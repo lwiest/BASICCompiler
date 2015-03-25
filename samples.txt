@@ -1,0 +1,222 @@
+E:\BASICCompiler>java 3dplot
+                             3D-PLOT
+              CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY
+
+
+
+
+                        *
+                    *   *  *
+                 *  *   *  *   *
+             *   *  *   *  *   *  *
+             *   *  *   *  *   *  *
+             *   *  *   *  *   *  *
+          *  *   *  *   *  *   *  *   *
+          *  *   *   *  *   *  *  *   *
+          *  *   *   *   *  *  *  *   *
+      *   *  *   *    *  *   * *  *   *  *
+      *   *  *    *   *    * *  * *   *  *
+      *   *   *   *     *   *  **  *  *  *
+      *   *   *    *      *    * * *  *  *
+      *   *   *     *       *    * *  *  *
+      *   *   *      *        *      **  *
+      *   *    *       *         *       *
+      *   *    *        *           *       *
+      *   *     *         *            *        *
+      *   *     *          *             *         *
+      *   *     *          *               *         *
+   *  *   *     *           *              *          *
+      *   *     *          *               *         *
+      *   *     *          *             *         *
+      *   *     *         *            *        *
+      *   *    *        *           *       *
+      *   *    *       *         *       *
+      *   *   *      *        *      **  *
+      *   *   *     *       *    * *  *  *
+      *   *   *    *      *    * * *  *  *
+      *   *   *   *     *   *  **  *  *  *
+      *   *  *    *   *    * *  * *   *  *
+      *   *  *   *    *  *   * *  *   *  *
+          *  *   *   *   *  *  *  *   *
+          *  *   *   *  *   *  *  *   *
+          *  *   *  *   *  *   *  *   *
+             *   *  *   *  *   *  *
+             *   *  *   *  *   *  *
+             *   *  *   *  *   *  *
+                 *  *   *  *   *
+                    *   *  *
+                        *
+
+~~~
+E:\BASICCompiler>java Amazing
+                           AMAZING PROGRAM
+              CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY
+
+
+WHAT ARE YOUR WIDTH AND LENGTH?22,15
+
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+  +--+--+--+--+--+
+|                       |     |     |           |        |        |
+|  +--+--+--+--+--|  |  |  |  |  |  +--+--+--|  |  |  |  |  +--|  +
+|        |           |     |     |           |  |  |  |  |     |  |
++--+--+--|  |  +--+--+--+--+--+--+--+--+--|  |  |  |  +--|  +--|  +
+|           |                 |  |     |     |     |     |  |     |
++--+--|  +--+--+--+--|  +--|  |  |  |  |  +--|  +--+--|  |  |  +--+
+|        |           |     |     |  |  |        |     |  |  |     |
+|  +--+--|  +--+--|  +--+--|  +--|  |  +--+--+--|  |  |  +--+--|  +
+|  |     |  |     |  |     |  |     |              |  |           |
+|  |  |  |  |  |  |  |  |  +--|  +--+--|  +--+--+--+--|  +--+--|  +
+|     |  |  |  |  |     |        |        |  |        |  |     |  |
++--+--|  |  |  |  +--+--+--+--+--|  +--+--|  |  +--|  |  |  |  |  +
+|     |  |  |  |                    |        |     |     |  |  |  |
+|  |  |  +--|  |  +--+--+--+--+--+--|  +--+--|  |  +--+--|  |  +--+
+|  |     |     |           |     |           |  |  |        |     |
+|  +--+--|  +--+--|  +--+--|  |  |  +--+--|  +--|  |  +--+--+--|  +
+|           |     |  |        |  |        |        |  |           |
++--+--+--+--|  |  |  |  +--+--|  +--+--|  +--+--+--+--|  |  +--|  +
+|  |     |     |     |        |        |        |        |     |  |
+|  |  |  |  |  +--|  +--+--|  +--+--+--+--|  |  |  +--+--+--|  |  +
+|     |     |     |     |  |  |           |  |              |  |  |
++--+--+--+--+--|  +--|  |  |  |  +--+--|  |  +--+--+--+--+--|  |  +
+|  |           |     |     |  |  |     |  |     |              |  |
++--+--|  +--|  +--|  +--+--|  |  |  |  |  +--|  |  +--+--+--+--+--+
+|  |     |     |     |        |     |  |     |  |  |        |     |
++--|  |  +--+--|  |  |  +--+--+--+--|  +--|  |  +--|  |  |  |  |  +
+|     |           |     |           |  |  |  |        |  |  |  |  |
+|  +--+--+--+--+--+--+--|  +--+--|  |  |  |  |  +--+--|  |  +--|  +
+|                       |        |        |  |        |  |        |
++--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|  +--+--+--+
+
+~~~
+F:\BASICCompiler>java Lunar
+                                LUNAR
+              CREATIVE COMPUTING MORRISTOWN, NEW JERSEY
+
+
+This is a computer simulation of an Apollo Lunar Landing Capsule.
+
+The on-board computer has failed (it was made by XEROX) so you have to
+land the capsule manually.
+
+* Set burn rate of retro rockets to any value between
+  0 (free fall) and 200 (maximum burn) pounds per second.
+* Set new burn rate every 10 seconds.
+* Capsule weight is 32,500 lbs.
+* Fuel weight is 16,500 lbs.
+
+GOOD LUCK!
+
+Sec           Mi + Ft       Mph           Lbs Fuel      Burn Rate
+ 0             120  0        3600          16500        ?0
+ 10            109  5015     3636          16500        ?0
+ 20            99  4223      3672          16500        ?0
+ 30            89  2903      3708          16500        ?0
+ 40            79  1055      3743.99       16500        ?0
+ 50            68  3959      3779.99       16500        ?0
+ 60            58  1055      3815.99       16500        ?0
+ 70            47  2903      3851.99       16500        ?200
+ 80            37  1883      3482.86       14500        ?200
+ 90            28  1191      3086.7        12500        ?200
+ 100           20  1251      2659.65       10500        ?200
+ 110           13  2549      2196.94       8500         ?200
+ 120           8  370        1692.63       6500         ?200
+ 130           4  658        1139.13       4500         ?100
+ 140           1  1827       858.97        3500         ?100
+
+On Moon at 146.3 seconds - Impact velocity 673.6 mph.
+Sorry there were no survivors. You blew it!
+In fact, you blasted a new lunar crater 186.6 feet deep!
+
+Try again?
+
+~~~
+E:\BASICCompiler>java StarTrek
+
+
+
+
+
+
+
+
+
+
+
+                                    ,------*------,
+                    ,-------------   '---  ------'
+                     '-------- --'      / /
+                         ,---' '-------/ /--,
+                          '----------------'
+
+                    The USS ENTERPRISE --- NCC-1701
+
+
+
+
+
+Your orders are as follows:
+   Destroy the 17 Klingon warships which have invaded the Galaxy before
+   they can attack Federation Headquarters on Stardate 2432.
+   This gives you 32 days.
+   There is 1 Starbase in the Galaxy for resupplying your ship.
+
+Hit RETURN when ready to accept command.
+
+
+Your mission begins with your Starship located in the Galactic quadrant
+SPICA III.
+
+---------------------------------
+                                        Stardate           2400
+                                        Condition          Green
+                                        Quadrant           7 , 8
+     <*>                                Sector             2 , 4
+                  *                     Photon Torpedoes   10
+                                        Total Energy       3000
+                                        Shields            0
+                                        Klingons Remaining 17
+---------------------------------
+Command ?HLP
+
+You are the Captain of the Starship ENTERPRISE. Navigate the universe and
+destroy all Klingon cruisers. Dock at a Starbase to refuel and repair the
+ENTERPRISE.
+
+The universe consists of 8 x 8 quadrants, each quadrant of 8 x 8 sectors.
+
+Available commands are:
+
+  NAV  Set the course of the ENTERPRISE. Directions are given as
+          4 3 2
+           \|/
+          5-+-1
+           /|\
+          6 7 8
+  SRS  Display a short-range-sensor scan, a map of the sector you are in.
+       It displays the following objects:
+          <*> - ENTERPRISE
+          +K+ - Klingon cruiser
+          >!< - Starbase
+           *  - Star
+  LRS  Display a long-range-sensor scan, a map of the surrounding
+       quadrants. They are encoded as ABC with
+          A   - Number of Klingon cruisers
+          B   - Number of Starbases
+          C   - Number of Stars
+  PHA  Fire phasers
+  TOR  Fire photon torpedoes
+  SHE  Raise or lower shields
+  DAM  Display Damage-Control Report
+  COM  Call on Library-Computer. Available computer commands are:
+          0   - Cumulative Galactic Record
+          1   - Status Report
+          2   - Photon Torpedo Data
+          3   - Starbase Nav Data
+          4   - Direction/Distance Calculator
+          5   - Galaxy 'Region Name' Map
+  XXX  Resign your command
+  HLP  Display help
+
+Command ?
+
+~~~
