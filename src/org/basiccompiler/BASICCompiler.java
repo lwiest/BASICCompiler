@@ -54,18 +54,18 @@ import org.basiccompiler.parser.statements.Statement;
 import org.basiccompiler.parser.statements.impl.LineNumberStatement;
 
 public class BASICCompiler {
-
+  private static final String CR = System.getProperty("line.separator");  
   private static final String HELP = "" //
-      + " ____    _    ____  _  ____    ____                      _ _\n" //
-      + "| __ )  / \\  / ___|| |/ ___|  / ___|___  _ __ ___  _ __ (_) | ___ _ __\n" //
-      + "|  _ \\ / _ \\ \\___ \\| | |     | |   / _ \\| '_ ` _ \\| '_ \\| | |/ _ \\ '__|\n" //
-      + "| |_) / ___ \\ ___) | | |___  | |__| (_) | | | | | | |_) | | |  __/ |\n" //
-      + "|____/_/   \\_\\____/|_|\\____|  \\____\\___/|_| |_| |_| .__/|_|_|\\___|_|\n" //
-      + "                                                  |_|\n" //
-      + "Version 1.3 (25-MAR-2015) by Lorenz Wiest\n" //
-      + "\n" //
-      + "Usage:   java BASICCompiler <BASIC source filename> <Java class filename> [<options>]\n" //
-      + "Options: -formatted=<filename> | Writes a formatted BASIC source file\n" //
+      + " ____    _    ____  _  ____    ____                      _ _" + CR //
+      + "| __ )  / \\  / ___|| |/ ___|  / ___|___  _ __ ___  _ __ (_) | ___ _ __" + CR //
+      + "|  _ \\ / _ \\ \\___ \\| | |     | |   / _ \\| '_ ` _ \\| '_ \\| | |/ _ \\ '__|" + CR //
+      + "| |_) / ___ \\ ___) | | |___  | |__| (_) | | | | | | |_) | | |  __/ |" + CR //
+      + "|____/_/   \\_\\____/|_|\\____|  \\____\\___/|_| |_| |_| .__/|_|_|\\___|_|" + CR //
+      + "                                                  |_|" + CR //
+      + "Version 1.3 (25-MAR-2015) by Lorenz Wiest" + CR //
+      + CR //
+      + "Usage:   java BASICCompiler <BASIC source filename> <Java class filename> [<options>]" + CR //
+      + "Options: -formatted=<filename> | Writes a formatted BASIC source file" + CR //
       + "         -optimize             | Applies compiler optimizations";
 
   private final static String OPT_FORMATTED_OUTPUT = "-formatted=";
