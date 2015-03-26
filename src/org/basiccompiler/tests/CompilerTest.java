@@ -76,6 +76,16 @@ public class CompilerTest {
   }
 
   @Test
+  public void testVariableAndFunctionNamesWithDots() {
+    assertEquals(compileAndRun("10 A.HELLO = 1 : PRINT A.HELLO"), " 1 ");
+    assertEquals(compileAndRun("10 A.HELLO$ = \"HELLO\" : PRINT A.HELLO$"), "HELLO");
+    assertEquals(compileAndRun("10 DIM A.HELLO(2) : A.HELLO(1) = 3 : PRINT A.HELLO(1)"), " 3 ");
+    assertEquals(compileAndRun("10 DIM A.HELLO$(2) : A.HELLO$(1) = \"HELLO\" : PRINT A.HELLO$(1)"), "HELLO");
+    assertEquals(compileAndRun("10 DEF FNA.HELLO(X)=X*X : PRINT FNA.HELLO(2)"), " 4 ");
+    assertEquals(compileAndRun("10 DEF FNA.HELLO$(A$)=A$+A$ : PRINT FNA.HELLO$(\"HELLO\")"), "HELLOHELLO");
+  }
+
+  @Test
   public void testFloatConversion_VAL_Simple() {
     // effectively checks class Method_CharsToFloat, Method_FloatToChars
     assertEquals(compileAndRun("10 PRINT VAL(\"0\")"), " 0 ");

@@ -1576,14 +1576,14 @@ public class Parser {
   }
 
   /*
-   * ^           | Start of string
-   * \\s*?       | Match any whitespace, consumed lazily
-   * (           | Start capture group (number variable name)
-   * [A-Z]       | Match one letter
-   * [A-Z0-9]*+  | Match any letter or digit, consumed possessively
-   * )           | End capture group
+   * ^              | Start of string
+   * \\s*?          | Match any whitespace, consumed lazily
+   * (              | Start capture group (number variable name)
+   * [A-Z]          | Match one letter
+   * [A-Z0-9\\.]*+  | Match any letter, digit, or dot, consumed possessively
+   * )              | End capture group
    */
-  private static final Pattern NUM_VARIABLENAME_PATTERN = Pattern.compile("^\\s*?([A-Z][A-Z0-9]*+)");
+  private static final Pattern NUM_VARIABLENAME_PATTERN = Pattern.compile("^\\s*?([A-Z][A-Z0-9\\.]*+)");
 
   private String getNumVariableName() {
     String match = findMatch(NUM_VARIABLENAME_PATTERN);
@@ -1596,15 +1596,15 @@ public class Parser {
   }
 
   /*
-   * ^           | Start of string
-   * \\s*?       | Match any whitespace, consumed lazily
-   * (           | Start capture group (string variable name)
-   * [A-Z]       | Match one letter
-   * [A-Z0-9]*?  | Match any letter or digit, consumed lazily
-   * \\$         | Match one dollar sign
-   * )           | End capture group
+   * ^              | Start of string
+   * \\s*?          | Match any whitespace, consumed lazily
+   * (              | Start capture group (string variable name)
+   * [A-Z]          | Match one letter
+   * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
+   * \\$            | Match one dollar sign
+   * )              | End capture group
    */
-  private static final Pattern STR_VARIABLENAME_PATTERN = Pattern.compile("^\\s*?([A-Z][A-Z0-9]*?\\$)");
+  private static final Pattern STR_VARIABLENAME_PATTERN = Pattern.compile("^\\s*?([A-Z][A-Z0-9\\.]*?\\$)");
 
   private String getStrVariableName() {
     return findMatch(STR_VARIABLENAME_PATTERN);
@@ -1637,38 +1637,43 @@ public class Parser {
   }
 
   /*
-   * ^           | Start of string
-   * \\s*?       | Match any whitespace, consumed lazily
-   * (           | Start capture group (number function name)
-   * FN          | Match "FN"
-   * [A-Z]       | Match one letter
-   * [A-Z0-9]*?  | Match any letter or digit, consumed lazily
-   * \\(         | Match an opening parenthesis
-   * )           | End capture group
+   * ^              | Start of string
+   * \\s*?          | Match any whitespace, consumed lazily
+   * (              | Start capture group (number function name)
+   * FN             | Match "FN"
+   * [A-Z]          | Match one letter
+   * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
+   * \\(            | Match an opening parenthesis
+   * )              | End capture group
    */
-  private static final Pattern NUM_FUNCTION_NAME_PATTERN = Pattern.compile("^\\s*?(FN[A-Z][A-Z0-9]*?\\()");
+  private static final Pattern NUM_FUNCTION_NAME_PATTERN = Pattern.compile("^\\s*?(FN[A-Z][A-Z0-9\\.]*?\\()");
 
   private String getNumFunctionName() {
     return findMatch(NUM_FUNCTION_NAME_PATTERN);
   }
 
   /*
-   * ^           | Start of string
-   * \\s*?       | Match any whitespace, consumed lazily
-   * (           | Start capture group (number array variable name)
-   * [A-Z]       | Match one letter
-   * [A-Z0-9]*?  | Match any letter or digit, consumed lazily
-   * \\(         | Match an opening parenthesis
-   * )           | End capture group
+   * ^              | Start of string
+   * \\s*?          | Match any whitespace, consumed lazily
+   * (?!            | Start negative lookahead. No match if characters ahead...
+   * FN             | Match FN
+   * [A-Z]          | Match one letter
+   * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
+   * \\$            | Match one dollar sign
+   * \\(            | Match an opening parenthesis
+   * )              | End negative lookahead
+   * (              | Start capture group (number array variable name)
+   * [A-Z]          | Match one letter
+   * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
+   * \\(            | Match an opening parenthesis
+   * )              | End capture group
    */
-  private static final Pattern NUM_ARRAY_VARIABLE_NAME_PATTERN = Pattern.compile("^\\s*?([A-Z][A-Z0-9]*?\\()");
+  private static final Pattern NUM_ARRAY_VARIABLE_NAME_PATTERN = Pattern.compile("^\\s*?(?!FN[A-Z][A-Z0-9\\.]*?\\()([A-Z][A-Z0-9\\.]*?\\()");
 
   private String getNumArrayVariableName() {
     String match = findMatch(NUM_ARRAY_VARIABLE_NAME_PATTERN);
     if (match != null) {
       if (NUM_FUNCTION_KEYWORDS.contains(match)) {
-        match = unmatch(match);
-      } else if (match.startsWith("FN") && (match.length() > 3 /* FN.(... */)) { // TODO: make FN part of regex?
         match = unmatch(match);
       }
     }
@@ -1691,40 +1696,45 @@ public class Parser {
   }
 
   /*
-   * ^           | Start of string
-   * \\s*?       | Match any whitespace, consumed lazily
-   * (           | Start capture group (string function name)
-   * FN          | Match "FN"
-   * [A-Z]       | Match one letter
-   * [A-Z0-9]*?  | Match any letter or digit, consumed lazily
-   * \\$         | Match one dollar sign
-   * \\(         | Match an opening parenthesis
-   * )           | End capture group
+   * ^              | Start of string
+   * \\s*?          | Match any whitespace, consumed lazily
+   * (              | Start capture group (string function name)
+   * FN             | Match "FN"
+   * [A-Z]          | Match one letter
+   * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
+   * \\$            | Match one dollar sign
+   * \\(            | Match an opening parenthesis
+   * )              | End capture group
    */
-  private static final Pattern STR_FUNCTION_NAME_PATTERN = Pattern.compile("^\\s*?(FN[A-Z][A-Z0-9]*?\\$\\()");
+  private static final Pattern STR_FUNCTION_NAME_PATTERN = Pattern.compile("^\\s*?(FN[A-Z][A-Z0-9\\.]*?\\$\\()");
 
   private String getStrFunctionName() {
     return findMatch(STR_FUNCTION_NAME_PATTERN);
   }
 
   /*
-   * ^           | Start of string
-   * \\s*?       | Match any whitespace, consumed lazily
-   * (           | Start capture group (string array name)
-   * [A-Z]       | Match one letter
-   * [A-Z0-9]*?  | Match any letter or digit, consumed lazily
-   * \\$         | Match one dollar sign
-   * \\(         | Match an opening parenthesis
-   * )           | End capture group
+   * ^              | Start of string
+   * \\s*?          | Match any whitespace, consumed lazily
+   * (?!            | Start negative lookahead. No match if characters ahead...
+   * FN             | Match FN
+   * [A-Z]          | Match one letter
+   * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
+   * \\$            | Match one dollar sign
+   * \\(            | Match an opening parenthesis
+   * )              | End negative lookahead
+   * (              | Start capture group (string array name)
+   * [A-Z]          | Match one letter
+   * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
+   * \\$            | Match one dollar sign
+   * \\(            | Match an opening parenthesis
+   * )              | End capture group
    */
-  private static final Pattern STR_ARRAY_VARIABLE_NAME_PATTERN = Pattern.compile("^\\s*?([A-Z][A-Z0-9]*?\\$\\()");
+  private static final Pattern STR_ARRAY_VARIABLE_NAME_PATTERN = Pattern.compile("^\\s*?(?!FN[A-Z][A-Z0-9\\.]*?\\$\\()([A-Z][A-Z0-9\\.]*?\\$\\()");
 
   private String getStrArrayVariableName() {
     String match = findMatch(STR_ARRAY_VARIABLE_NAME_PATTERN);
     if (match != null) {
       if (STR_FUNCTION_KEYWORDS.contains(match)) {
-        match = unmatch(match);
-      } else if (match.startsWith("FN") && (match.length() > 4 /* FN.$(... */)) { // TODO: make FN part of regex?
         match = unmatch(match);
       }
     }
