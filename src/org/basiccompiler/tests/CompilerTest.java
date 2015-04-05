@@ -690,6 +690,20 @@ public class CompilerTest {
     assertEquals(compileAndRun("10 DIM A(1, 0)"), "");
     assertEquals(compileAndRun("10 DIM A(1, 32767)"), "");
     assertRuntimeError(compileAndRun("10 DIM A(1, 32768)"));
+    
+    assertCompileError(compileAndRun("10 DIM A(10), A(10)"));
+    assertCompileError(compileAndRun("10 DIM A(10) : DIM A(10)"));    
+    assertCompileError(compileAndRun("10 DIM A(10) : DIM A(10,10)"));
+    
+    assertEquals(compileAndRun("10 DIM A(10) : DIM A$(10)"), "");    
+    assertEquals(compileAndRun("10 DIM A(10) : DIM A$(10,10)"), "");
+    assertEquals(compileAndRun("10 DIM A(10,10) : DIM A$(10)"), "");    
+    assertEquals(compileAndRun("10 DIM A(10,10) : DIM A$(10,10)"), "");
+    
+    assertCompileError(compileAndRun("10 DIM A(10) : A(0,1) = 0"));    
+    assertCompileError(compileAndRun("10 A(0,1) = 0 : DIM A(10)"));
+    assertCompileError(compileAndRun("10 A(0) = 0 : A(0,1) = 0)"));
+    assertRuntimeError(compileAndRun("10 A(0) = 0 : DIM A(10)"));
   }
 
   @Test
@@ -728,6 +742,15 @@ public class CompilerTest {
     assertEquals(compileAndRun("10 DIM A$(1,0)"), "");
     assertEquals(compileAndRun("10 DIM A$(1,32767)"), "");
     assertRuntimeError(compileAndRun("10 DIM A$(1,32768)"));
+    
+    assertCompileError(compileAndRun("10 DIM A$(10), A$(10)"));    
+    assertCompileError(compileAndRun("10 DIM A$(10) : DIM A$(10)"));
+    assertCompileError(compileAndRun("10 DIM A$(10) : DIM A$(10,10)"));
+    
+    assertCompileError(compileAndRun("10 DIM A$(10) : A$(0,1) = \"HELLO\""));    
+    assertCompileError(compileAndRun("10 A$(0,1) = \"HELLO\" : DIM A$(10)"));
+    assertCompileError(compileAndRun("10 A$(0) = \"HELLO\" : A$(0,1) = \"HELLO\")"));
+    assertRuntimeError(compileAndRun("10 A$(0) = \"HELLO\" : DIM A$(10)"));
   }
 
   @Test

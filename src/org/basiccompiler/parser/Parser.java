@@ -172,7 +172,29 @@ public class Parser {
   private final Map<String, DefFnStatement> defFnMap = new HashMap<String, DefFnStatement>();
 
   private final Map<String, FnFunctionNode> fnMap = new HashMap<String, FnFunctionNode>();
+  
+  //////////////////////////////////////////////////////////////////////////////
+  
+  private class ArrayVariableInfo {
+    private int numDims;
+    private boolean usedInDimStatement;
 
+    public ArrayVariableInfo(int numDims, boolean usedInDimStatement) {
+      this.numDims = numDims;
+      this.usedInDimStatement = usedInDimStatement;
+    }
+
+    public int getNumDims() {
+      return this.numDims;
+    }
+
+    public boolean usedInDimStatement() {
+      return this.usedInDimStatement;
+    }
+  }
+  
+  private Map<String /* array variable name */, ArrayVariableInfo> arrayVariables = new HashMap<String, ArrayVariableInfo>();  
+  
   public Parser() {
     this.currentLineNumber = BEFORE_FIRST_LINE_NUMBER;
   }
@@ -369,7 +391,7 @@ public class Parser {
     this.defFnMap.put(funcName, statement);
     return statement;
   }
-
+  
   private Statement parseDIM() {
     // DIM <arrayVar>[,<arrayVar>]*
 
@@ -382,6 +404,24 @@ public class Parser {
       if (arrayVar == null) {
         throw new CompileException("Missing or illegal variable name(s) after DIM.");
       }
+      
+      String arrayVarName = arrayVar.getVariableName();
+      if (this.arrayVariables.containsKey(arrayVarName)) {
+        ArrayVariableInfo info = arrayVariables.get(arrayVarName);
+        if (info.usedInDimStatement()) {
+          NodeType arrayVarType = arrayVar.getType();
+          String message = "";
+          if (arrayVarType == NodeType.NUM) {
+            message = "Number array variable " + arrayVarName + ") has already been used in a DIM statement.";
+          } else if (arrayVarType == NodeType.STR) {
+            message = "String array variable " + arrayVarName + ") has already been used in a DIM statement.";
+          }
+          throw new CompileException(message);
+        }
+      }
+      ArrayVariableInfo info = new ArrayVariableInfo(arrayVar.getDimExpressions().length, true /* usedInDimStatement */);
+      this.arrayVariables.put(arrayVarName, info);
+
       arrayVars.add(arrayVar);
       if (isNextToken(COMMA) == false) {
         break;
@@ -1013,14 +1053,30 @@ public class Parser {
           throw new CompileException("Missing or invalid expression for second index of number array variable " + varName + ").");
         }
         if (isNextToken(CLOSE)) {
+          if (this.arrayVariables.containsKey(varName)) {
+            if (arrayVariables.get(varName).getNumDims() != 2) {
+              throw new CompileException("Number array variable " + varName + ") does not have two indexes like in earlier part of code.");
+            }
+          } else {
+            ArrayVariableInfo info = new ArrayVariableInfo(2, false /* usedInDimStatement */);
+            this.arrayVariables.put(varName, info);
+          }
           return VariableNode.createVariableNode(varName, NodeType.NUM, dim1Expr, dim2Expr);
         }
-        throw new CompileException("Missing closing parentheses after second index of array variable " + varName + ").");
+        throw new CompileException("Missing closing parentheses after second index of number array variable " + varName + ").");
       }
       if (isNextToken(CLOSE)) {
+        if (this.arrayVariables.containsKey(varName)) {
+          if (arrayVariables.get(varName).getNumDims() != 1) {
+            throw new CompileException("Number array variable " + varName + ") does not have one index like in earlier part of code.");
+          }
+        } else {
+          ArrayVariableInfo info = new ArrayVariableInfo(1, false /* usedInDimStatement */);
+          this.arrayVariables.put(varName, info);
+        }
         return VariableNode.createVariableNode(varName, NodeType.NUM, dim1Expr);
       }
-      throw new CompileException("Missing closing parentheses after first index of array variable " + varName + ").");
+      throw new CompileException("Missing closing parentheses after first index of number array variable " + varName + ").");
     }
     return null;
   }
@@ -1280,11 +1336,27 @@ public class Parser {
           throw new CompileException("Cannot parse expression for second index of string array variable " + varName + ".");
         }
         if (isNextToken(CLOSE)) {
+          if (this.arrayVariables.containsKey(varName)) {
+            if (arrayVariables.get(varName).getNumDims() != 2) {
+              throw new CompileException("String array variable " + varName + ") does not have two indexes like in earlier part of code.");
+            }
+          } else {
+            ArrayVariableInfo info = new ArrayVariableInfo(2, false /* usedInDimStatement */);
+            this.arrayVariables.put(varName, info);
+          }
           return VariableNode.createVariableNode(varName, NodeType.STR, dim1Expr, dim2Expr);
         }
         throw new CompileException("Closing parentheses missing after second index of string array variable " + varName + ".");
       }
       if (isNextToken(CLOSE)) {
+        if (this.arrayVariables.containsKey(varName)) {
+          if (arrayVariables.get(varName).getNumDims() != 1) {
+            throw new CompileException("String array variable " + varName + ") does not have one index like in earlier part of code.");
+          }
+        } else {
+          ArrayVariableInfo info = new ArrayVariableInfo(1, false /* usedInDimStatement */);
+          this.arrayVariables.put(varName, info);
+        }
         return VariableNode.createVariableNode(varName, NodeType.STR, dim1Expr);
       }
       throw new CompileException("Closing parentheses missing after first index of string array variable " + varName + ".");
