@@ -1929,6 +1929,12 @@ public class CompilerTest {
 	}
 
 	@Test
+	public void testLineNumberSorting() {
+		assertEquals(compileAndRun("20 PRINT \"WORLD\"" + CR + "10 PRINT \"HELLO\""), "HELLO" + CR + "WORLD");
+		assertEquals(compileAndRun("30 PRINT \"HELLO\"" + CR + "100 PRINT \"WORLD!\"" + CR), "HELLO" + CR + "WORLD!");
+	}
+
+	@Test
 	public void testProgramTooLong() {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 1; i < 5980; i++) {
