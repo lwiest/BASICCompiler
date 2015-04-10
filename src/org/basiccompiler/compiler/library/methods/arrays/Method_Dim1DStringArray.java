@@ -41,7 +41,7 @@ import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Dim1DStringArray extends Method {
 	private final static String METHOD_NAME = "Dim1DStringArray";
-	private final static String DESCRIPTOR = "(F)[[C";
+	private final static String DESCRIPTOR = "([[[CF)V";
 	private final static int NUM_LOCALS = 3;
 
 	public Method_Dim1DStringArray(LibraryManager libraryManager) {
@@ -51,42 +51,58 @@ public class Method_Dim1DStringArray extends Method {
 	@Override
 	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
-		// local 0: F=>I dim max element index (= size - 1), loop counter
-		// local 1: [[C  array ref
-		// local 2: [C   empty char array ref
+		// local 0: [[[C reference to array reference
+		// local 1: F=>I dim max element index (= size - 1), loop counter
+		// local 2: [C   empty char array reference
 
-		o.fload_0();
+		o.aload_0();
+		o.iconst_0();
+		o.aaload();
+		o.ifnull("initialize");
+
+		emitThrowRuntimeException(o, "1D string array already dimensioned.");
+
+		o.label("initialize");
+		o.aload_0();
+		o.iconst_0();
+
+		o.fload_1();
 		this.libraryManager.getMethod(MethodEnum.ROUND_TO_INT).emitCall(o);
-		o.istore_0();
+		o.istore_1();
 
-		o.iload_0();
+		o.iload_1();
 		this.libraryManager.getMethod(MethodEnum.DIM_1D_CHECK_SIZE).emitCall(o);
 
-		o.iinc(0, 1);
-		o.iload_0();
+		o.iinc(1, 1);
+		o.iload_1();
 		o.iconst_0();
 		o.multianewarray(this.classModel.getClassIndex("[[C"), 2);
-		o.astore_1();
+		o.aastore();
 
-		o.iconst_0(); // create empty string array
+		// create empty string array
+
+		o.iconst_0();
 		o.newarray_char();
 		o.astore_2();
+
+		// initialization loop
 
 		o.goto_("loopCond");
 
 		o.label("loop");
-		o.iinc(0, -1);
+		o.iinc(1, -1);
 
-		o.aload_1();
-		o.iload_0();
+		o.aload_0();
+		o.iconst_0();
+		o.aaload();
+		o.iload_1();
 		o.aload_2();
 		o.aastore();
 
 		o.label("loopCond");
-		o.iload_0();
+		o.iload_1();
 		o.ifgt("loop");
 
-		o.aload_1();
-		o.areturn();
+		o.return_();
 	}
 }

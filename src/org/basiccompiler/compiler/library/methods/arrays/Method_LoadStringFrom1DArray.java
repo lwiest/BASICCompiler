@@ -41,7 +41,7 @@ import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_LoadStringFrom1DArray extends Method {
 	private final static String METHOD_NAME = "LoadStringFrom1DArray";
-	private final static String DESCRIPTOR = "([[CF)[C";
+	private final static String DESCRIPTOR = "([[[CF)[C";
 	private final static int NUM_LOCALS = 2;
 
 	public Method_LoadStringFrom1DArray(LibraryManager libraryManager) {
@@ -51,8 +51,8 @@ public class Method_LoadStringFrom1DArray extends Method {
 	@Override
 	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
-		// local 0: [[C  array reference
-		// local 1: F=>I array index
+		// local 0: [[[C  reference to array reference
+		// local 1: F=>I  array index
 
 		o.fload_1();
 		this.libraryManager.getMethod(MethodEnum.ROUND_TO_INT).emitCall(o);
@@ -63,6 +63,8 @@ public class Method_LoadStringFrom1DArray extends Method {
 		this.libraryManager.getMethod(MethodEnum.CHECK_1D_STRING_ARRAY_ACCESS).emitCall(o);
 
 		o.aload_0();
+		o.iconst_0();
+		o.aaload();
 		o.iload_1();
 		o.aaload();
 		o.areturn();

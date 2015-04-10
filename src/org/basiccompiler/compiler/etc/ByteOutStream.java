@@ -137,6 +137,11 @@ public class ByteOutStream extends ByteArrayOutputStream {
 		}
 	}
 
+  public void anewarray(int cp_index) {
+    write_u1(0xbd);
+    write_u2(cp_index);
+  }  
+  
 	public void areturn() {
 		write_u1(0xb0);
 	}
@@ -487,7 +492,13 @@ public class ByteOutStream extends ByteArrayOutputStream {
 		write_u2(0x00);
 	}
 
-	public void iinc(int local_index, int increment) {
+  public void ifnull(String label) {
+    write_u1(0xc6);
+    patchHereToLabel(label);
+    write_u2(0x00);
+  }
+
+  public void iinc(int local_index, int increment) {
 		write_u1(0x84);
 		write_u1(local_index);
 		write_u1(increment);

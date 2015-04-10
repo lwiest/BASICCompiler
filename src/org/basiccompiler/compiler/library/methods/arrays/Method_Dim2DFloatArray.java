@@ -41,8 +41,8 @@ import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Dim2DFloatArray extends Method {
 	private final static String METHOD_NAME = "Dim2DFloatArray";
-	private final static String DESCRIPTOR = "(FF)[[F";
-	private final static int NUM_LOCALS = 2;
+	private final static String DESCRIPTOR = "([[[FFF)V";
+	private final static int NUM_LOCALS = 3;
 
 	public Method_Dim2DFloatArray(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);
@@ -51,26 +51,40 @@ public class Method_Dim2DFloatArray extends Method {
 	@Override
 	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
-		// local 0: F=>I dim1 max element index (= size - 1)
-		// local 1: F=>I dim2 max element index (= size - 1)
+		// local 0: [[[F reference to array reference
+		// local 1: F=>I dim1 max element index (= size - 1)
+		// local 2: F=>I dim2 max element index (= size - 1)
 
-		o.fload_0();
-		this.libraryManager.getMethod(MethodEnum.ROUND_TO_INT).emitCall(o);
-		o.istore_0();
+		o.aload_0();
+		o.iconst_0();
+		o.aaload();
+		o.ifnull("initialize");
+
+		emitThrowRuntimeException(o, "2D number array already dimensioned.");
+
+		o.label("initialize");
+		o.aload_0();
+		o.iconst_0();
 
 		o.fload_1();
 		this.libraryManager.getMethod(MethodEnum.ROUND_TO_INT).emitCall(o);
 		o.istore_1();
 
-		o.iload_0();
+		o.fload_2();
+		this.libraryManager.getMethod(MethodEnum.ROUND_TO_INT).emitCall(o);
+		o.istore_2();
+
 		o.iload_1();
+		o.iload_2();
 		this.libraryManager.getMethod(MethodEnum.DIM_2D_CHECK_SIZE).emitCall(o);
 
-		o.iinc(0, 1);
 		o.iinc(1, 1);
-		o.iload_0();
+		o.iinc(2, 1);
 		o.iload_1();
+		o.iload_2();
 		o.multianewarray(this.classModel.getClassIndex("[[F"), 2);
-		o.areturn();
+
+		o.aastore();
+		o.return_();
 	}
 }

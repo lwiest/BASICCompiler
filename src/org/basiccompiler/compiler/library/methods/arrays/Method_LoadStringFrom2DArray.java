@@ -41,7 +41,7 @@ import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_LoadStringFrom2DArray extends Method {
 	private final static String METHOD_NAME = "LoadStringFrom2DArray";
-	private final static String DESCRIPTOR = "([[[CFF)[C";
+	private final static String DESCRIPTOR = "([[[[CFF)[C";
 	private final static int NUM_LOCALS = 3;
 
 	public Method_LoadStringFrom2DArray(LibraryManager libraryManager) {
@@ -51,9 +51,9 @@ public class Method_LoadStringFrom2DArray extends Method {
 	@Override
 	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
-		// local 0: [[[C array reference
-		// local 1: F=>I array index 1
-		// local 2: F=>I array index 2
+		// local 0: [[[[C reference to array reference
+		// local 1: F=>I  array index 1
+		// local 2: F=>I  array index 2
 
 		o.fload_1();
 		this.libraryManager.getMethod(MethodEnum.ROUND_TO_INT).emitCall(o);
@@ -69,6 +69,8 @@ public class Method_LoadStringFrom2DArray extends Method {
 		this.libraryManager.getMethod(MethodEnum.CHECK_2D_STRING_ARRAY_ACCESS).emitCall(o);
 
 		o.aload_0();
+		o.iconst_0();
+		o.aaload();
 		o.iload_1();
 		o.aaload();
 		o.iload_2();

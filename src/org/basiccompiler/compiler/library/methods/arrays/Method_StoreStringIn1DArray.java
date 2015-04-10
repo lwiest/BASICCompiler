@@ -41,7 +41,7 @@ import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_StoreStringIn1DArray extends Method {
 	private final static String METHOD_NAME = "StoreStringIn1DArray";
-	private final static String DESCRIPTOR = "([C[[CF)V";
+	private final static String DESCRIPTOR = "([C[[[CF)V";
 	private final static int NUM_LOCALS = 3;
 
 	public Method_StoreStringIn1DArray(LibraryManager libraryManager) {
@@ -52,7 +52,7 @@ public class Method_StoreStringIn1DArray extends Method {
 	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: [C   value
-		// local 1: [[C  array reference
+		// local 1: [[[C reference to array reference
 		// local 2: F=>I array index
 
 		o.fload_2();
@@ -64,6 +64,8 @@ public class Method_StoreStringIn1DArray extends Method {
 		this.libraryManager.getMethod(MethodEnum.CHECK_1D_STRING_ARRAY_ACCESS).emitCall(o);
 
 		o.aload_1();
+		o.iconst_0();
+		o.aaload();
 		o.iload_2();
 		o.aload_0();
 		o.aastore();

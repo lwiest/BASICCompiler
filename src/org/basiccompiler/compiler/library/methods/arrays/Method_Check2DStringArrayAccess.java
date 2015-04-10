@@ -36,63 +36,73 @@ import java.util.List;
 import org.basiccompiler.bytecode.info.ExceptionTableInfo;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 import org.basiccompiler.compiler.library.LibraryManager;
+import org.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Check2DStringArrayAccess extends Method {
-  private final static String METHOD_NAME = "Check2DStringArrayAccess";
-  private final static String DESCRIPTOR = "([[[CII)V";
-  private final static int NUM_LOCALS = 3;
+	private final static String METHOD_NAME = "Check2DStringArrayAccess";
+	private final static String DESCRIPTOR = "([[[[CII)V";
+	private final static int NUM_LOCALS = 3;
 
-  public Method_Check2DStringArrayAccess(LibraryManager libraryManager) {
-    super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);
-  }
+	public Method_Check2DStringArrayAccess(LibraryManager libraryManager) {
+		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);
+	}
 
-  @Override
-  public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	@Override
+	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
-    // local 0: [[[C array reference
-    // local 1: I    array index 1
-    // local 2: I    array index 2
+		// local 0: [[[[C reference to array reference
+		// local 1: I     array index 1
+		// local 2: I     array index 2
 
-    o.aload_0();
-    o.ifnonnull("skipNullArray");
+		o.aload_0();
+		o.iconst_0();
+		o.aaload();
+		o.ifnonnull("skipInitialize");
 
-    // TODO: Allocate on-the-fly 10 x 10-element array if not DIM'ed, like MS BASIC
+		o.aload_0();
+		o.iconst(10);
+		o.i2f();
+		o.dup();
+		this.libraryManager.getMethod(MethodEnum.DIM_2D_STRING_ARRAY).emitCall(o);
 
-    emitThrowRuntimeException(o, "Undimensioned 2D string array.");
+		o.label("skipInitialize");
+		o.iload_1();
+		o.ifge("skipIndex1Underflow");
 
-    o.label("skipNullArray");
-    o.iload_1();
-    o.ifge("skipIndex1Underflow");
+		emitThrowRuntimeException(o, "First index of 2D string array < 0.");
 
-    emitThrowRuntimeException(o, "First index of 2D string array < 0.");
+		o.label("skipIndex1Underflow");
+		o.iload_1();
 
-    o.label("skipIndex1Underflow");
-    o.iload_1();
-    o.aload_0();
-    o.arraylength();
-    o.if_icmplt("skipIndex1Overflow");
+		o.aload_0();
+		o.iconst_0();
+		o.aaload();
+		o.arraylength();
+		o.if_icmplt("skipIndex1Overflow");
 
-    emitThrowRuntimeException(o, "First index of 2D string array out of max bounds.");
+		emitThrowRuntimeException(o, "First index of 2D string array out of max bounds.");
 
-    o.label("skipIndex1Overflow");
-    o.iload_2();
-    o.ifge("skipIndex2Underflow");
+		o.label("skipIndex1Overflow");
+		o.iload_2();
+		o.ifge("skipIndex2Underflow");
 
-    emitThrowRuntimeException(o, "Second index of 2D string array < 0.");
+		emitThrowRuntimeException(o, "Second index of 2D string array < 0.");
 
-    o.label("skipIndex2Underflow");
-    o.iload_2();
+		o.label("skipIndex2Underflow");
+		o.iload_2();
 
-    o.aload_0(); // fetch sub array reference
-    o.iload_1();
-    o.aaload();
-    o.arraylength();
-    o.if_icmplt("skipIndex2Overflow");
+		o.aload_0();
+		o.iconst_0();
+		o.aaload();
+		o.iload_1();  // fetch sub array reference
+		o.aaload();
+		o.arraylength();
+		o.if_icmplt("skipIndex2Overflow");
 
-    emitThrowRuntimeException(o, "Second index of 2D string array out of max bounds.");
+		emitThrowRuntimeException(o, "Second index of 2D string array out of max bounds.");
 
-    o.label("skipIndex2Overflow");
-    o.return_();
-  }
+		o.label("skipIndex2Overflow");
+		o.return_();
+	}
 }

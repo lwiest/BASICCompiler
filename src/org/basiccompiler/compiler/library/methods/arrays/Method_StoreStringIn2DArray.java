@@ -41,7 +41,7 @@ import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_StoreStringIn2DArray extends Method {
 	private final static String METHOD_NAME = "StoreStringIn2DArray";
-	private final static String DESCRIPTOR = "([C[[[CFF)V";
+	private final static String DESCRIPTOR = "([C[[[[CFF)V";
 	private final static int NUM_LOCALS = 4;
 
 	public Method_StoreStringIn2DArray(LibraryManager libraryManager) {
@@ -51,10 +51,10 @@ public class Method_StoreStringIn2DArray extends Method {
 	@Override
 	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
-		// local 0: [C   value
-		// local 1: [[[C array reference
-		// local 2: F=>I array index 1
-		// local 3: F=>I array index 2
+		// local 0: [C    value
+		// local 1: [[[[C reference to array reference
+		// local 2: F=>I  array index 1
+		// local 3: F=>I  array index 2
 
 		o.fload_2();
 		this.libraryManager.getMethod(MethodEnum.ROUND_TO_INT).emitCall(o);
@@ -70,6 +70,8 @@ public class Method_StoreStringIn2DArray extends Method {
 		this.libraryManager.getMethod(MethodEnum.CHECK_2D_STRING_ARRAY_ACCESS).emitCall(o);
 
 		o.aload_1();
+		o.iconst_0();
+		o.aaload();
 		o.iload_2();
 		o.aaload();
 		o.iload_3();

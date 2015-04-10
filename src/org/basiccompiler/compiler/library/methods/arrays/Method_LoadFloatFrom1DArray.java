@@ -41,7 +41,7 @@ import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_LoadFloatFrom1DArray extends Method {
 	private final static String METHOD_NAME = "LoadFloatFrom1DArray";
-	private final static String DESCRIPTOR = "([FF)F";
+	private final static String DESCRIPTOR = "([[FF)F";
 	private final static int NUM_LOCALS = 2;
 
 	public Method_LoadFloatFrom1DArray(LibraryManager libraryManager) {
@@ -51,7 +51,7 @@ public class Method_LoadFloatFrom1DArray extends Method {
 	@Override
 	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
-		// local 0: [F   array reference
+		// local 0: [[F  reference to array reference
 		// local 1: F=>I array index
 
 		o.fload_1();
@@ -63,6 +63,8 @@ public class Method_LoadFloatFrom1DArray extends Method {
 		this.libraryManager.getMethod(MethodEnum.CHECK_1D_FLOAT_ARRAY_ACCESS).emitCall(o);
 
 		o.aload_0();
+		o.iconst_0();
+		o.aaload();
 		o.iload_1();
 		o.faload();
 		o.freturn();

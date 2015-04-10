@@ -36,45 +36,51 @@ import java.util.List;
 import org.basiccompiler.bytecode.info.ExceptionTableInfo;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 import org.basiccompiler.compiler.library.LibraryManager;
+import org.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Check1DStringArrayAccess extends Method {
-  private final static String METHOD_NAME = "Check1DStringArrayAccess";
-  private final static String DESCRIPTOR = "([[CI)V";
-  private final static int NUM_LOCALS = 2;
+	private final static String METHOD_NAME = "Check1DStringArrayAccess";
+	private final static String DESCRIPTOR = "([[[CI)V";
+	private final static int NUM_LOCALS = 2;
 
-  public Method_Check1DStringArrayAccess(LibraryManager libraryManager) {
-    super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);
-  }
+	public Method_Check1DStringArrayAccess(LibraryManager libraryManager) {
+		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);
+	}
 
-  @Override
-  public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	@Override
+	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
-    // local 0: [[C array reference
-    // local 1: I   array index
+		// local 0: [[[C reference to array reference
+		// local 1: I    array index
 
-    o.aload_0();
-    o.ifnonnull("skipNullArray");
+		o.aload_0();
+		o.iconst_0();
+		o.aaload();
+		o.ifnonnull("skipInitialize");
 
-    // TODO: Allocate on-the-fly 10-element array if not DIM'ed, like MS BASIC		
+		o.aload_0();
+		o.iconst(10);
+		o.i2f();
+		this.libraryManager.getMethod(MethodEnum.DIM_1D_STRING_ARRAY).emitCall(o);
 
-    emitThrowRuntimeException(o, "Undimensioned 1D string array.");
+		o.label("skipInitialize");
+		o.iload_1();
+		o.ifge("skipIndexUnderflow");
 
-    o.label("skipNullArray");
-    o.iload_1();
-    o.ifge("skipIndexUnderflow");
+		emitThrowRuntimeException(o, "Index of 1D string array < 0.");
 
-    emitThrowRuntimeException(o, "Index of 1D string array < 0.");
+		o.label("skipIndexUnderflow");
+		o.iload_1();
+		o.aload_0();
+		o.iconst_0();
+		o.aaload();
+		o.arraylength();
+		o.if_icmplt("skipIndexOverflow");
 
-    o.label("skipIndexUnderflow");
-    o.iload_1();
-    o.aload_0();
-    o.arraylength();
-    o.if_icmplt("skipIndexOverflow");
+		emitThrowRuntimeException(o, "Index of 1D string array out of max bounds.");
 
-    emitThrowRuntimeException(o, "Index of 1D string array out of max bounds.");
-
-    o.label("skipIndexOverflow");
-    o.return_();
-  }
+		o.label("skipIndexOverflow");
+		o.return_();
+	}
 }

@@ -41,7 +41,7 @@ import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_StoreFloatIn2DArray extends Method {
 	private final static String METHOD_NAME = "StoreFloatIn2DArray";
-	private final static String DESCRIPTOR = "(F[[FFF)V";
+	private final static String DESCRIPTOR = "(F[[[FFF)V";
 	private final static int NUM_LOCALS = 4;
 
 	public Method_StoreFloatIn2DArray(LibraryManager libraryManager) {
@@ -52,7 +52,7 @@ public class Method_StoreFloatIn2DArray extends Method {
 	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: F    value
-		// local 1: [[F  array reference
+		// local 1: [[[F  reference to array reference
 		// local 2: F=>I array index 1
 		// local 3: F=>I array index 2
 
@@ -70,6 +70,8 @@ public class Method_StoreFloatIn2DArray extends Method {
 		this.libraryManager.getMethod(MethodEnum.CHECK_2D_FLOAT_ARRAY_ACCESS).emitCall(o);
 
 		o.aload_1();
+		o.iconst_0();
+		o.aaload();
 		o.iload_2();
 		o.aaload();
 		o.iload_3();

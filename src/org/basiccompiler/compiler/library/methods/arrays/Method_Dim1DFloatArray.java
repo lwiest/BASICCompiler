@@ -41,8 +41,8 @@ import org.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Dim1DFloatArray extends Method {
 	private final static String METHOD_NAME = "Dim1DFloatArray";
-	private final static String DESCRIPTOR = "(F)[F";
-	private final static int NUM_LOCALS = 1;
+	private final static String DESCRIPTOR = "([[FF)V";
+	private final static int NUM_LOCALS = 2;
 
 	public Method_Dim1DFloatArray(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);
@@ -51,19 +51,32 @@ public class Method_Dim1DFloatArray extends Method {
 	@Override
 	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
-		// local 0: F=>I dim max element index (= size - 1)
+		// local 0: [[F  reference to array reference
+		// local 1: F=>I dim max element index (= size - 1)
 
-		o.fload_0();
+		o.aload_0();
+		o.iconst_0();
+		o.aaload();
+		o.ifnull("initialize");
+
+		emitThrowRuntimeException(o, "1D number array already dimensioned.");
+
+		o.label("initialize");
+		o.aload_0();
+		o.iconst_0();
+
+		o.fload_1();
 		this.libraryManager.getMethod(MethodEnum.ROUND_TO_INT).emitCall(o);
-		o.istore_0();
+		o.istore_1();
 
-		o.iload_0();
+		o.iload_1();
 		this.libraryManager.getMethod(MethodEnum.DIM_1D_CHECK_SIZE).emitCall(o);
 
-		o.iinc(0, 1);
-		o.iload_0();
-
+		o.iinc(1, 1);
+		o.iload_1();
 		o.newarray_float();
-		o.areturn();
+
+		o.aastore();
+		o.return_();
 	}
 }
