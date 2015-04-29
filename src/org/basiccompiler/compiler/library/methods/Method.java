@@ -74,10 +74,9 @@ public abstract class Method {
 		
 		List<ExceptionTableInfo> exInfo = new ArrayList<ExceptionTableInfo>();
 		addMethodByteCode(o, exInfo);
-		ExceptionTableInfo[] exArr = exInfo.toArray(new ExceptionTableInfo[0]);
 		
 		o.flushAndCloseGracefully();
-		this.classModel.addMethod(this.methodName, this.descriptor, this.numLocals, o.toByteArray(), exArr);
+		this.classModel.addMethod(this.methodName, this.descriptor, this.numLocals, o.toByteArray());
 	}
 
 	// implemented by subclasses
