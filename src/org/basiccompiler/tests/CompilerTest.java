@@ -2419,8 +2419,7 @@ public class CompilerTest {
 			closeGracefully(inReader);
 			File classFile = new File(TEST_CLASS_FULLFILENAME);
 			if (classFile.exists()) {
-				// TODO: Delete commented!
-				// classFile.delete();
+				classFile.delete();
 			}
 			if (p != null) {
 				p.destroy();
