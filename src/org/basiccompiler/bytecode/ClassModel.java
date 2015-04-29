@@ -45,6 +45,7 @@ import org.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Float;
 import org.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_MethodRef;
 import org.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_NameAndType;
 import org.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_String;
+import org.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Utf8;
 import org.basiccompiler.bytecode.info.AttributeInfo;
 import org.basiccompiler.bytecode.info.CodeAttributeInfo;
 import org.basiccompiler.bytecode.info.ExceptionTableInfo;
@@ -77,7 +78,7 @@ public class ClassModel {
 
 	public ClassModel(String className) {
 		this.className = className;
-		init();
+		addConstructorMethod();
 	}
 
 	public String getClassName() {
@@ -160,26 +161,13 @@ public class ClassModel {
 		new ClassModelWriter(this.className, SUPER_CLASS_NAME, this.constantPool, this.interfaces, this.fields, this.methods, this.attributes).write(outStream);
 	}
 
-	private void init() {
-		// fill class structure
-
-		ConstantPoolInfo_Class.addAndReturnIndex(this.constantPool, SUPER_CLASS_NAME);
-		ConstantPoolInfo_Class.addAndReturnIndex(this.constantPool, this.className);
-
-		// add constructor
-
-		final int CONSTRUCTOR_ACCESS_FLAGS = ACC_PUBLIC;
-
-		int methodConstructorIndex = ConstantPoolInfo_MethodRef.addAndReturnIndex(this.constantPool, SUPER_CLASS_NAME, CONSTRUCTOR_METHOD_NAME, CONSTRUCTOR_METHOD_DESCRIPTOR);
-		ConstantPoolInfo_MethodRef constructorMethodRef = (ConstantPoolInfo_MethodRef) this.constantPool.get(methodConstructorIndex);
-		ConstantPoolInfo_NameAndType constructorNameAndTypeRef = (ConstantPoolInfo_NameAndType) this.constantPool.get(constructorMethodRef.getNameAndTypeIndex());
-		int constructorNameIndex = constructorNameAndTypeRef.getNameIndex();
-		int constructorDescriptorIndex = constructorNameAndTypeRef.getDescriptorIndex();
+	private void addConstructorMethod() {
+		int methodSuperConstructorIndex = ConstantPoolInfo_MethodRef.addAndReturnIndex(this.constantPool, SUPER_CLASS_NAME, CONSTRUCTOR_METHOD_NAME, CONSTRUCTOR_METHOD_DESCRIPTOR);
 
 		ByteOutStream o = new ByteOutStream();
 
 		o.aload_0();
-		o.invokespecial(methodConstructorIndex + 1); // NOTE: serialized constant pool indexes are 1-based
+		o.invokespecial(methodSuperConstructorIndex + 1); // NOTE: serialized constant pool indexes are 1-based
 		o.return_();
 
 		o.flush();
@@ -189,10 +177,11 @@ public class ClassModel {
 		} catch (IOException e) {
 			// ignore
 		}
-		CodeAttributeInfo constructorCodeAttributeInfo = new CodeAttributeInfo(this.constantPool, 1, constructorByteCode, new ExceptionTableInfo[0]);
-
-		MethodInfo methodConstructorInfo = new MethodInfo(constructorNameIndex, constructorDescriptorIndex, CONSTRUCTOR_ACCESS_FLAGS, constructorCodeAttributeInfo);
-		this.methods.add(methodConstructorInfo);
+		CodeAttributeInfo codeAttributeInfo = new CodeAttributeInfo(this.constantPool, 1, constructorByteCode, new ExceptionTableInfo[0]);
+		int nameIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(this.constantPool, CONSTRUCTOR_METHOD_NAME);
+		int descriptorIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(this.constantPool, CONSTRUCTOR_METHOD_DESCRIPTOR);
+		MethodInfo methodInfo = new MethodInfo(nameIndex, descriptorIndex, ACC_PUBLIC, codeAttributeInfo);
+		this.methods.add(methodInfo);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
