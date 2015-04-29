@@ -170,13 +170,9 @@ public class ClassModel {
 		o.invokespecial(methodSuperConstructorIndex + 1); // NOTE: serialized constant pool indexes are 1-based
 		o.return_();
 
-		o.flush();
+		o.flushAndCloseGracefully();
 		byte[] constructorByteCode = o.toByteArray();
-		try {
-			o.close();
-		} catch (IOException e) {
-			// ignore
-		}
+		
 		CodeAttributeInfo codeAttributeInfo = new CodeAttributeInfo(this.constantPool, 1, constructorByteCode, new ExceptionTableInfo[0]);
 		int nameIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(this.constantPool, CONSTRUCTOR_METHOD_NAME);
 		int descriptorIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(this.constantPool, CONSTRUCTOR_METHOD_DESCRIPTOR);

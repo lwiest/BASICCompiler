@@ -31,7 +31,6 @@
 
 package org.basiccompiler.compiler.library.methods;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,16 +71,13 @@ public abstract class Method {
 
 	public void addMethod() {
 		ByteOutStream o = new ByteOutStream(ClassModel.MAX_METHOD_LENGTH);
+		
 		List<ExceptionTableInfo> exInfo = new ArrayList<ExceptionTableInfo>();
 		addMethodByteCode(o, exInfo);
 		ExceptionTableInfo[] exArr = exInfo.toArray(new ExceptionTableInfo[0]);
-		o.flush();
+		
+		o.flushAndCloseGracefully();
 		this.classModel.addMethod(this.methodName, this.descriptor, this.numLocals, o.toByteArray(), exArr);
-		try {
-			o.close();
-		} catch (IOException e) {
-			// ignore
-		}
 	}
 
 	// implemented by subclasses

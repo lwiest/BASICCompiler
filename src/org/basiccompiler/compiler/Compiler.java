@@ -34,7 +34,6 @@ package org.basiccompiler.compiler;
 import static org.basiccompiler.bytecode.ClassModel.JavaClass.RUNTIME_EXCEPTION;
 import static org.basiccompiler.bytecode.ClassModel.JavaMethod.EXCEPTION_GET_MESSAGE;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -241,11 +240,7 @@ public class Compiler {
 
 		this.libraryManager.flush();
 
-		try {
-			this.o.close();
-		} catch (IOException e) {
-			// ignore
-		}
+		this.o.closeGracefully();
 	}
 
 	private void flushDefFns() {
@@ -289,16 +284,10 @@ public class Compiler {
 				o.areturn();
 			}
 
-			o.flush();
+			o.flushAndCloseGracefully();
+			
 			this.o = saveStream;
-
 			this.classModel.addMethod(funcName, descriptor, numLocals, o.toByteArray());
-
-			try {
-				o.close();
-			} catch (IOException e) {
-				// ignore
-			}
 		}
 	}
 
@@ -320,7 +309,8 @@ public class Compiler {
 		initGosubStack(o);
 
 		o.pad4ByteBoundary(); // padding for tableswitch in body code
-		o.flush();
+		
+		o.flushAndCloseGracefully();
 		return o.toByteArray();
 	}
 

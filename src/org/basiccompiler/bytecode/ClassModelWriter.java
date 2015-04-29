@@ -68,6 +68,7 @@ public class ClassModelWriter {
 
 	public void write(OutputStream outStream) throws IOException {
 		ByteOutStream o = new ByteOutStream();
+		
 		writeMagicNumber(o, MAGIC_NUMBER);
 		writeMinorVersion(o, MINOR_VERSION);
 		writeMajorVersion(o, MAJOR_VERSION);
@@ -84,6 +85,8 @@ public class ClassModelWriter {
 		writeMethods(o, this.methods);
 		writeAttributesCount(o, this.attributes);
 		writeAttributes(o, this.attributes);
+		
+		o.flushAndCloseGracefully();
 		outStream.write(o.toByteArray());
 	}
 

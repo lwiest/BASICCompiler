@@ -765,6 +765,19 @@ public class ByteOutStream extends ByteArrayOutputStream {
 		}
 	}
 
+	public void closeGracefully() {
+		try {
+			this.close();
+		} catch (IOException e) {
+			// ignore
+		}
+	}
+	
+	public void flushAndCloseGracefully() {
+		flush();
+		closeGracefully();
+	}
+
 	private void patch() {
 		Set<Entry<Integer, String>> patchHereEntrySet = this.patchHereMap.entrySet();
 		for (Entry<Integer, String> patchHereEntry : patchHereEntrySet) {
