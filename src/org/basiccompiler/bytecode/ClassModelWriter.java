@@ -50,13 +50,13 @@ public class ClassModelWriter {
 
 	private final String className;
 	private final String superClassName;
-	private final List<ConstantPoolInfo> constantPool;
+	private final ConstantPool constantPool;
 	private final List<InterfaceInfo> interfaces;
 	private final List<FieldInfo> fields;
 	private final List<MethodInfo> methods;
 	private final List<AttributeInfo> attributes;
 
-	public ClassModelWriter(String className, String superClassName, List<ConstantPoolInfo> constantPool, List<InterfaceInfo> interfaces, List<FieldInfo> fields, List<MethodInfo> methods, List<AttributeInfo> attributes) {
+	public ClassModelWriter(String className, String superClassName, ConstantPool constantPool, List<InterfaceInfo> interfaces, List<FieldInfo> fields, List<MethodInfo> methods, List<AttributeInfo> attributes) {
 		this.className = className;
 		this.superClassName = superClassName;
 		this.constantPool = constantPool;
@@ -68,7 +68,7 @@ public class ClassModelWriter {
 
 	public void write(OutputStream outStream) throws IOException {
 		ByteOutStream o = new ByteOutStream();
-		
+
 		writeMagicNumber(o, MAGIC_NUMBER);
 		writeMinorVersion(o, MINOR_VERSION);
 		writeMajorVersion(o, MAJOR_VERSION);
@@ -85,7 +85,7 @@ public class ClassModelWriter {
 		writeMethods(o, this.methods);
 		writeAttributesCount(o, this.attributes);
 		writeAttributes(o, this.attributes);
-		
+
 		o.flushAndCloseGracefully();
 		outStream.write(o.toByteArray());
 	}
@@ -102,13 +102,14 @@ public class ClassModelWriter {
 		o.write_u2(majorVersion);
 	}
 
-	private void writeConstantPoolCount(ByteOutStream o, List<ConstantPoolInfo> constantPool) {
+	private void writeConstantPoolCount(ByteOutStream o, ConstantPool constantPool) {
 		o.write_u2(constantPool.size() + 1); // NOTE: serialized constant pool indexes are 1-based
 	}
 
-	private void writeConstantPool(ByteOutStream o, List<ConstantPoolInfo> constantPool) {
-		for (ConstantPoolInfo info : constantPool) {
-			info.write(o);
+	private void writeConstantPool(ByteOutStream o, ConstantPool constantPool) {
+		ConstantPoolInfo[] constantPoolInfos = constantPool.getConstantPoolInfos();
+		for (ConstantPoolInfo constantPoolInfo : constantPoolInfos) {
+			constantPoolInfo.write(o);
 		}
 	}
 
@@ -116,12 +117,12 @@ public class ClassModelWriter {
 		o.write_u2(accessFlags);
 	}
 
-	private void writeThisClass(ByteOutStream o, List<ConstantPoolInfo> constantPool, String className) {
+	private void writeThisClass(ByteOutStream o, ConstantPool constantPool, String className) {
 		int classIndex = ConstantPoolInfo_Class.getIndex(constantPool, className);
 		o.write_u2(classIndex + 1); // NOTE: serialized constant pool indexes are 1-based
 	}
 
-	private void writeSuperClass(ByteOutStream o, List<ConstantPoolInfo> constantPool, String superClassName) {
+	private void writeSuperClass(ByteOutStream o, ConstantPool constantPool, String superClassName) {
 		int superClassIndex = ConstantPoolInfo_Class.getIndex(constantPool, superClassName);
 		o.write_u2(superClassIndex + 1); // NOTE: serialized constant pool indexes are 1-based
 	}

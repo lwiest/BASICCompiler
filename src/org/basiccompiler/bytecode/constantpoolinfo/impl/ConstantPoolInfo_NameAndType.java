@@ -31,8 +31,7 @@
 
 package org.basiccompiler.bytecode.constantpoolinfo.impl;
 
-import java.util.List;
-
+import org.basiccompiler.bytecode.ConstantPool;
 import org.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 
@@ -61,42 +60,21 @@ public class ConstantPoolInfo_NameAndType extends ConstantPoolInfo {
 		o.write_u2(this.descriptorIndex + 1); // NOTE: serialized constant pool indexes are 1-based
 	}
 
-	public static int addAndReturnIndex(List<ConstantPoolInfo> constantPool, String name, String descriptor) {
-		if (contains(constantPool, name, descriptor) == false) {
-			add(constantPool, name, descriptor);
+	public static int addAndGetIndex(ConstantPool constantPool, String name, String descriptor) {
+		String key = getKey(name, descriptor);
+		if (constantPool.contains(key) == false) {
+			constantPool.put(key, createInfo(constantPool, name, descriptor));
 		}
-		return getIndex(constantPool, name, descriptor);
+		return constantPool.getIndex(key);
 	}
 
-	private static boolean contains(List<ConstantPoolInfo> constantPool, String name, String descriptor) {
-		return getIndex(constantPool, name, descriptor) > -1;
+	private static String getKey(String name, String descriptor) {
+		return "NAME_AND_TYPE_" + name + descriptor;
 	}
 
-	private static void add(List<ConstantPoolInfo> constantPool, String name, String descriptor) {
-		int nameIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(constantPool, name);
-		int descriptorIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(constantPool, descriptor);
-		constantPool.add(new ConstantPoolInfo_NameAndType(nameIndex, descriptorIndex));
-	}
-
-	private static int getIndex(List<ConstantPoolInfo> constantPool, String name, String descriptor) {
-		for (int i = 0; i < constantPool.size(); i++) {  // TODO: implement faster lookup, although speed not an issue yet
-			ConstantPoolInfo info = constantPool.get(i);
-			if (info.getTag() == TAG_NAME_AND_TYPE) {
-				ConstantPoolInfo_NameAndType infoNameAndType = (ConstantPoolInfo_NameAndType) info;
-
-				int nameIndex = infoNameAndType.getNameIndex();
-				String nameToCompare = ConstantPoolInfo_Utf8.getString(constantPool, nameIndex);
-				boolean isSameName = name.equals(nameToCompare);
-
-				int descriptorIndex = infoNameAndType.getDescriptorIndex();
-				String descriptorToCompare = ConstantPoolInfo_Utf8.getString(constantPool, descriptorIndex);
-				boolean isSameDescriptor = descriptor.equals(descriptorToCompare);
-
-				if (isSameName && isSameDescriptor) {
-					return i;
-				}
-			}
-		}
-		return -1;
+	private static ConstantPoolInfo_NameAndType createInfo(ConstantPool constantPool, String name, String descriptor) {
+		int nameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, name);
+		int descriptorIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, descriptor);
+		return new ConstantPoolInfo_NameAndType(nameIndex, descriptorIndex);
 	}
 }

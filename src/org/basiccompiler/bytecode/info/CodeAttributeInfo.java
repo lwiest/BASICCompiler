@@ -31,9 +31,7 @@
 
 package org.basiccompiler.bytecode.info;
 
-import java.util.List;
-
-import org.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
+import org.basiccompiler.bytecode.ConstantPool;
 import org.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Utf8;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 
@@ -66,8 +64,8 @@ public class CodeAttributeInfo {
 	// private int attributesCount;                    // u2
 	private final Object[] attributeInfos;             // attribute_info[]
 
-	public CodeAttributeInfo(List<ConstantPoolInfo> constantPool, int maxLocals, byte[] code, ExceptionTableInfo[] exceptionTable) {
-		this.attributeNameIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(constantPool, CODE_ID);
+	public CodeAttributeInfo(ConstantPool constantPool, int maxLocals, byte[] code, ExceptionTableInfo[] exceptionTable) {
+		this.attributeNameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, CODE_ID);
 		// this.attributeLength calculated implicitly in write()
 		this.maxStack = 100; // TODO: variable max operand stack size
 		this.maxLocals = maxLocals;

@@ -31,8 +31,7 @@
 
 package org.basiccompiler.bytecode.constantpoolinfo.impl;
 
-import java.util.List;
-
+import org.basiccompiler.bytecode.ConstantPool;
 import org.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 
@@ -55,40 +54,19 @@ public class ConstantPoolInfo_Float extends ConstantPoolInfo {
 		o.write_u4(bitsOfFloat);
 	}
 
-	public static int addAndReturnIndex(List<ConstantPoolInfo> constantPool, float aFloat) {
-		if (contains(constantPool, aFloat) == false) {
-			add(constantPool, aFloat);
+	public static int addAndGetIndex(ConstantPool constantPool, float aFloat) {
+		String key = getKey(aFloat);
+		if (constantPool.contains(key) == false) {
+			constantPool.put(key, createInfo(constantPool, aFloat));
 		}
-		return getIndex(constantPool, aFloat);
+		return constantPool.getIndex(key);
 	}
 
-	private static boolean contains(List<ConstantPoolInfo> constantPool, float aFloat) {
-		return getIndex(constantPool, aFloat) > -1;
+	private static String getKey(float aFloat) {
+		return "FLOAT_" + aFloat;
 	}
 
-	private static void add(List<ConstantPoolInfo> constantPool, float aFloat) {
-		constantPool.add(new ConstantPoolInfo_Float(aFloat));
-	}
-
-	private static int getIndex(List<ConstantPoolInfo> constantPool, float aFloat) {
-		for (int i = 0; i < constantPool.size(); i++) {  // TODO: implement faster lookup, although speed not an issue yet
-			ConstantPoolInfo info = constantPool.get(i);
-			if (info.getTag() == TAG_FLOAT) {
-				ConstantPoolInfo_Float infoFloat = (ConstantPoolInfo_Float) info;
-				float floatToCompare = infoFloat.getFloat();
-
-				// detect floats with value NaN
-				boolean isAFloatNaN = (aFloat != aFloat);
-				boolean isFloatToCompareNaN = (floatToCompare != floatToCompare);
-				if (isAFloatNaN && isFloatToCompareNaN) {
-					return i;
-				}
-
-				if (aFloat == floatToCompare) {
-					return i;
-				}
-			}
-		}
-		return -1;
+	private static ConstantPoolInfo_Float createInfo(ConstantPool constantPool, float aFloat) {
+		return new ConstantPoolInfo_Float(aFloat);
 	}
 }

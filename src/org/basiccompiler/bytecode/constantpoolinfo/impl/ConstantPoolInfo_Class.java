@@ -31,8 +31,7 @@
 
 package org.basiccompiler.bytecode.constantpoolinfo.impl;
 
-import java.util.List;
-
+import org.basiccompiler.bytecode.ConstantPool;
 import org.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 
@@ -54,34 +53,25 @@ public class ConstantPoolInfo_Class extends ConstantPoolInfo {
 		o.write_u2(this.nameIndex + 1); // NOTE: serialized constant pool indexes are 1-based
 	}
 
-	public static int getIndex(List<ConstantPoolInfo> constantPool, String className) {
-		for (int i = 0; i < constantPool.size(); i++) {  // TODO: implement faster lookup, although speed not an issue yet
-			ConstantPoolInfo info = constantPool.get(i);
-			if (info.getTag() == TAG_CLASS) {
-				ConstantPoolInfo_Class infoClass = (ConstantPoolInfo_Class) info;
-				int nameIndex = infoClass.getNameIndex();
-				String classNameToCompare = ConstantPoolInfo_Utf8.getString(constantPool, nameIndex);
-				if (className.equals(classNameToCompare)) {
-					return i;
-				}
-			}
+	public static int getIndex(ConstantPool constantPool, String className) {
+		String key = getKey(className);
+		return constantPool.getIndex(key);
+	}
+
+	private static String getKey(String className) {
+		return "CLASS_" + className;
+	}
+
+	public static int addAndGetIndex(ConstantPool constantPool, String className) {
+		String key = getKey(className);
+		if (constantPool.contains(key) == false) {
+			constantPool.put(key, createInfo(constantPool, className));
 		}
-		return -1;
+		return constantPool.getIndex(key);
 	}
 
-	public static int addAndReturnIndex(List<ConstantPoolInfo> constantPool, String className) {
-		if (contains(constantPool, className) == false) {
-			add(constantPool, className);
-		}
-		return getIndex(constantPool, className);
-	}
-
-	private static boolean contains(List<ConstantPoolInfo> constantPool, String className) {
-		return getIndex(constantPool, className) > -1;
-	}
-
-	private static void add(List<ConstantPoolInfo> constantPool, String className) {
-		int nameIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(constantPool, className);
-		constantPool.add(new ConstantPoolInfo_Class(nameIndex));
+	private static ConstantPoolInfo_Class createInfo(ConstantPool constantPool, String className) {
+		int nameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, className);
+		return new ConstantPoolInfo_Class(nameIndex);
 	}
 }

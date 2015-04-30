@@ -31,8 +31,7 @@
 
 package org.basiccompiler.bytecode.constantpoolinfo.impl;
 
-import java.util.List;
-
+import org.basiccompiler.bytecode.ConstantPool;
 import org.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 
@@ -61,50 +60,21 @@ public class ConstantPoolInfo_FieldRef extends ConstantPoolInfo {
 		o.write_u2(this.nameAndTypeIndex + 1); // NOTE: serialized constant pool indexes are 1-based
 	}
 
-	public static int addAndReturnIndex(List<ConstantPoolInfo> constantPool, String className, String fieldName, String descriptor) {
-		if (contains(constantPool, className, fieldName, descriptor) == false) {
-			add(constantPool, className, fieldName, descriptor);
+	public static int addAndGetIndex(ConstantPool constantPool, String className, String fieldName, String descriptor) {
+		String key = getKey(className, fieldName, descriptor);
+		if (constantPool.contains(key) == false) {
+			constantPool.put(key, createInfo(constantPool, className, fieldName, descriptor));
 		}
-		return getIndex(constantPool, className, fieldName, descriptor);
+		return constantPool.getIndex(key);
 	}
 
-	private static boolean contains(List<ConstantPoolInfo> constantPool, String className, String fieldName, String descriptor) {
-		return getIndex(constantPool, className, fieldName, descriptor) > -1;
+	private static String getKey(String className, String fieldName, String descriptor) {
+		return "FIELD_" + className + fieldName + descriptor;
 	}
 
-	private static void add(List<ConstantPoolInfo> constantPool, String className, String fieldName, String descriptor) {
-		int classIndex = ConstantPoolInfo_Class.addAndReturnIndex(constantPool, className);
-		int nameAndTypeIndex = ConstantPoolInfo_NameAndType.addAndReturnIndex(constantPool, fieldName, descriptor);
-		constantPool.add(new ConstantPoolInfo_FieldRef(classIndex, nameAndTypeIndex));
-	}
-
-	private static int getIndex(List<ConstantPoolInfo> constantPool, String className, String fieldName, String descriptor) {
-		for (int i = 0; i < constantPool.size(); i++) {  // TODO: implement faster lookup, although speed not an issue yet
-			ConstantPoolInfo info = constantPool.get(i);
-			if (info.getTag() == TAG_FIELDREF) {
-				ConstantPoolInfo_FieldRef infoField = (ConstantPoolInfo_FieldRef) info;
-
-				int classIndex = infoField.getClassIndex();
-				ConstantPoolInfo_Class classInfo = (ConstantPoolInfo_Class) constantPool.get(classIndex);
-				int classNameIndex = classInfo.getNameIndex();
-				String classNameToCompare = ConstantPoolInfo_Utf8.getString(constantPool, classNameIndex);
-				boolean isSameClass = className.equals(classNameToCompare);
-
-				int nameAndTypeIndex = infoField.getNameAndTypeIndex();
-				ConstantPoolInfo_NameAndType nameAndTypeInfo = (ConstantPoolInfo_NameAndType) constantPool.get(nameAndTypeIndex);
-				int nameIndex = nameAndTypeInfo.getNameIndex();
-				String fieldNameToCompare = ConstantPoolInfo_Utf8.getString(constantPool, nameIndex);
-				boolean isSameFieldName = fieldName.equals(fieldNameToCompare);
-
-				int descriptorIndex = nameAndTypeInfo.getDescriptorIndex();
-				String descriptorToCompare = ConstantPoolInfo_Utf8.getString(constantPool, descriptorIndex);
-				boolean isSameDescriptor = descriptor.equals(descriptorToCompare);
-
-				if (isSameClass && isSameFieldName && isSameDescriptor) {
-					return i;
-				}
-			}
-		}
-		return -1;
+	private static ConstantPoolInfo_FieldRef createInfo(ConstantPool constantPool, String className, String fieldName, String descriptor) {
+		int classIndex = ConstantPoolInfo_Class.addAndGetIndex(constantPool, className);
+		int nameAndTypeIndex = ConstantPoolInfo_NameAndType.addAndGetIndex(constantPool, fieldName, descriptor);
+		return new ConstantPoolInfo_FieldRef(classIndex, nameAndTypeIndex);
 	}
 }

@@ -31,8 +31,7 @@
 
 package org.basiccompiler.bytecode.constantpoolinfo.impl;
 
-import java.util.List;
-
+import org.basiccompiler.bytecode.ConstantPool;
 import org.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 
@@ -61,50 +60,21 @@ public class ConstantPoolInfo_MethodRef extends ConstantPoolInfo {
 		o.write_u2(this.nameAndTypeIndex + 1); // NOTE: serialized constant pool indexes are 1-based
 	}
 
-	public static int addAndReturnIndex(List<ConstantPoolInfo> constantPool, String className, String methodName, String descriptor) {
-		if (contains(constantPool, className, methodName, descriptor) == false) {
-			add(constantPool, className, methodName, descriptor);
+	public static int addAndGetIndex(ConstantPool constantPool, String className, String methodName, String descriptor) {
+		String key = getKey(className, methodName, descriptor);
+		if (constantPool.contains(key) == false) {
+			constantPool.put(key, createInfo(constantPool, className, methodName, descriptor));
 		}
-		return getIndex(constantPool, className, methodName, descriptor);
+		return constantPool.getIndex(key);
 	}
 
-	private static boolean contains(List<ConstantPoolInfo> constantPool, String className, String methodName, String descriptor) {
-		return getIndex(constantPool, className, methodName, descriptor) > -1;
+	private static String getKey(String className, String methodName, String descriptor) {
+		return "METHOD_" + className + methodName + descriptor;
 	}
 
-	private static void add(List<ConstantPoolInfo> constantPool, String className, String methodName, String descriptor) {
-		int classIndex = ConstantPoolInfo_Class.addAndReturnIndex(constantPool, className);
-		int nameAndTypeIndex = ConstantPoolInfo_NameAndType.addAndReturnIndex(constantPool, methodName, descriptor);
-		constantPool.add(new ConstantPoolInfo_MethodRef(classIndex, nameAndTypeIndex));
-	}
-
-	private static int getIndex(List<ConstantPoolInfo> constantPool, String className, String methodName, String descriptor) {
-		for (int i = 0; i < constantPool.size(); i++) {  // TODO: implement faster lookup, although speed not an issue yet
-			ConstantPoolInfo info = constantPool.get(i);
-			if (info.getTag() == TAG_METHODREF) {
-				ConstantPoolInfo_MethodRef infoMethod = (ConstantPoolInfo_MethodRef) info;
-
-				int classIndex = infoMethod.getClassIndex();
-				ConstantPoolInfo_Class classInfo = (ConstantPoolInfo_Class) constantPool.get(classIndex);
-				int classNameIndex = classInfo.getNameIndex();
-				String classNameToCompare = ConstantPoolInfo_Utf8.getString(constantPool, classNameIndex);
-				boolean isSameClass = className.equals(classNameToCompare);
-
-				int nameAndTypeIndex = infoMethod.getNameAndTypeIndex();
-				ConstantPoolInfo_NameAndType nameAndTypeInfo = (ConstantPoolInfo_NameAndType) constantPool.get(nameAndTypeIndex);
-				int nameIndex = nameAndTypeInfo.getNameIndex();
-				String methodNameToCompare = ConstantPoolInfo_Utf8.getString(constantPool, nameIndex);
-				boolean isSameMethodName = methodName.equals(methodNameToCompare);
-
-				int descriptorIndex = nameAndTypeInfo.getDescriptorIndex();
-				String descriptorToCompare = ConstantPoolInfo_Utf8.getString(constantPool, descriptorIndex);
-				boolean isSameDescriptor = descriptor.equals(descriptorToCompare);
-
-				if (isSameClass && isSameMethodName && isSameDescriptor) {
-					return i;
-				}
-			}
-		}
-		return -1;
+	private static ConstantPoolInfo_MethodRef createInfo(ConstantPool constantPool, String className, String methodName, String descriptor) {
+		int classIndex = ConstantPoolInfo_Class.addAndGetIndex(constantPool, className);
+		int nameAndTypeIndex = ConstantPoolInfo_NameAndType.addAndGetIndex(constantPool, methodName, descriptor);
+		return new ConstantPoolInfo_MethodRef(classIndex, nameAndTypeIndex);
 	}
 }

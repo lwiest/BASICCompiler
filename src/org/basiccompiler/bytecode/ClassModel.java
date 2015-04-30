@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
 import org.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Class;
 import org.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_FieldRef;
 import org.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Float;
@@ -70,7 +69,7 @@ public class ClassModel {
 	private static final String CONSTRUCTOR_METHOD_DESCRIPTOR = "()V";
 
 	private final String className;
-	private final List<ConstantPoolInfo> constantPool = new ArrayList<ConstantPoolInfo>();
+	private final ConstantPool constantPool = new ConstantPool();
 	private final List<InterfaceInfo> interfaces = new ArrayList<InterfaceInfo>();
 	private final List<FieldInfo> fields = new ArrayList<FieldInfo>();
 	private final List<MethodInfo> methods = new ArrayList<MethodInfo>();
@@ -94,9 +93,11 @@ public class ClassModel {
 	}
 
 	public void addMethod(String methodName, String descriptor, int numLocals, byte[] bytecode, ExceptionTableInfo[] exceptionTable) {
-		int methodRefIndex = ConstantPoolInfo_MethodRef.addAndReturnIndex(this.constantPool, this.className, methodName, descriptor);
+		int methodRefIndex = ConstantPoolInfo_MethodRef.addAndGetIndex(this.constantPool, this.className, methodName, descriptor);
+
 		ConstantPoolInfo_MethodRef methodRef = (ConstantPoolInfo_MethodRef) this.constantPool.get(methodRefIndex);
 		ConstantPoolInfo_NameAndType nameAndTypeRef = (ConstantPoolInfo_NameAndType) this.constantPool.get(methodRef.getNameAndTypeIndex());
+
 		int nameIndex = nameAndTypeRef.getNameIndex();
 		int descriptorIndex = nameAndTypeRef.getDescriptorIndex();
 		int maxLocals = numLocals + 0; // NOTE: static methods have no "this" field => offset 0!
@@ -111,9 +112,11 @@ public class ClassModel {
 	}
 
 	private FieldInfo createFieldInfo(String fieldName, String descriptor) {
-		int fieldRefIndex = ConstantPoolInfo_FieldRef.addAndReturnIndex(this.constantPool, this.className, fieldName, descriptor);
+		int fieldRefIndex = ConstantPoolInfo_FieldRef.addAndGetIndex(this.constantPool, this.className, fieldName, descriptor);
+
 		ConstantPoolInfo_FieldRef fieldRef = (ConstantPoolInfo_FieldRef) this.constantPool.get(fieldRefIndex);
 		ConstantPoolInfo_NameAndType nameAndTypeRef = (ConstantPoolInfo_NameAndType) this.constantPool.get(fieldRef.getNameAndTypeIndex());
+
 		int nameIndex = nameAndTypeRef.getNameIndex();
 		int descriptorIndex = nameAndTypeRef.getDescriptorIndex();
 		FieldInfo fieldInfo = new FieldInfo(nameIndex, descriptorIndex, ACC_PUBLIC | ACC_STATIC);
@@ -129,22 +132,22 @@ public class ClassModel {
 	}
 
 	public int getFieldRefIndex(String fieldName, String descriptor) {
-		int fieldRefIndex = ConstantPoolInfo_FieldRef.addAndReturnIndex(this.constantPool, this.className, fieldName, descriptor);
+		int fieldRefIndex = ConstantPoolInfo_FieldRef.addAndGetIndex(this.constantPool, this.className, fieldName, descriptor);
 		return fieldRefIndex + 1; // NOTE: serialized constant pool indexes are 1-based
 	}
 
 	public int getMethodRefIndex(String methodName, String descriptor) {
-		int methodRefIndex = ConstantPoolInfo_MethodRef.addAndReturnIndex(this.constantPool, this.className, methodName, descriptor);
+		int methodRefIndex = ConstantPoolInfo_MethodRef.addAndGetIndex(this.constantPool, this.className, methodName, descriptor);
 		return methodRefIndex + 1; // NOTE: serialized constant pool indexes are 1-based
 	}
 
 	public int getStringIndex(String string) {
-		int stringConstIndex = ConstantPoolInfo_String.addAndReturnIndex(this.constantPool, string);
+		int stringConstIndex = ConstantPoolInfo_String.addAndGetIndex(this.constantPool, string);
 		return stringConstIndex + 1; // NOTE: serialized constant pool indexes are 1-based
 	}
 
 	public int getFloatIndex(float aFloat) {
-		int floatConstIndex = ConstantPoolInfo_Float.addAndReturnIndex(this.constantPool, aFloat);
+		int floatConstIndex = ConstantPoolInfo_Float.addAndGetIndex(this.constantPool, aFloat);
 		return floatConstIndex + 1; // NOTE: serialized constant pool indexes are 1-based
 	}
 
@@ -153,7 +156,7 @@ public class ClassModel {
 	}
 
 	public int getClassIndex(String className) {
-		int classIndex = ConstantPoolInfo_Class.addAndReturnIndex(this.constantPool, className);
+		int classIndex = ConstantPoolInfo_Class.addAndGetIndex(this.constantPool, className);
 		return classIndex + 1; // NOTE: serialized constant pool indexes are 1-based
 	}
 
@@ -162,7 +165,7 @@ public class ClassModel {
 	}
 
 	private void addConstructorMethod() {
-		int methodSuperConstructorIndex = ConstantPoolInfo_MethodRef.addAndReturnIndex(this.constantPool, SUPER_CLASS_NAME, CONSTRUCTOR_METHOD_NAME, CONSTRUCTOR_METHOD_DESCRIPTOR);
+		int methodSuperConstructorIndex = ConstantPoolInfo_MethodRef.addAndGetIndex(this.constantPool, SUPER_CLASS_NAME, CONSTRUCTOR_METHOD_NAME, CONSTRUCTOR_METHOD_DESCRIPTOR);
 
 		ByteOutStream o = new ByteOutStream();
 
@@ -172,10 +175,10 @@ public class ClassModel {
 
 		o.flushAndCloseGracefully();
 		byte[] constructorByteCode = o.toByteArray();
-		
+
 		CodeAttributeInfo codeAttributeInfo = new CodeAttributeInfo(this.constantPool, 1, constructorByteCode, new ExceptionTableInfo[0]);
-		int nameIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(this.constantPool, CONSTRUCTOR_METHOD_NAME);
-		int descriptorIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(this.constantPool, CONSTRUCTOR_METHOD_DESCRIPTOR);
+		int nameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(this.constantPool, CONSTRUCTOR_METHOD_NAME);
+		int descriptorIndex = ConstantPoolInfo_Utf8.addAndGetIndex(this.constantPool, CONSTRUCTOR_METHOD_DESCRIPTOR);
 		MethodInfo methodInfo = new MethodInfo(nameIndex, descriptorIndex, ACC_PUBLIC, codeAttributeInfo);
 		this.methods.add(methodInfo);
 	}
@@ -201,7 +204,7 @@ public class ClassModel {
 	public int getJavaClassRefIndex(JavaClass javaClass) {
 		if (this.JAVA_CLASS_MAP.containsKey(javaClass) == false) {
 			String fullClassName = javaClass.getFullClassName();
-			this.JAVA_CLASS_MAP.put(javaClass, ConstantPoolInfo_Class.addAndReturnIndex(this.constantPool, fullClassName));
+			this.JAVA_CLASS_MAP.put(javaClass, ConstantPoolInfo_Class.addAndGetIndex(this.constantPool, fullClassName));
 		}
 		return this.JAVA_CLASS_MAP.get(javaClass) + 1; // NOTE: serialized constant pool indexes are 1-based
 	}
@@ -242,7 +245,7 @@ public class ClassModel {
 			String fullClassName = javaField.getFullClassName();
 			String fieldName = javaField.getFieldName();
 			String descriptor = javaField.getDescriptor();
-			int fieldRefIndex = ConstantPoolInfo_FieldRef.addAndReturnIndex(this.constantPool, fullClassName, fieldName, descriptor);
+			int fieldRefIndex = ConstantPoolInfo_FieldRef.addAndGetIndex(this.constantPool, fullClassName, fieldName, descriptor);
 			this.JAVA_FIELD_MAP.put(javaField, fieldRefIndex);
 		}
 		return this.JAVA_FIELD_MAP.get(javaField) + 1; // NOTE: serialized constant pool indexes are 1-based
@@ -301,7 +304,7 @@ public class ClassModel {
 			String fullClassName = javaMethod.getFullClassName();
 			String methodName = javaMethod.getMethodName();
 			String descriptor = javaMethod.getDescriptor();
-			int methodRefIndex = ConstantPoolInfo_MethodRef.addAndReturnIndex(this.constantPool, fullClassName, methodName, descriptor);
+			int methodRefIndex = ConstantPoolInfo_MethodRef.addAndGetIndex(this.constantPool, fullClassName, methodName, descriptor);
 			this.JAVA_METHOD_MAP.put(javaMethod, methodRefIndex);
 		}
 		return this.JAVA_METHOD_MAP.get(javaMethod) + 1; // NOTE: serialized constant pool indexes are 1-based

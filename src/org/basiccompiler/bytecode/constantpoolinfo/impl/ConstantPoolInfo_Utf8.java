@@ -33,8 +33,8 @@ package org.basiccompiler.bytecode.constantpoolinfo.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 
+import org.basiccompiler.bytecode.ConstantPool;
 import org.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 
@@ -80,43 +80,26 @@ public class ConstantPoolInfo_Utf8 extends ConstantPoolInfo {
 
 		try {
 			b.flush();
+			b.close();
 		} catch (IOException e) {
 			// ignore
 		}
 		return b.toByteArray();
 	}
 
-	public static int addAndReturnIndex(List<ConstantPoolInfo> constantPool, String string) {
-		if (contains(constantPool, string) == false) {
-			add(constantPool, string);
+	public static int addAndGetIndex(ConstantPool constantPool, String string) {
+		String key = getKey(string);
+		if (constantPool.contains(key) == false) {
+			constantPool.put(key, createInfo(constantPool, string));
 		}
-		return getIndex(constantPool, string);
+		return constantPool.getIndex(key);
 	}
 
-	private static boolean contains(List<ConstantPoolInfo> constantPool, String string) {
-		return getIndex(constantPool, string) > -1;
+	private static String getKey(String string) {
+		return "UTF8_" + string;
 	}
 
-	private static void add(List<ConstantPoolInfo> constantPool, String string) {
-		constantPool.add(new ConstantPoolInfo_Utf8(string));
-	}
-
-	public static String getString(List<ConstantPoolInfo> constantPool, int index) {
-		ConstantPoolInfo_Utf8 infoUtf8 = (ConstantPoolInfo_Utf8) constantPool.get(index);
-		return infoUtf8.getString();
-	}
-
-	private static int getIndex(List<ConstantPoolInfo> constantPool, String string) {
-		for (int i = 0; i < constantPool.size(); i++) {  // TODO: implement faster lookup, although speed not an issue yet
-			ConstantPoolInfo info = constantPool.get(i);
-			if (info.getTag() == TAG_UTF8) {
-				ConstantPoolInfo_Utf8 infoUtf8 = (ConstantPoolInfo_Utf8) info;
-				String stringToCompare = infoUtf8.getString();
-				if (string.equals(stringToCompare)) {
-					return i;
-				}
-			}
-		}
-		return -1;
+	private static ConstantPoolInfo_Utf8 createInfo(ConstantPool constantPool, String string) {
+		return new ConstantPoolInfo_Utf8(string);
 	}
 }

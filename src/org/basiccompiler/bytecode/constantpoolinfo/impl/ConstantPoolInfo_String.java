@@ -31,8 +31,7 @@
 
 package org.basiccompiler.bytecode.constantpoolinfo.impl;
 
-import java.util.List;
-
+import org.basiccompiler.bytecode.ConstantPool;
 import org.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
 import org.basiccompiler.compiler.etc.ByteOutStream;
 
@@ -54,36 +53,20 @@ public class ConstantPoolInfo_String extends ConstantPoolInfo {
 		o.write_u2(this.stringIndex + 1); // NOTE: serialized constant pool indexes are 1-based
 	}
 
-	public static int addAndReturnIndex(List<ConstantPoolInfo> constantPool, String string) {
-		if (contains(constantPool, string) == false) {
-			add(constantPool, string);
+	public static int addAndGetIndex(ConstantPool constantPool, String string) {
+		String key = getKey(string);
+		if (constantPool.contains(key) == false) {
+			constantPool.put(key, createInfo(constantPool, string));
 		}
-		return getIndex(constantPool, string);
+		return constantPool.getIndex(key);
 	}
 
-	private static boolean contains(List<ConstantPoolInfo> constantPool, String string) {
-		return getIndex(constantPool, string) > -1;
+	private static String getKey(String string) {
+		return "STRING_" + string;
 	}
 
-	private static void add(List<ConstantPoolInfo> constantPool, String string) {
-		int stringIndex = ConstantPoolInfo_Utf8.addAndReturnIndex(constantPool, string);
-		constantPool.add(new ConstantPoolInfo_String(stringIndex));
-	}
-
-	private static int getIndex(List<ConstantPoolInfo> constantPool, String string) {
-		for (int i = 0; i < constantPool.size(); i++) {  // TODO: implement faster lookup, although speed not an issue yet
-			ConstantPoolInfo info = constantPool.get(i);
-			if (info.getTag() == TAG_STRING) {
-				ConstantPoolInfo_String infoString = (ConstantPoolInfo_String) info;
-				int stringIndex = infoString.getStringIndex();
-				String stringToCompare = ConstantPoolInfo_Utf8.getString(constantPool, stringIndex);
-				boolean isSameName = string.equals(stringToCompare);
-
-				if (isSameName) {
-					return i;
-				}
-			}
-		}
-		return -1;
+	private static ConstantPoolInfo_String createInfo(ConstantPool constantPool, String string) {
+		int stringIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, string);
+		return new ConstantPoolInfo_String(stringIndex);
 	}
 }
