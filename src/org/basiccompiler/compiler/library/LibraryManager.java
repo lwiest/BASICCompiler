@@ -199,7 +199,7 @@ public class LibraryManager {
 		TAN,
 		THROW_RUNTIME_EXCEPTION,
 		VAL,
-		XOR; //
+		XOR;
 	}
 
 	public LibraryManager(ClassModel classModel) {
@@ -210,165 +210,246 @@ public class LibraryManager {
 		return this.classModel;
 	}
 
-	public Method getMethod(MethodEnum m) { // TODO: can we simplify this? Via reflection? Elegantly?
+	public Method getMethod(MethodEnum m) {
 		if (this.methodMap.containsKey(m) == false) {
-			if (m == MethodEnum.PRINT_FLOAT_FROM_STACK) {
-				this.methodMap.put(m, new Method_PrintFloatFromStack(this));
-			} else if (m == MethodEnum.READ_CHARS_TO_STACK) {
-				this.methodMap.put(m, new Method_ReadCharsToStack(this));
-			} else if (m == MethodEnum.PRINT_CHARS_FROM_STACK) {
-				this.methodMap.put(m, new Method_PrintCharsFromStack(this));
-			} else if (m == MethodEnum.PRINT_STRING_FROM_STACK) {
-				this.methodMap.put(m, new Method_PrintStringFromStack(this));
-			} else if (m == MethodEnum.PRINT_CHAR_FROM_STACK) {
-				this.methodMap.put(m, new Method_PrintCharFromStack(this));
-			} else if (m == MethodEnum.STRING_TO_CHARS) {
-				this.methodMap.put(m, new Method_StringToChars(this));
-			} else if (m == MethodEnum.SQR) {
-				this.methodMap.put(m, new Method_Sqr(this));
-			} else if (m == MethodEnum.TAB) {
-				this.methodMap.put(m, new Method_Tab(this));
-			} else if (m == MethodEnum.INT) {
-				this.methodMap.put(m, new Method_Int(this));
-			} else if (m == MethodEnum.CHECK_1D_FLOAT_ARRAY_ACCESS) {
-				this.methodMap.put(m, new Method_Check1DFloatArrayAccess(this));
-			} else if (m == MethodEnum.CHECK_2D_FLOAT_ARRAY_ACCESS) {
-				this.methodMap.put(m, new Method_Check2DFloatArrayAccess(this));
-			} else if (m == MethodEnum.CHECK_1D_STRING_ARRAY_ACCESS) {
-				this.methodMap.put(m, new Method_Check1DStringArrayAccess(this));
-			} else if (m == MethodEnum.CHECK_2D_STRING_ARRAY_ACCESS) {
-				this.methodMap.put(m, new Method_Check2DStringArrayAccess(this));
-			} else if (m == MethodEnum.LOAD_FLOAT_FROM_1D_ARRAY) {
-				this.methodMap.put(m, new Method_LoadFloatFrom1DArray(this));
-			} else if (m == MethodEnum.LOAD_FLOAT_FROM_2D_ARRAY) {
-				this.methodMap.put(m, new Method_LoadFloatFrom2DArray(this));
-			} else if (m == MethodEnum.LOAD_STRING_FROM_1D_ARRAY) {
-				this.methodMap.put(m, new Method_LoadStringFrom1DArray(this));
-			} else if (m == MethodEnum.LOAD_STRING_FROM_2D_ARRAY) {
-				this.methodMap.put(m, new Method_LoadStringFrom2DArray(this));
-			} else if (m == MethodEnum.STORE_FLOAT_IN_1D_ARRAY) {
-				this.methodMap.put(m, new Method_StoreFloatIn1DArray(this));
-			} else if (m == MethodEnum.STORE_FLOAT_IN_2D_ARRAY) {
-				this.methodMap.put(m, new Method_StoreFloatIn2DArray(this));
-			} else if (m == MethodEnum.STORE_STRING_IN_1D_ARRAY) {
-				this.methodMap.put(m, new Method_StoreStringIn1DArray(this));
-			} else if (m == MethodEnum.STORE_STRING_IN_2D_ARRAY) {
-				this.methodMap.put(m, new Method_StoreStringIn2DArray(this));
-			} else if (m == MethodEnum.DIM_1D_FLOAT_ARRAY) {
-				this.methodMap.put(m, new Method_Dim1DFloatArray(this));
-			} else if (m == MethodEnum.DIM_2D_FLOAT_ARRAY) {
-				this.methodMap.put(m, new Method_Dim2DFloatArray(this));
-			} else if (m == MethodEnum.DIM_1D_STRING_ARRAY) {
-				this.methodMap.put(m, new Method_Dim1DStringArray(this));
-			} else if (m == MethodEnum.DIM_2D_STRING_ARRAY) {
-				this.methodMap.put(m, new Method_Dim2DStringArray(this));
-			} else if (m == MethodEnum.DIM_1D_CHECK_SIZE) {
-				this.methodMap.put(m, new Method_Dim1DCheckSize(this));
-			} else if (m == MethodEnum.DIM_2D_CHECK_SIZE) {
-				this.methodMap.put(m, new Method_Dim2DCheckSize(this));
-			} else if (m == MethodEnum.STRING_CONCATENATION) {
-				this.methodMap.put(m, new Method_StringConcatenation(this));
-			} else if (m == MethodEnum.STRING_EQUAL) {
-				this.methodMap.put(m, new Method_StringEqual(this));
-			} else if (m == MethodEnum.STRING_NOT_EQUAL) {
-				this.methodMap.put(m, new Method_StringNotEqual(this));
-			} else if (m == MethodEnum.STRING_LESS_THAN) {
-				this.methodMap.put(m, new Method_StringLessThan(this));
-			} else if (m == MethodEnum.STRING_LESS_OR_EQUAL) {
-				this.methodMap.put(m, new Method_StringLessOrEqual(this));
-			} else if (m == MethodEnum.STRING_GREATER_THAN) {
-				this.methodMap.put(m, new Method_StringGreaterThan(this));
-			} else if (m == MethodEnum.STRING_GREATER_OR_EQUAL) {
-				this.methodMap.put(m, new Method_StringGreaterOrEqual(this));
-			} else if (m == MethodEnum.LEFT) {
-				this.methodMap.put(m, new Method_Left(this));
-			} else if (m == MethodEnum.RIGHT) {
-				this.methodMap.put(m, new Method_Right(this));
-			} else if (m == MethodEnum.AND) {
-				this.methodMap.put(m, new Method_And(this));
-			} else if (m == MethodEnum.OR) {
-				this.methodMap.put(m, new Method_Or(this));
-			} else if (m == MethodEnum.XOR) {
-				this.methodMap.put(m, new Method_Xor(this));
-			} else if (m == MethodEnum.NOT) {
-				this.methodMap.put(m, new Method_Not(this));
-			} else if (m == MethodEnum.CHECK_LOGICAL_OPERATION_ARGUMENTS) {
-				this.methodMap.put(m, new Method_CheckLogicalOperatorArguments(this));
-			} else if (m == MethodEnum.LEN) {
-				this.methodMap.put(m, new Method_Len(this));
-			} else if (m == MethodEnum.ABS) {
-				this.methodMap.put(m, new Method_Abs(this));
-			} else if (m == MethodEnum.SGN) {
-				this.methodMap.put(m, new Method_Sgn(this));
-			} else if (m == MethodEnum.COS) {
-				this.methodMap.put(m, new Method_Cos(this));
-			} else if (m == MethodEnum.SIN) {
-				this.methodMap.put(m, new Method_Sin(this));
-			} else if (m == MethodEnum.ATN) {
-				this.methodMap.put(m, new Method_Atn(this));
-			} else if (m == MethodEnum.ASC) {
-				this.methodMap.put(m, new Method_Asc(this));
-			} else if (m == MethodEnum.CHR) {
-				this.methodMap.put(m, new Method_Chr(this));
-			} else if (m == MethodEnum.POS) {
-				this.methodMap.put(m, new Method_Pos(this));
-			} else if (m == MethodEnum.SPC) {
-				this.methodMap.put(m, new Method_Spc(this));
-			} else if (m == MethodEnum.SPACE) {
-				this.methodMap.put(m, new Method_Space(this));
-			} else if (m == MethodEnum.STR) {
-				this.methodMap.put(m, new Method_Str(this));
-			} else if (m == MethodEnum.VAL) {
-				this.methodMap.put(m, new Method_Val(this));
-			} else if (m == MethodEnum.FIX) {
-				this.methodMap.put(m, new Method_Fix(this));
-			} else if (m == MethodEnum.ROUND_TO_INT) {
-				this.methodMap.put(m, new Method_RoundToInt(this));
-			} else if (m == MethodEnum.LOG) {
-				this.methodMap.put(m, new Method_Log(this));
-			} else if (m == MethodEnum.EXP) {
-				this.methodMap.put(m, new Method_Exp(this));
-			} else if (m == MethodEnum.MID) {
-				this.methodMap.put(m, new Method_Mid(this));
-			} else if (m == MethodEnum.DIVISION) {
-				this.methodMap.put(m, new Method_Division(this));
-			} else if (m == MethodEnum.INTEGER_DIVISION) {
-				this.methodMap.put(m, new Method_IntegerDivision(this));
-			} else if (m == MethodEnum.MOD) {
-				this.methodMap.put(m, new Method_Mod(this));
-			} else if (m == MethodEnum.DIVISION_BY_ZERO) {
-				this.methodMap.put(m, new Method_DivisionByZero(this));
-			} else if (m == MethodEnum.POWER) {
-				this.methodMap.put(m, new Method_Power(this));
-			} else if (m == MethodEnum.INSTR) {
-				this.methodMap.put(m, new Method_Instr(this));
-			} else if (m == MethodEnum.TAN) {
-				this.methodMap.put(m, new Method_Tan(this));
-			} else if (m == MethodEnum.SUBSTRING) {
-				this.methodMap.put(m, new Method_Substring(this));
-			} else if (m == MethodEnum.INPUT) {
-				this.methodMap.put(m, new Method_Input(this));
-			} else if (m == MethodEnum.CHECK_ON_GOTO_GOSUB_ARG) {
-				this.methodMap.put(m, new Method_CheckOnGotoGosubArg(this));
-			} else if (m == MethodEnum.GOSUB_STACK_INITIALIZE) {
-				this.methodMap.put(m, new Method_GosubStackInitialize(this));
-			} else if (m == MethodEnum.GOSUB_STACK_PUSH) {
-				this.methodMap.put(m, new Method_GosubStackPush(this));
-			} else if (m == MethodEnum.GOSUB_STACK_POP) {
-				this.methodMap.put(m, new Method_GosubStackPop(this));
-			} else if (m == MethodEnum.THROW_RUNTIME_EXCEPTION) {
-				this.methodMap.put(m, new Method_ThrowRuntimeException(this));
-			} else if (m == MethodEnum.READ_NUM_FROM_DATA_TO_STACK) {
-				this.methodMap.put(m, new Method_ReadNumFromDataToStack(this));
-			} else if (m == MethodEnum.READ_STRING_FROM_DATA_TO_STACK) {
-				this.methodMap.put(m, new Method_ReadStringFromDataToStack(this));
-			} else if (m == MethodEnum.RND) {
-				this.methodMap.put(m, new Method_Rnd(this));
-			} else if (m == MethodEnum.CHARS_TO_FLOAT) {
-				this.methodMap.put(m, new Method_CharsToFloat(this));
-			} else if (m == MethodEnum.FLOAT_TO_CHARS) {
-				this.methodMap.put(m, new Method_FloatToChars(this));
+			Method method = null;
+			switch (m) {
+				case ABS:
+					method = new Method_Abs(this);
+					break;
+				case AND:
+					method = new Method_And(this);
+					break;
+				case ASC:
+					method = new Method_Asc(this);
+					break;
+				case ATN:
+					method = new Method_Atn(this);
+					break;
+				case CHARS_TO_FLOAT:
+					method = new Method_CharsToFloat(this);
+					break;
+				case CHECK_1D_FLOAT_ARRAY_ACCESS:
+					method = new Method_Check1DFloatArrayAccess(this);
+					break;
+				case CHECK_1D_STRING_ARRAY_ACCESS:
+					method = new Method_Check1DStringArrayAccess(this);
+					break;
+				case CHECK_2D_FLOAT_ARRAY_ACCESS:
+					method = new Method_Check2DFloatArrayAccess(this);
+					break;
+				case CHECK_2D_STRING_ARRAY_ACCESS:
+					method = new Method_Check2DStringArrayAccess(this);
+					break;
+				case CHECK_LOGICAL_OPERATION_ARGUMENTS:
+					method = new Method_CheckLogicalOperatorArguments(this);
+					break;
+				case CHECK_ON_GOTO_GOSUB_ARG:
+					method = new Method_CheckOnGotoGosubArg(this);
+					break;
+				case CHR:
+					method = new Method_Chr(this);
+					break;
+				case COS:
+					method = new Method_Cos(this);
+					break;
+				case DIM_1D_CHECK_SIZE:
+					method = new Method_Dim1DCheckSize(this);
+					break;
+				case DIM_1D_FLOAT_ARRAY:
+					method = new Method_Dim1DFloatArray(this);
+					break;
+				case DIM_1D_STRING_ARRAY:
+					method = new Method_Dim1DStringArray(this);
+					break;
+				case DIM_2D_CHECK_SIZE:
+					method = new Method_Dim2DCheckSize(this);
+					break;
+				case DIM_2D_FLOAT_ARRAY:
+					method = new Method_Dim2DFloatArray(this);
+					break;
+				case DIM_2D_STRING_ARRAY:
+					method = new Method_Dim2DStringArray(this);
+					break;
+				case DIVISION:
+					method = new Method_Division(this);
+					break;
+				case DIVISION_BY_ZERO:
+					method = new Method_DivisionByZero(this);
+					break;
+				case EXP:
+					method = new Method_Exp(this);
+					break;
+				case FIX:
+					method = new Method_Fix(this);
+					break;
+				case FLOAT_TO_CHARS:
+					method = new Method_FloatToChars(this);
+					break;
+				case GOSUB_STACK_INITIALIZE:
+					method = new Method_GosubStackInitialize(this);
+					break;
+				case GOSUB_STACK_POP:
+					method = new Method_GosubStackPop(this);
+					break;
+				case GOSUB_STACK_PUSH:
+					method = new Method_GosubStackPush(this);
+					break;
+				case INPUT:
+					method = new Method_Input(this);
+					break;
+				case INSTR:
+					method = new Method_Instr(this);
+					break;
+				case INT:
+					method = new Method_Int(this);
+					break;
+				case INTEGER_DIVISION:
+					method = new Method_IntegerDivision(this);
+					break;
+				case LEFT:
+					method = new Method_Left(this);
+					break;
+				case LEN:
+					method = new Method_Len(this);
+					break;
+				case LOAD_FLOAT_FROM_1D_ARRAY:
+					method = new Method_LoadFloatFrom1DArray(this);
+					break;
+				case LOAD_FLOAT_FROM_2D_ARRAY:
+					method = new Method_LoadFloatFrom2DArray(this);
+					break;
+				case LOAD_STRING_FROM_1D_ARRAY:
+					method = new Method_LoadStringFrom1DArray(this);
+					break;
+				case LOAD_STRING_FROM_2D_ARRAY:
+					method = new Method_LoadStringFrom2DArray(this);
+					break;
+				case LOG:
+					method = new Method_Log(this);
+					break;
+				case MID:
+					method = new Method_Mid(this);
+					break;
+				case MOD:
+					method = new Method_Mod(this);
+					break;
+				case NOT:
+					method = new Method_Not(this);
+					break;
+				case OR:
+					method = new Method_Or(this);
+					break;
+				case POS:
+					method = new Method_Pos(this);
+					break;
+				case POWER:
+					method = new Method_Power(this);
+					break;
+				case PRINT_CHAR_FROM_STACK:
+					method = new Method_PrintCharFromStack(this);
+					break;
+				case PRINT_CHARS_FROM_STACK:
+					method = new Method_PrintCharsFromStack(this);
+					break;
+				case PRINT_FLOAT_FROM_STACK:
+					method = new Method_PrintFloatFromStack(this);
+					break;
+				case PRINT_STRING_FROM_STACK:
+					method = new Method_PrintStringFromStack(this);
+					break;
+				case READ_CHARS_TO_STACK:
+					method = new Method_ReadCharsToStack(this);
+					break;
+				case READ_NUM_FROM_DATA_TO_STACK:
+					method = new Method_ReadNumFromDataToStack(this);
+					break;
+				case READ_STRING_FROM_DATA_TO_STACK:
+					method = new Method_ReadStringFromDataToStack(this);
+					break;
+				case RIGHT:
+					method = new Method_Right(this);
+					break;
+				case RND:
+					method = new Method_Rnd(this);
+					break;
+				case ROUND_TO_INT:
+					method = new Method_RoundToInt(this);
+					break;
+				case SGN:
+					method = new Method_Sgn(this);
+					break;
+				case SIN:
+					method = new Method_Sin(this);
+					break;
+				case SPACE:
+					method = new Method_Space(this);
+					break;
+				case SPC:
+					method = new Method_Spc(this);
+					break;
+				case SQR:
+					method = new Method_Sqr(this);
+					break;
+				case STORE_FLOAT_IN_1D_ARRAY:
+					method = new Method_StoreFloatIn1DArray(this);
+					break;
+				case STORE_FLOAT_IN_2D_ARRAY:
+					method = new Method_StoreFloatIn2DArray(this);
+					break;
+				case STORE_STRING_IN_1D_ARRAY:
+					method = new Method_StoreStringIn1DArray(this);
+					break;
+				case STORE_STRING_IN_2D_ARRAY:
+					method = new Method_StoreStringIn2DArray(this);
+					break;
+				case STR:
+					method = new Method_Str(this);
+					break;
+				case STRING_CONCATENATION:
+					method = new Method_StringConcatenation(this);
+					break;
+				case STRING_EQUAL:
+					method = new Method_StringEqual(this);
+					break;
+				case STRING_GREATER_OR_EQUAL:
+					method = new Method_StringGreaterOrEqual(this);
+					break;
+				case STRING_GREATER_THAN:
+					method = new Method_StringGreaterThan(this);
+					break;
+				case STRING_LESS_OR_EQUAL:
+					method = new Method_StringLessOrEqual(this);
+					break;
+				case STRING_LESS_THAN:
+					method = new Method_StringLessThan(this);
+					break;
+				case STRING_NOT_EQUAL:
+					method = new Method_StringNotEqual(this);
+					break;
+				case STRING_TO_CHARS:
+					method = new Method_StringToChars(this);
+					break;
+				case SUBSTRING:
+					method = new Method_Substring(this);
+					break;
+				case TAB:
+					method = new Method_Tab(this);
+					break;
+				case TAN:
+					method = new Method_Tan(this);
+					break;
+				case THROW_RUNTIME_EXCEPTION:
+					method = new Method_ThrowRuntimeException(this);
+					break;
+				case VAL:
+					method = new Method_Val(this);
+					break;
+				case XOR:
+					method = new Method_Xor(this);
+					break;
 			}
+			this.methodMap.put(m, method);
 			this.usedMethods.add(m);
 		}
 		return this.methodMap.get(m);
