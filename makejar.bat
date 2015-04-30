@@ -1,3 +1,7 @@
+@IF NOT "%JAVA_HOME%" == "" GOTO OK
+@ECHO Please set JAVA_HOME environment variable, for example "SET JAVA_HOME=c:\java\jdk180"
+@GOTO EXIT
+@:OK
 SET HOME=.
 SET BIN=%HOME%\bin
 SET SRC=%HOME%\src
@@ -18,3 +22,4 @@ IF EXIST %JARNAME% DEL %JARNAME%
 DEL %MANIFESTNAME%
 POPD
 MOVE %BIN%\%JARNAME% .
+@:EXIT
