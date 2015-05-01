@@ -48,10 +48,6 @@ public class ConstantPoolInfo {
 		this.tag = tag;
 	}
 
-	public byte getTag() {
-		return this.tag;
-	}
-
 	public void write(ByteOutStream o) {
 		o.write_u1(this.tag);
 	}
