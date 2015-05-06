@@ -267,7 +267,7 @@ public class Compiler {
 
 			// runtime definition flag
 			String fieldName = IS_DEF_PREFIX + funcName;
-			o.getstatic(this.classModel.addFieldAndGetFieldRefIndex(fieldName, "I"));
+			o.getstatic(this.classModel.addFieldAndGetFieldRefIndex(fieldName, "Z"));
 			o.ifne("isDefinedAtRuntime");
 
 			o.ldc(this.classModel.getStringIndex("Undefined function " + funcName + "()."));
@@ -285,7 +285,7 @@ public class Compiler {
 			}
 
 			o.flushAndCloseGracefully();
-			
+
 			this.o = saveStream;
 			this.classModel.addMethod(funcName, descriptor, numLocals, o.toByteArray());
 		}
@@ -309,7 +309,7 @@ public class Compiler {
 		initGosubStack(o);
 
 		o.pad4ByteBoundary(); // padding for tableswitch in body code
-		
+
 		o.flushAndCloseGracefully();
 		return o.toByteArray();
 	}
@@ -466,7 +466,7 @@ public class Compiler {
 		String fieldName = IS_DEF_PREFIX + defFnStatement.getFuncName();
 
 		this.o.iconst_1();
-		this.o.putstatic(this.classModel.addFieldAndGetFieldRefIndex(fieldName, "I"));
+		this.o.putstatic(this.classModel.addFieldAndGetFieldRefIndex(fieldName, "Z"));
 	}
 
 	private void emitDim(DimStatement dimStatement) {
