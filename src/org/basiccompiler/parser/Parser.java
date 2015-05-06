@@ -1579,7 +1579,7 @@ public class Parser {
 	private boolean isNextKeyword(Token token) {
 		String match = findMatch(KEYWORD_PATTERN);
 		if (match != null) {
-			if (match.trim().equals(token.getChars())) {
+			if (match.equals(token.getChars())) {
 				return true;
 			}
 			match = unmatch(match);
