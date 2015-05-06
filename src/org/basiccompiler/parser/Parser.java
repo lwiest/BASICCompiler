@@ -169,9 +169,9 @@ public class Parser {
 	private String stringToParse;
 	private int pos;
 
-	private final Map<String, DefFnStatement> defFnMap = new HashMap<String, DefFnStatement>();
+	private final Map<String /* function name */, DefFnStatement> defFnMap = new HashMap<String, DefFnStatement>();
 
-	private final Map<String, FnFunctionNode> fnMap = new HashMap<String, FnFunctionNode>();
+	private final Map<String /* function name */, FnFunctionNode> fnMap = new HashMap<String, FnFunctionNode>();
 
 	//////////////////////////////////////////////////////////////////////////////
 
@@ -880,9 +880,10 @@ public class Parser {
 		if (result != null) {
 			Token token;
 
-			// the while loop turns a left-recursive binary operation into a
-			// right-recursive operation by holding back the recursive descent until
-			// all adjacent operators of the same production level are parsed.
+			// the while loop turns a left-recursive (= right-associative) binary
+			// operation into a right-recursive (= left-associative) operation by
+			// holding back the recursive descent until all adjacent operators of the
+			// same production level are parsed.
 			//
 			// sample expression: 1 - 2 - 3
 			// left-recursive:    1 - ( 2 - 3 ) = 2  (wrong)
@@ -1620,8 +1621,8 @@ public class Parser {
 		"ELSE",
 		"END",
 		"FOR",
-		"GOTO",
 		"GOSUB",
+		"GOTO",
 		"IF",
 		"INPUT",
 		"LET",
@@ -1638,7 +1639,7 @@ public class Parser {
 		"THEN",
 		"TO",
 		"WEND",
-		"WHILE", //
+		"WHILE"
 	};
 
 	private static Set<String> STATEMENT_KEYWORDS = new HashSet<String>();
@@ -1683,23 +1684,23 @@ public class Parser {
 	}
 
 	private static String numFunctionKeywords[] = new String[] { //
-		"INT(",
-		"SQR(",
-		"LEN(",
 		"ABS(",
+		"ASC(",
+		"ATN(",
+		"COS(",
+		"EXP(",
+		"FIX(",
+		"INSTR(",
+		"INT(",
+		"LEN(",
+		"LOG(",
+		"POS(",
+		"RND(",
 		"SGN(",
 		"SIN(",
-		"COS(",
+		"SQR(",
 		"TAN(",
-		"ATN(",
-		"ASC(",
-		"POS(",
-		"VAL(",
-		"FIX(",
-		"LOG(",
-		"EXP(",
-		"RND(",
-		"INSTR(", //
+		"VAL("
 	};
 
 	private static Set<String> NUM_FUNCTION_KEYWORDS = new HashSet<String>();
@@ -1757,8 +1758,8 @@ public class Parser {
 		"LEFT$(",
 		"MID$(",
 		"RIGHT$(",
-		"STR$(",
-		"SPACE$(", //
+		"SPACE$(",
+		"STR$("
 	};
 
 	private static Set<String> STR_FUNCTION_KEYWORDS = new HashSet<String>();
