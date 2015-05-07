@@ -211,12 +211,7 @@ public class Parser {
 		}
 
 		List<Statement> statements = new ArrayList<Statement>();
-		String strLineNumber = parseLineNumber();
-		if (strLineNumber == null) {
-			throw new CompileException("Line has no line number.");
-		}
-
-		statements.add(new LineNumberStatement(strLineNumber));
+		statements.add(parseLineNumberStatement());
 		statements.addAll(parseStatements());
 		if (this.pos < this.stringToParse.length()) {
 			throw new CompileException("Not fully parsed. Invalid characters at position " + this.pos + ".");
@@ -231,6 +226,14 @@ public class Parser {
 				throw new CompileException("Function " + funcName + " is undefined.");
 			}
 		}
+	}
+
+	private Statement parseLineNumberStatement() {
+		String strLineNumber = parseLineNumber();
+		if (strLineNumber == null) {
+			throw new CompileException("Line has no line number.");
+		}
+		return(new LineNumberStatement(strLineNumber));
 	}
 
 	private List<Statement> parseStatements() {
