@@ -45,8 +45,8 @@ import org.basiccompiler.compiler.etc.ByteOutStream;
 
 public class ClassModelWriter {
 	private final static int MAGIC_NUMBER = 0xCAFEBABE;
-	private final static int MAJOR_VERSION = 45; // equivalent to JDK 1.0.2
-	private final static int MINOR_VERSION = 3;
+	private final static int MAJOR_VERSION = 49; // equivalent to JDK 1.5 - we use Math.log10() introduced with this JDK
+	private final static int MINOR_VERSION = 0;
 
 	private final String className;
 	private final String superClassName;
