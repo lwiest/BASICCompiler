@@ -132,23 +132,19 @@ public class ClassModel {
 	}
 
 	public int getFieldRefIndex(String fieldName, String descriptor) {
-		int fieldRefIndex = ConstantPoolInfo_FieldRef.addAndGetIndex(this.constantPool, this.className, fieldName, descriptor);
-		return fieldRefIndex + 1; // NOTE: serialized constant pool indexes are 1-based
+		return ConstantPoolInfo_FieldRef.addAndGetIndex(this.constantPool, this.className, fieldName, descriptor);
 	}
 
 	public int getMethodRefIndex(String methodName, String descriptor) {
-		int methodRefIndex = ConstantPoolInfo_MethodRef.addAndGetIndex(this.constantPool, this.className, methodName, descriptor);
-		return methodRefIndex + 1; // NOTE: serialized constant pool indexes are 1-based
+		return ConstantPoolInfo_MethodRef.addAndGetIndex(this.constantPool, this.className, methodName, descriptor);
 	}
 
 	public int getStringIndex(String string) {
-		int stringConstIndex = ConstantPoolInfo_String.addAndGetIndex(this.constantPool, string);
-		return stringConstIndex + 1; // NOTE: serialized constant pool indexes are 1-based
+		return ConstantPoolInfo_String.addAndGetIndex(this.constantPool, string);
 	}
 
 	public int getFloatIndex(float aFloat) {
-		int floatConstIndex = ConstantPoolInfo_Float.addAndGetIndex(this.constantPool, aFloat);
-		return floatConstIndex + 1; // NOTE: serialized constant pool indexes are 1-based
+		return ConstantPoolInfo_Float.addAndGetIndex(this.constantPool, aFloat);
 	}
 
 	public int getFloatIndexOfNaN() {
@@ -156,8 +152,7 @@ public class ClassModel {
 	}
 
 	public int getClassIndex(String className) {
-		int classIndex = ConstantPoolInfo_Class.addAndGetIndex(this.constantPool, className);
-		return classIndex + 1; // NOTE: serialized constant pool indexes are 1-based
+		return ConstantPoolInfo_Class.addAndGetIndex(this.constantPool, className);
 	}
 
 	public void write(OutputStream outStream) throws IOException {
@@ -170,7 +165,7 @@ public class ClassModel {
 		ByteOutStream o = new ByteOutStream();
 
 		o.aload_0();
-		o.invokespecial(methodSuperConstructorIndex + 1); // NOTE: serialized constant pool indexes are 1-based
+		o.invokespecial(methodSuperConstructorIndex);
 		o.return_();
 
 		o.flushAndCloseGracefully();
@@ -206,7 +201,7 @@ public class ClassModel {
 			String fullClassName = javaClass.getFullClassName();
 			this.JAVA_CLASS_MAP.put(javaClass, ConstantPoolInfo_Class.addAndGetIndex(this.constantPool, fullClassName));
 		}
-		return this.JAVA_CLASS_MAP.get(javaClass) + 1; // NOTE: serialized constant pool indexes are 1-based
+		return this.JAVA_CLASS_MAP.get(javaClass);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -248,7 +243,7 @@ public class ClassModel {
 			int fieldRefIndex = ConstantPoolInfo_FieldRef.addAndGetIndex(this.constantPool, fullClassName, fieldName, descriptor);
 			this.JAVA_FIELD_MAP.put(javaField, fieldRefIndex);
 		}
-		return this.JAVA_FIELD_MAP.get(javaField) + 1; // NOTE: serialized constant pool indexes are 1-based
+		return this.JAVA_FIELD_MAP.get(javaField);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -307,6 +302,6 @@ public class ClassModel {
 			int methodRefIndex = ConstantPoolInfo_MethodRef.addAndGetIndex(this.constantPool, fullClassName, methodName, descriptor);
 			this.JAVA_METHOD_MAP.put(javaMethod, methodRefIndex);
 		}
-		return this.JAVA_METHOD_MAP.get(javaMethod) + 1; // NOTE: serialized constant pool indexes are 1-based
+		return this.JAVA_METHOD_MAP.get(javaMethod);
 	}
 }

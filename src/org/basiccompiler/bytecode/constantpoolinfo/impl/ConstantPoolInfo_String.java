@@ -50,7 +50,7 @@ public class ConstantPoolInfo_String extends ConstantPoolInfo {
 	@Override
 	public void write(ByteOutStream o) {
 		super.write(o);
-		o.write_u2(this.stringIndex + 1); // NOTE: serialized constant pool indexes are 1-based
+		o.write_u2(this.stringIndex);
 	}
 
 	public static int addAndGetIndex(ConstantPool constantPool, String string) {

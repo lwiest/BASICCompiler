@@ -56,8 +56,8 @@ public class ConstantPoolInfo_FieldRef extends ConstantPoolInfo {
 	@Override
 	public void write(ByteOutStream o) {
 		super.write(o);
-		o.write_u2(this.classIndex + 1); // NOTE: serialized constant pool indexes are 1-based
-		o.write_u2(this.nameAndTypeIndex + 1); // NOTE: serialized constant pool indexes are 1-based
+		o.write_u2(this.classIndex);
+		o.write_u2(this.nameAndTypeIndex);
 	}
 
 	public static int addAndGetIndex(ConstantPool constantPool, String className, String fieldName, String descriptor) {

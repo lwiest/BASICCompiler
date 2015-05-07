@@ -56,8 +56,8 @@ public class MethodInfo {
 
 	public void write(ByteOutStream o) {
 		o.write_u2(this.accessFlags);
-		o.write_u2(this.nameIndex + 1); // NOTE: serialized constant pool indexes are 1-based
-		o.write_u2(this.descriptorIndex + 1); // NOTE: serialized constant pool indexes are 1-based
+		o.write_u2(this.nameIndex);
+		o.write_u2(this.descriptorIndex);
 		o.write_u2(this.attributeCount);
 		this.attributes.write(o);
 	}

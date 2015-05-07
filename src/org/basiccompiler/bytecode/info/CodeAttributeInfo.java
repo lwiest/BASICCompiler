@@ -78,7 +78,7 @@ public class CodeAttributeInfo {
 	}
 
 	public void write(ByteOutStream o) {
-		o.write_u2(this.attributeNameIndex + 1); // NOTE: serialized constant pool indexes are 1-based
+		o.write_u2(this.attributeNameIndex);
 		o.write_u4(12 + this.code.length + (this.exceptionTable.length * 2 * 4));
 		o.write_u2(this.maxStack);
 		o.write_u2(this.maxLocals);

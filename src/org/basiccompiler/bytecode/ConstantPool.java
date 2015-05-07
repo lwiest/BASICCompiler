@@ -42,6 +42,10 @@ public class ConstantPool {
 	private List<ConstantPoolInfo> listOfConstantPoolInfos = new ArrayList<ConstantPoolInfo>();
 	private Map<String, Integer> mapOfKeys = new HashMap<String, Integer>();
 
+	public ConstantPool() {
+		this.listOfConstantPoolInfos.add(null);  // add first constant pool entry, a dummy entry
+	}
+
 	public void put(String key, ConstantPoolInfo constantPoolInfo) {
 		int nextIndex = this.listOfConstantPoolInfos.size();
 
@@ -53,6 +57,10 @@ public class ConstantPool {
 		return this.listOfConstantPoolInfos.get(constantPoolIndex);
 	}
 
+	public boolean contains(String key) {
+		return this.mapOfKeys.containsKey(key);
+	}
+
 	public int getIndex(String key) {
 		Integer anIndex = this.mapOfKeys.get(key);
 		if (anIndex != null) {
@@ -61,15 +69,12 @@ public class ConstantPool {
 		return -1;
 	}
 
-	public boolean contains(String key) {
-		return this.mapOfKeys.containsKey(key);
-	}
-
-	public int size() {
+	public int getCount() {
 		return this.listOfConstantPoolInfos.size();
 	}
 
 	public ConstantPoolInfo[] getConstantPoolInfos() {
-		return this.listOfConstantPoolInfos.toArray(new ConstantPoolInfo[0]);
+		List<ConstantPoolInfo> allButFirstConstantPoolInfo = this.listOfConstantPoolInfos.subList(1, this.listOfConstantPoolInfos.size());
+		return allButFirstConstantPoolInfo.toArray(new ConstantPoolInfo[0]);
 	}
 }

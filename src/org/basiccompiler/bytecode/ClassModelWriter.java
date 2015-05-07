@@ -103,7 +103,7 @@ public class ClassModelWriter {
 	}
 
 	private void writeConstantPoolCount(ByteOutStream o, ConstantPool constantPool) {
-		o.write_u2(constantPool.size() + 1); // NOTE: serialized constant pool indexes are 1-based
+		o.write_u2(constantPool.getCount());
 	}
 
 	private void writeConstantPool(ByteOutStream o, ConstantPool constantPool) {
@@ -119,12 +119,12 @@ public class ClassModelWriter {
 
 	private void writeThisClass(ByteOutStream o, ConstantPool constantPool, String className) {
 		int classIndex = ConstantPoolInfo_Class.getIndex(constantPool, className);
-		o.write_u2(classIndex + 1); // NOTE: serialized constant pool indexes are 1-based
+		o.write_u2(classIndex);
 	}
 
 	private void writeSuperClass(ByteOutStream o, ConstantPool constantPool, String superClassName) {
 		int superClassIndex = ConstantPoolInfo_Class.getIndex(constantPool, superClassName);
-		o.write_u2(superClassIndex + 1); // NOTE: serialized constant pool indexes are 1-based
+		o.write_u2(superClassIndex);
 	}
 
 	private void writeInterfacesCount(ByteOutStream o, List<InterfaceInfo> interfaceInfos) {
