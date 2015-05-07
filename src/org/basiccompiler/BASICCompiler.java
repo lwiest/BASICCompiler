@@ -169,11 +169,9 @@ public class BASICCompiler {
 
 		List<Statement> statements = new ArrayList<Statement>();
 		try {
-			Compiler compiler = new Compiler(className);
-			Parser parser = new Parser();
-
 			Map<Integer /* lineNumber */, List<Statement> /* statements of line */> sortedLinesOfStatements = new TreeMap<Integer, List<Statement>>();
 
+			Parser parser = new Parser();
 			while (true) {
 				String line = inReader.readLine();
 				if (line == null) {
@@ -183,8 +181,7 @@ public class BASICCompiler {
 				lineNr++;
 				List<Statement> statementsOfLine = parser.parseLine(line);
 				if (statementsOfLine.size() > 0) {
-					LineNumberStatement statement = (LineNumberStatement) statementsOfLine.get(0);
-					int lineNumber = Integer.parseInt(statement.getLineNumber());
+					int lineNumber = Integer.parseInt(((LineNumberStatement) statementsOfLine.get(0)).getLineNumber());
 					sortedLinesOfStatements.put(lineNumber, statementsOfLine);
 				}
 			}
@@ -197,17 +194,17 @@ public class BASICCompiler {
 
 			if (properties.containsKey(OPT_FORMATTED_OUTPUT)) {
 				String formattedOutputFilename = properties.getProperty(OPT_FORMATTED_OUTPUT);
-				new CodeFormatter(statements, formattedOutputFilename).format();
+				new CodeFormatter().formatToFile(statements, formattedOutputFilename);
 			}
 
 			if (properties.containsKey(OPT_OPTIMIZE)) {
 				new CodeOptimizer().optimize(statements);
 			}
 
+			Compiler compiler = new Compiler(className);
 			for (Statement statement : statements) {
 				compiler.compile(statement);
 			}
-
 			compiler.flush();
 			compiler.getClassModel().write(outStream);
 		} catch (CompileException ex) {

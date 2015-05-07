@@ -82,21 +82,15 @@ import org.basiccompiler.parser.tokens.FunctionToken;
 import org.basiccompiler.parser.tokens.Token;
 
 public class CodeFormatter {
-  private final List<Statement> statements;
-  private final String outFilename;
-
+  private List<Statement> statements;
   private Map<String, String> lineNumberMap;
   private Set<String> lineNumbersBranchedTo;
 
-  CodeFormatter(List<Statement> statements, String outFilename) {
-    this.statements = statements;
-    this.outFilename = outFilename;
-  }
-
-  public void format() throws IOException {
+  public void formatToFile(List<Statement> statements, String outFilename) throws IOException {
+  	this.statements = statements;
     BufferedWriter o = null;
     try {
-      o = new BufferedWriter(new FileWriter(this.outFilename));
+      o = new BufferedWriter(new FileWriter(outFilename));
       this.lineNumberMap = createLineNumberMap();
       this.lineNumbersBranchedTo = createLineNumberBranchedToSet();
       internalFormat(this.statements.toArray(new Statement[0]), o);
