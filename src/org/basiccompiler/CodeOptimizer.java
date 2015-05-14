@@ -72,14 +72,8 @@ public class CodeOptimizer {
 					startPos = i;
 				}
 				printExprs.addAll(normalize(((PrintStatement) s).getExpressions()));
-			} else if (s instanceof LineNumberStatement) {
-				if ((startPos != -1) && isBranchedTo((LineNumberStatement) s)) {
-					foldPrintStatements(statements, startPos, i, printExprs);
-					i = startPos + 1;
-					startPos = -1;
-				}
-			} else {
-				if (startPos != -1) {
+			} else if (startPos != -1) {
+				if (((s instanceof LineNumberStatement) == false) || (isBranchedTo((LineNumberStatement) s))) {
 					foldPrintStatements(statements, startPos, i, printExprs);
 					i = startPos + 1;
 					startPos = -1;
@@ -92,7 +86,7 @@ public class CodeOptimizer {
 	}
 
 	private List<INode> normalize(INode[] printExprs) {
-		List<INode> normalizedPrintExprs = new ArrayList<INode>();
+		List<INode> normalizedPrintExprs = new ArrayList<INode>(); // we need a copy here!
 		normalizedPrintExprs.addAll(Arrays.asList(printExprs));
 		if ((printExprs.length == 0) || (!isTokenExpr(printExprs[printExprs.length - 1], Token.SEMICOLON) && !isTokenExpr(printExprs[printExprs.length - 1], Token.COMMA))) {
 			normalizedPrintExprs.add(TokenNode.createTokenNode(Token.SEMICOLON));
@@ -118,10 +112,10 @@ public class CodeOptimizer {
 
 		for (int i = 0; i < (foldedExprs.size() - 1); i++) { // remove all but last semicolon
 			INode printExpr = foldedExprs.get(i);
-		if (isTokenExpr(printExpr, Token.SEMICOLON)) {
-			foldedExprs.remove(i);
-			i--;
-		}
+			if (isTokenExpr(printExpr, Token.SEMICOLON)) {
+				foldedExprs.remove(i);
+				i--;
+			}
 		}
 
 		for (int i = 0; i < foldedExprs.size(); i++) {
@@ -136,7 +130,6 @@ public class CodeOptimizer {
 						foldedExprs.remove(i);
 						foldedExprs.add(i, StrNode.createStringNode(s1 + s2));
 						i--;
-						continue;
 					}
 				}
 			}
