@@ -1534,7 +1534,7 @@ public class Parser {
 	 * [0-9]+      | Option 1: Match one or more digits, consumed lazily
 	 * (?:         |   Start unnamed capture group 3 (fractional part of mantissa)
 	 * \\.         |   Match one single period
-	 * [0-9]*      |   Match any digits, consumed ###
+	 * [0-9]*      |   Match any digits, consumed possessively
 	 * )           |   End unnamed capture group 3 (fractional part of mantissa)
 	 * ?           |   ...capture group 3 (fractional part of mantissa) is optional
 	 * |           | ...or...
@@ -1549,7 +1549,7 @@ public class Parser {
 	 * ?           | ... capture group 3 (exponent) is optional
 	 * )           | End capture group 1 (number)
 	 */
-	private static final Pattern NUMBER_PATTERN = Pattern.compile("^\\s*?([-+]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]++)(?:[eE][-+]?[0-9]++)?)");
+	private static final Pattern NUMBER_PATTERN = Pattern.compile("^\\s*?([-+]?(?:[0-9]+(?:\\.[0-9]*+)?|\\.[0-9]++)(?:[eE][-+]?[0-9]++)?)");
 
 	private String getNumConstant() {
 		return findMatch(NUMBER_PATTERN);
