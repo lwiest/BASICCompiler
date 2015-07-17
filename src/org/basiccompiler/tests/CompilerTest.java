@@ -54,9 +54,7 @@ import org.junit.Test;
 public class CompilerTest {
 	private final static String CR = System.getProperty("line.separator");
 
-	private final static String TEST_FOLDER_PATH = "c:\\temp";
 	private final static String TEST_CLASS_NAME = "CompilerTestClass";
-	private final static String TEST_CLASS_FULLFILENAME = TEST_FOLDER_PATH + "\\" + TEST_CLASS_NAME + ".class";
 
 	private static int testCount;
 
@@ -2366,20 +2364,26 @@ public class CompilerTest {
 
 		String output = null;
 		Process p = null;
+		File tempFolder = null;
 		try {
-			StringBuffer sb = new StringBuffer();
+			tempFolder = createTempFolder();
+			tempFolder.deleteOnExit();
+
+			String fullPathToTestClass = new File(tempFolder, TEST_CLASS_NAME).getAbsolutePath() + ".class";
+
 			inReader = new BufferedReader(new StringReader(strStatements));
-			outStream = new FileOutputStream(TEST_CLASS_FULLFILENAME);
+			outStream = new FileOutputStream(fullPathToTestClass);
 
 			// compile
 			BASICCompiler.exec(inReader, outStream, TEST_CLASS_NAME);
 
 			// execute
 			ProcessBuilder pb = new ProcessBuilder("java", TEST_CLASS_NAME);
-			pb.directory(new File(TEST_FOLDER_PATH));
+			pb.directory(tempFolder);
 			pb.redirectErrorStream(true);
 			p = pb.start();
 
+			StringBuffer sb = new StringBuffer();
 			if (lineOfInput != null) {
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
 				writer.write(lineOfInput);
@@ -2419,13 +2423,10 @@ public class CompilerTest {
 		} finally {
 			closeGracefully(outStream);
 			closeGracefully(inReader);
-			File classFile = new File(TEST_CLASS_FULLFILENAME);
-			if (classFile.exists()) {
-				classFile.delete();
-			}
 			if (p != null) {
 				p.destroy();
 			}
+			deleteFolderRecursively(tempFolder);
 		}
 		return output;
 	}
@@ -2437,6 +2438,28 @@ public class CompilerTest {
 			} catch (IOException e) {
 				// ignore
 			}
+		}
+	}
+
+	public static File createTempFolder() throws IOException {
+		final File tempFolder = File.createTempFile("~BASICCompilerTest", "");
+		if(tempFolder.delete() == false) {
+			throw new IOException("Could not delete temporary file " + tempFolder.getAbsolutePath());
+		}
+		if(tempFolder.mkdir() == false) {
+			throw new IOException("Could not create temporary directory: " + tempFolder.getAbsolutePath());
+		}
+		return tempFolder;
+	}
+
+	public static void deleteFolderRecursively(File fileOrFolder) {
+		if (fileOrFolder.exists()) {
+			if (fileOrFolder.isDirectory()) {
+				for (File file : fileOrFolder.listFiles()) {
+					deleteFolderRecursively(file);
+				}
+			}
+			fileOrFolder.delete();  // this may fail and leave a folder, which is deleted by deleteOnExit()
 		}
 	}
 }
