@@ -307,16 +307,22 @@ public class Parser {
 
 		List<String> constants = new ArrayList<String>();
 		while (true) {
+			String constant = null;
+
 			StrNode strNode = parseStrConst();
-			if (strNode == null) {
+			if (strNode != null) {
+				constant = strNode.getValue();
+			} else {
 				strNode = parseAnyConstant();
+				if (strNode != null) {
+					constant = strNode.getValue().trim();
+				}
 			}
 			if (strNode == null) {
 				throw new CompileException("Cannot parse DATA.");
 			}
 
-			String constant = strNode.getValue();
-			constants.add(constant.trim());
+			constants.add(constant);
 			if (isNextToken(COMMA) == false) {
 				break;
 			}

@@ -1229,6 +1229,8 @@ public class CompilerTest {
 
 		assertRuntimeError(compileAndRun("10 READ A, B, C, D : DATA 1,2,3 : PRINT A;B;C"));
 		assertRuntimeError(compileAndRun("10 READ A, B, C, D : DATA 1,\"ABC\",3 : PRINT A;B;C"));
+
+		assertEquals(compileAndRun("10 READ A$,B$,C$ : DATA \"HELLO \", HELLO, \" HELLO\" : PRINT A$;B$;C$"), "HELLO HELLO HELLO");
 	}
 
 	@Test
