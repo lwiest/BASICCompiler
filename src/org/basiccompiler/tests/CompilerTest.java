@@ -2347,7 +2347,7 @@ public class CompilerTest {
 	}
 
 	private static void assertCompileError(String actual) {
-		assertTrue(actual.startsWith("COMPILE ERROR"));
+		assertTrue(actual.startsWith("Compile error"));
 	}
 
 	private static void assertRuntimeError(String actual) {

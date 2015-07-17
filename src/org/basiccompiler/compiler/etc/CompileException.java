@@ -55,6 +55,6 @@ public class CompileException extends RuntimeException {
 	}
 
 	public String getFullMessage() {
-		return "COMPILE ERROR at line " + this.lineNumber + ": " + super.getMessage();
+		return "Compile error at line " + this.lineNumber + ": " + super.getMessage();
 	}
 }
