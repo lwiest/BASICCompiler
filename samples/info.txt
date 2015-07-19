@@ -1,4 +1,4 @@
 Sample programs are from the books
-"BASIC Computer games" by David H. Ahl
-"More BASIC Computer Games" by David H. Ahl
-Used with permission of the author.
+o "BASIC Computer Games" by David H. Ahl
+o "More BASIC Computer Games" by David H. Ahl
+Used with permission by the author.
