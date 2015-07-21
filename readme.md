@@ -18,13 +18,13 @@ Download the project ZIP-file from github and unzip it to a temporary folder ("r
 
 **To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the root folder as an import source _General > Existing Projects into Workspace_.
 
-**To compile the BASIC compiler into a convenient JAR-file**, open a command prompt in the root folder and type (Windows only, `%JAVA_HOME%` must point to the installation folder of your Java SDK):
+**To compile the BASIC compiler into a convenient JAR-file**, open a command prompt in the root folder and enter (Windows only, `%JAVA_HOME%` must point to the installation folder of your Java SDK):
 
 ```
 > makejar
 ```
 
-**To run the BASIC compiler and get command-line options**, type
+**To run the BASIC compiler and get command-line options**, enter
 
 ```
 > java -jar BASICCompiler.jar
@@ -45,13 +45,13 @@ Option `-formatted=<filename>` writes a pretty-printed version of the BASIC prog
 
 Option `-optimize` applies compiler optimizations. As of now, the only implemented optimization is the folding of constant string arguments of one or more `PRINT` statements.
 
-**To compile a BASIC program**, for example [STARTREK.BAS](samples/STARTREK.BAS) in folder [samples](samples), type
+**To compile a BASIC program**, for example [STARTREK.BAS](samples/STARTREK.BAS) in folder [samples](samples), enter
 
 ```
 > java -jar BASICCompiler.jar samples/STARTREK.BAS StarTrek
 ```
 
-**To run the compiled program**, type
+**To run the compiled program**, enter
 
 ```
 > java StarTrek
