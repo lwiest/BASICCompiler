@@ -1,32 +1,25 @@
 /*
- * Copyright (c) 2015, Lorenz Wiest
- * All rights reserved.
+ * The MIT License (MIT)
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Copyright (c) 2016 Lorenz Wiest
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are
- * those of the authors and should not be interpreted as representing official
- * policies, either expressed or implied, of the FreeBSD Project.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
 package de.lorenzwiest.basiccompiler.compiler.library;
@@ -214,240 +207,240 @@ public class LibraryManager {
 		if (this.methodMap.containsKey(m) == false) {
 			Method method = null;
 			switch (m) {
-				case ABS:
-					method = new Method_Abs(this);
-					break;
-				case AND:
-					method = new Method_And(this);
-					break;
-				case ASC:
-					method = new Method_Asc(this);
-					break;
-				case ATN:
-					method = new Method_Atn(this);
-					break;
-				case CHARS_TO_FLOAT:
-					method = new Method_CharsToFloat(this);
-					break;
-				case CHECK_1D_FLOAT_ARRAY_ACCESS:
-					method = new Method_Check1DFloatArrayAccess(this);
-					break;
-				case CHECK_1D_STRING_ARRAY_ACCESS:
-					method = new Method_Check1DStringArrayAccess(this);
-					break;
-				case CHECK_2D_FLOAT_ARRAY_ACCESS:
-					method = new Method_Check2DFloatArrayAccess(this);
-					break;
-				case CHECK_2D_STRING_ARRAY_ACCESS:
-					method = new Method_Check2DStringArrayAccess(this);
-					break;
-				case CHECK_LOGICAL_OPERATION_ARGUMENTS:
-					method = new Method_CheckLogicalOperatorArguments(this);
-					break;
-				case CHECK_ON_GOTO_GOSUB_ARG:
-					method = new Method_CheckOnGotoGosubArg(this);
-					break;
-				case CHR:
-					method = new Method_Chr(this);
-					break;
-				case COS:
-					method = new Method_Cos(this);
-					break;
-				case DIM_1D_CHECK_SIZE:
-					method = new Method_Dim1DCheckSize(this);
-					break;
-				case DIM_1D_FLOAT_ARRAY:
-					method = new Method_Dim1DFloatArray(this);
-					break;
-				case DIM_1D_STRING_ARRAY:
-					method = new Method_Dim1DStringArray(this);
-					break;
-				case DIM_2D_CHECK_SIZE:
-					method = new Method_Dim2DCheckSize(this);
-					break;
-				case DIM_2D_FLOAT_ARRAY:
-					method = new Method_Dim2DFloatArray(this);
-					break;
-				case DIM_2D_STRING_ARRAY:
-					method = new Method_Dim2DStringArray(this);
-					break;
-				case DIVISION:
-					method = new Method_Division(this);
-					break;
-				case DIVISION_BY_ZERO:
-					method = new Method_DivisionByZero(this);
-					break;
-				case EXP:
-					method = new Method_Exp(this);
-					break;
-				case FIX:
-					method = new Method_Fix(this);
-					break;
-				case FLOAT_TO_CHARS:
-					method = new Method_FloatToChars(this);
-					break;
-				case GOSUB_STACK_INITIALIZE:
-					method = new Method_GosubStackInitialize(this);
-					break;
-				case GOSUB_STACK_POP:
-					method = new Method_GosubStackPop(this);
-					break;
-				case GOSUB_STACK_PUSH:
-					method = new Method_GosubStackPush(this);
-					break;
-				case INPUT:
-					method = new Method_Input(this);
-					break;
-				case INSTR:
-					method = new Method_Instr(this);
-					break;
-				case INT:
-					method = new Method_Int(this);
-					break;
-				case INTEGER_DIVISION:
-					method = new Method_IntegerDivision(this);
-					break;
-				case LEFT:
-					method = new Method_Left(this);
-					break;
-				case LEN:
-					method = new Method_Len(this);
-					break;
-				case LOAD_FLOAT_FROM_1D_ARRAY:
-					method = new Method_LoadFloatFrom1DArray(this);
-					break;
-				case LOAD_FLOAT_FROM_2D_ARRAY:
-					method = new Method_LoadFloatFrom2DArray(this);
-					break;
-				case LOAD_STRING_FROM_1D_ARRAY:
-					method = new Method_LoadStringFrom1DArray(this);
-					break;
-				case LOAD_STRING_FROM_2D_ARRAY:
-					method = new Method_LoadStringFrom2DArray(this);
-					break;
-				case LOG:
-					method = new Method_Log(this);
-					break;
-				case MID:
-					method = new Method_Mid(this);
-					break;
-				case MOD:
-					method = new Method_Mod(this);
-					break;
-				case NOT:
-					method = new Method_Not(this);
-					break;
-				case OR:
-					method = new Method_Or(this);
-					break;
-				case POS:
-					method = new Method_Pos(this);
-					break;
-				case POWER:
-					method = new Method_Power(this);
-					break;
-				case PRINT_CHAR_FROM_STACK:
-					method = new Method_PrintCharFromStack(this);
-					break;
-				case PRINT_CHARS_FROM_STACK:
-					method = new Method_PrintCharsFromStack(this);
-					break;
-				case PRINT_FLOAT_FROM_STACK:
-					method = new Method_PrintFloatFromStack(this);
-					break;
-				case PRINT_STRING_FROM_STACK:
-					method = new Method_PrintStringFromStack(this);
-					break;
-				case READ_CHARS_TO_STACK:
-					method = new Method_ReadCharsToStack(this);
-					break;
-				case READ_NUM_FROM_DATA_TO_STACK:
-					method = new Method_ReadNumFromDataToStack(this);
-					break;
-				case READ_STRING_FROM_DATA_TO_STACK:
-					method = new Method_ReadStringFromDataToStack(this);
-					break;
-				case RIGHT:
-					method = new Method_Right(this);
-					break;
-				case RND:
-					method = new Method_Rnd(this);
-					break;
-				case ROUND_TO_INT:
-					method = new Method_RoundToInt(this);
-					break;
-				case SGN:
-					method = new Method_Sgn(this);
-					break;
-				case SIN:
-					method = new Method_Sin(this);
-					break;
-				case SPACE:
-					method = new Method_Space(this);
-					break;
-				case SPC:
-					method = new Method_Spc(this);
-					break;
-				case SQR:
-					method = new Method_Sqr(this);
-					break;
-				case STORE_FLOAT_IN_1D_ARRAY:
-					method = new Method_StoreFloatIn1DArray(this);
-					break;
-				case STORE_FLOAT_IN_2D_ARRAY:
-					method = new Method_StoreFloatIn2DArray(this);
-					break;
-				case STORE_STRING_IN_1D_ARRAY:
-					method = new Method_StoreStringIn1DArray(this);
-					break;
-				case STORE_STRING_IN_2D_ARRAY:
-					method = new Method_StoreStringIn2DArray(this);
-					break;
-				case STR:
-					method = new Method_Str(this);
-					break;
-				case STRING_CONCATENATION:
-					method = new Method_StringConcatenation(this);
-					break;
-				case STRING_EQUAL:
-					method = new Method_StringEqual(this);
-					break;
-				case STRING_GREATER_OR_EQUAL:
-					method = new Method_StringGreaterOrEqual(this);
-					break;
-				case STRING_GREATER_THAN:
-					method = new Method_StringGreaterThan(this);
-					break;
-				case STRING_LESS_OR_EQUAL:
-					method = new Method_StringLessOrEqual(this);
-					break;
-				case STRING_LESS_THAN:
-					method = new Method_StringLessThan(this);
-					break;
-				case STRING_NOT_EQUAL:
-					method = new Method_StringNotEqual(this);
-					break;
-				case STRING_TO_CHARS:
-					method = new Method_StringToChars(this);
-					break;
-				case SUBSTRING:
-					method = new Method_Substring(this);
-					break;
-				case TAB:
-					method = new Method_Tab(this);
-					break;
-				case TAN:
-					method = new Method_Tan(this);
-					break;
-				case THROW_RUNTIME_EXCEPTION:
-					method = new Method_ThrowRuntimeException(this);
-					break;
-				case VAL:
-					method = new Method_Val(this);
-					break;
-				case XOR:
-					method = new Method_Xor(this);
-					break;
+			case ABS:
+				method = new Method_Abs(this);
+				break;
+			case AND:
+				method = new Method_And(this);
+				break;
+			case ASC:
+				method = new Method_Asc(this);
+				break;
+			case ATN:
+				method = new Method_Atn(this);
+				break;
+			case CHARS_TO_FLOAT:
+				method = new Method_CharsToFloat(this);
+				break;
+			case CHECK_1D_FLOAT_ARRAY_ACCESS:
+				method = new Method_Check1DFloatArrayAccess(this);
+				break;
+			case CHECK_1D_STRING_ARRAY_ACCESS:
+				method = new Method_Check1DStringArrayAccess(this);
+				break;
+			case CHECK_2D_FLOAT_ARRAY_ACCESS:
+				method = new Method_Check2DFloatArrayAccess(this);
+				break;
+			case CHECK_2D_STRING_ARRAY_ACCESS:
+				method = new Method_Check2DStringArrayAccess(this);
+				break;
+			case CHECK_LOGICAL_OPERATION_ARGUMENTS:
+				method = new Method_CheckLogicalOperatorArguments(this);
+				break;
+			case CHECK_ON_GOTO_GOSUB_ARG:
+				method = new Method_CheckOnGotoGosubArg(this);
+				break;
+			case CHR:
+				method = new Method_Chr(this);
+				break;
+			case COS:
+				method = new Method_Cos(this);
+				break;
+			case DIM_1D_CHECK_SIZE:
+				method = new Method_Dim1DCheckSize(this);
+				break;
+			case DIM_1D_FLOAT_ARRAY:
+				method = new Method_Dim1DFloatArray(this);
+				break;
+			case DIM_1D_STRING_ARRAY:
+				method = new Method_Dim1DStringArray(this);
+				break;
+			case DIM_2D_CHECK_SIZE:
+				method = new Method_Dim2DCheckSize(this);
+				break;
+			case DIM_2D_FLOAT_ARRAY:
+				method = new Method_Dim2DFloatArray(this);
+				break;
+			case DIM_2D_STRING_ARRAY:
+				method = new Method_Dim2DStringArray(this);
+				break;
+			case DIVISION:
+				method = new Method_Division(this);
+				break;
+			case DIVISION_BY_ZERO:
+				method = new Method_DivisionByZero(this);
+				break;
+			case EXP:
+				method = new Method_Exp(this);
+				break;
+			case FIX:
+				method = new Method_Fix(this);
+				break;
+			case FLOAT_TO_CHARS:
+				method = new Method_FloatToChars(this);
+				break;
+			case GOSUB_STACK_INITIALIZE:
+				method = new Method_GosubStackInitialize(this);
+				break;
+			case GOSUB_STACK_POP:
+				method = new Method_GosubStackPop(this);
+				break;
+			case GOSUB_STACK_PUSH:
+				method = new Method_GosubStackPush(this);
+				break;
+			case INPUT:
+				method = new Method_Input(this);
+				break;
+			case INSTR:
+				method = new Method_Instr(this);
+				break;
+			case INT:
+				method = new Method_Int(this);
+				break;
+			case INTEGER_DIVISION:
+				method = new Method_IntegerDivision(this);
+				break;
+			case LEFT:
+				method = new Method_Left(this);
+				break;
+			case LEN:
+				method = new Method_Len(this);
+				break;
+			case LOAD_FLOAT_FROM_1D_ARRAY:
+				method = new Method_LoadFloatFrom1DArray(this);
+				break;
+			case LOAD_FLOAT_FROM_2D_ARRAY:
+				method = new Method_LoadFloatFrom2DArray(this);
+				break;
+			case LOAD_STRING_FROM_1D_ARRAY:
+				method = new Method_LoadStringFrom1DArray(this);
+				break;
+			case LOAD_STRING_FROM_2D_ARRAY:
+				method = new Method_LoadStringFrom2DArray(this);
+				break;
+			case LOG:
+				method = new Method_Log(this);
+				break;
+			case MID:
+				method = new Method_Mid(this);
+				break;
+			case MOD:
+				method = new Method_Mod(this);
+				break;
+			case NOT:
+				method = new Method_Not(this);
+				break;
+			case OR:
+				method = new Method_Or(this);
+				break;
+			case POS:
+				method = new Method_Pos(this);
+				break;
+			case POWER:
+				method = new Method_Power(this);
+				break;
+			case PRINT_CHAR_FROM_STACK:
+				method = new Method_PrintCharFromStack(this);
+				break;
+			case PRINT_CHARS_FROM_STACK:
+				method = new Method_PrintCharsFromStack(this);
+				break;
+			case PRINT_FLOAT_FROM_STACK:
+				method = new Method_PrintFloatFromStack(this);
+				break;
+			case PRINT_STRING_FROM_STACK:
+				method = new Method_PrintStringFromStack(this);
+				break;
+			case READ_CHARS_TO_STACK:
+				method = new Method_ReadCharsToStack(this);
+				break;
+			case READ_NUM_FROM_DATA_TO_STACK:
+				method = new Method_ReadNumFromDataToStack(this);
+				break;
+			case READ_STRING_FROM_DATA_TO_STACK:
+				method = new Method_ReadStringFromDataToStack(this);
+				break;
+			case RIGHT:
+				method = new Method_Right(this);
+				break;
+			case RND:
+				method = new Method_Rnd(this);
+				break;
+			case ROUND_TO_INT:
+				method = new Method_RoundToInt(this);
+				break;
+			case SGN:
+				method = new Method_Sgn(this);
+				break;
+			case SIN:
+				method = new Method_Sin(this);
+				break;
+			case SPACE:
+				method = new Method_Space(this);
+				break;
+			case SPC:
+				method = new Method_Spc(this);
+				break;
+			case SQR:
+				method = new Method_Sqr(this);
+				break;
+			case STORE_FLOAT_IN_1D_ARRAY:
+				method = new Method_StoreFloatIn1DArray(this);
+				break;
+			case STORE_FLOAT_IN_2D_ARRAY:
+				method = new Method_StoreFloatIn2DArray(this);
+				break;
+			case STORE_STRING_IN_1D_ARRAY:
+				method = new Method_StoreStringIn1DArray(this);
+				break;
+			case STORE_STRING_IN_2D_ARRAY:
+				method = new Method_StoreStringIn2DArray(this);
+				break;
+			case STR:
+				method = new Method_Str(this);
+				break;
+			case STRING_CONCATENATION:
+				method = new Method_StringConcatenation(this);
+				break;
+			case STRING_EQUAL:
+				method = new Method_StringEqual(this);
+				break;
+			case STRING_GREATER_OR_EQUAL:
+				method = new Method_StringGreaterOrEqual(this);
+				break;
+			case STRING_GREATER_THAN:
+				method = new Method_StringGreaterThan(this);
+				break;
+			case STRING_LESS_OR_EQUAL:
+				method = new Method_StringLessOrEqual(this);
+				break;
+			case STRING_LESS_THAN:
+				method = new Method_StringLessThan(this);
+				break;
+			case STRING_NOT_EQUAL:
+				method = new Method_StringNotEqual(this);
+				break;
+			case STRING_TO_CHARS:
+				method = new Method_StringToChars(this);
+				break;
+			case SUBSTRING:
+				method = new Method_Substring(this);
+				break;
+			case TAB:
+				method = new Method_Tab(this);
+				break;
+			case TAN:
+				method = new Method_Tan(this);
+				break;
+			case THROW_RUNTIME_EXCEPTION:
+				method = new Method_ThrowRuntimeException(this);
+				break;
+			case VAL:
+				method = new Method_Val(this);
+				break;
+			case XOR:
+				method = new Method_Xor(this);
+				break;
 			}
 			this.methodMap.put(m, method);
 			this.usedMethods.add(m);
