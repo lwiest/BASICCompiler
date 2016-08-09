@@ -6,7 +6,7 @@ It compiles a BASIC program into Java bytecode, which can be executed with any J
 
 Originally, I started this project to learn about Java bytecodes, hacking together an empty Java class file, adding bits and pieces. Soon this grew into implementing a BASIC compiler complete enough to compile and play classic BASIC games like, for example, "StarTrek". 
 
-This BASIC compiler is self-contained. It uses only a minimum set of Java Virtual Machine methods and by intention no other frameworks as I wanted to write the compiler from scratch. The functionality of the BASIC compiler is backed by over 1500 unit test programs in BASIC. The implemented BASIC language is oriented at Microsoft BASIC. The BASIC Compiler source code is available under the FreeBSD license.
+BASIC Compiler is self-contained. It uses only a minimum set of Java Virtual Machine methods and by intention no other frameworks as I wanted to write the compiler from scratch. The functionality of BASIC Compiler is backed by over 1500 unit test programs in BASIC. The implemented BASIC language is oriented at Microsoft BASIC. The BASIC Compiler source code is available under the MIT license.
 
 Enjoy! -- Lorenz
 
@@ -18,13 +18,13 @@ Download the project ZIP-file from github and unzip it to a temporary folder ("r
 
 **To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the root folder as an import source _General > Existing Projects into Workspace_.
 
-**To compile the BASIC compiler into a convenient JAR-file**, open a command prompt in the root folder and enter (Windows only, `%JAVA_HOME%` must point to the installation folder of your Java SDK):
+**To compile BASIC Compiler into a convenient JAR-file**, open a command prompt in the root folder and enter (Windows only, `%JAVA_HOME%` must point to the installation folder of your Java SDK):
 
 ```
 > makejar
 ```
 
-**To run the BASIC compiler and get command-line options**, enter
+**To run BASIC Compiler and get command-line options**, enter
 
 ```
 > java -jar BASICCompiler.jar
@@ -56,14 +56,14 @@ Option `-optimize` applies compiler optimizations. As of now, the only implement
 > java StarTrek
 ```
 
-##BASICCompiler Language Specification
+##BASIC Compiler Language Specification
 
 Find more information about the implemented BASIC language in [doc/BASICCompilerLanguage.pdf](doc/BASICCompilerLanguage.pdf).
 
 ##Samples
 
 Find sample BASIC programs from David Ahl's classic _BASIC Computer Games_ books, original (used with permission) and modified, in folder [samples](samples).
-Below are some transcripts of runs from compiled sample BASIC programs:
+Below are transcripts of runs from some compiled sample BASIC programs:
 
 ```
 F:\BASICCompiler>java 3dplot
