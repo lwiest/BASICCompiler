@@ -28,13 +28,12 @@ Download the project ZIP-file from github and unzip it to a temporary folder ("r
 
 ```
 > java -jar BASICCompiler.jar
- ____    _    ____  _  ____    ____                      _ _
-| __ )  / \  / ___|| |/ ___|  / ___|___  _ __ ___  _ __ (_) | ___ _ __
-|  _ \ / _ \ \___ \| | |     | |   / _ \| '_ ` _ \| '_ \| | |/ _ \ '__|
-| |_) / ___ \ ___) | | |___  | |__| (_) | | | | | | |_) | | |  __/ |
-|____/_/   \_\____/|_|\____|  \____\___/|_| |_| |_| .__/|_|_|\___|_|
-                                                  |_|
-Version 1.3 (25-MAR-2015) by Lorenz Wiest
+ ___   _   ___  _  ___    ___                _ _
+| _ ) /_\ / __|| |/ __|  / __|___ _ __  _ __(_) |___ _ _
+| _ \/ _ \\__ \| | (__  | (__/ _ \ '  \| '_ \ | | -_) '_|
+|___/_/ \_\___/|_|\___|  \___\___/_|_|_| .__/_|_|___|_|
+                                       |_|
+Version 1.4 (09-AUG-2016) by Lorenz Wiest
 
 Usage: java BASICCompiler <BASIC source filename> <Java class filename> [<options>]
 Options: -formatted=<filename> | Writes a formatted BASIC source file
