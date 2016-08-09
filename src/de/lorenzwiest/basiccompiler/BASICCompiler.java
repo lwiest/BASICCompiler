@@ -49,12 +49,11 @@ import de.lorenzwiest.basiccompiler.parser.statements.impl.LineNumberStatement;
 public class BASICCompiler {
 	private static final String CR = System.getProperty("line.separator");
 	private static final String HELP = "" //
-			+ " ____    _    ____  _  ____    ____                      _ _" + CR //
-			+ "| __ )  / \\  / ___|| |/ ___|  / ___|___  _ __ ___  _ __ (_) | ___ _ __" + CR //
-			+ "|  _ \\ / _ \\ \\___ \\| | |     | |   / _ \\| '_ ` _ \\| '_ \\| | |/ _ \\ '__|" + CR //
-			+ "| |_) / ___ \\ ___) | | |___  | |__| (_) | | | | | | |_) | | |  __/ |" + CR //
-			+ "|____/_/   \\_\\____/|_|\\____|  \\____\\___/|_| |_| |_| .__/|_|_|\\___|_|" + CR //
-			+ "                                                  |_|" + CR //
+			+ " ___   _   ___  _  ___    ___                _ _" + CR //
+			+ "| _ ) /_\\ / __|| |/ __|  / __|___ _ __  _ __(_) |___ _ _" + CR //
+			+ "| _ \\/ _ \\\\__ \\| | (__  | (__/ _ \\ '  \\| '_ \\ | | -_) '_|" + CR //
+			+ "|___/_/ \\_\\___/|_|\\___|  \\___\\___/_|_|_| .__/_|_|___|_|" + CR //
+			+ "                                       |_|" + CR //
 			+ "Version 1.3 (25-MAR-2015) by Lorenz Wiest" + CR //
 			+ CR //
 			+ "Usage:   java BASICCompiler <BASIC source filename> <Java class filename> [<options>]" + CR //
