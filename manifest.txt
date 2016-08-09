@@ -1,1 +1,1 @@
-Main-Class: org.basiccompiler.BASICCompiler
+Main-Class: de.lorenzwiest.basiccompiler.BASICCompiler
