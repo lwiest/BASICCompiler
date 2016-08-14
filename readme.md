@@ -14,7 +14,7 @@ Enjoy! -- Lorenz
 
 **Prerequisites:** You have Java SDK 5 (or higher) installed on your system.
 
-Download the project ZIP-file from github and unzip it to a temporary folder ("root" folder).
+Download the project ZIP-file from GitHub and unzip it to a temporary folder ("root" folder).
 
 **To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the root folder as an import source _General > Existing Projects into Workspace_.
 
