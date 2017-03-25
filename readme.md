@@ -1,4 +1,4 @@
-#BASIC Compiler
+# BASIC Compiler
 
 This project is an open-source BASIC compiler written in Java.
 
@@ -10,7 +10,7 @@ BASIC Compiler is self-contained. It uses only a minimum set of Java Virtual Mac
 
 Enjoy! -- Lorenz
 
-##Getting Started
+## Getting Started
 
 **Prerequisites:** You have Java SDK 5 (or higher) installed on your system.
 
@@ -56,11 +56,11 @@ Option `-optimize` applies compiler optimizations. As of now, the only implement
 > java StarTrek
 ```
 
-##BASIC Compiler Language Specification
+## BASIC Compiler Language Specification
 
 Find more information about the implemented BASIC language in [doc/BASICCompilerLanguage.pdf](doc/BASICCompilerLanguage.pdf).
 
-##Samples
+## Samples
 
 Find sample BASIC programs from David Ahl's classic _BASIC Computer Games_ books, original (used with permission) and modified, in folder [samples](samples).
 Below are transcripts of runs from some compiled sample BASIC programs:
