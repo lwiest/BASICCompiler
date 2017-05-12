@@ -1,12 +1,14 @@
 # BASIC Compiler
 
-This project is an open-source BASIC compiler written in Java.
+BASIC Compiler is an open-source BASIC compiler written in Java.
 
 It compiles a BASIC program into Java bytecode, which can be executed with any Java Virtual Machine 1.5 and higher.
 
 Originally, I started this project to learn about Java bytecodes, hacking together an empty Java class file, adding bits and pieces. Soon this grew into implementing a BASIC compiler complete enough to compile and play classic BASIC games like, for example, "StarTrek". 
 
-BASIC Compiler is self-contained. It uses only a minimum set of Java Virtual Machine methods and by intention no other frameworks as I wanted to write the compiler from scratch. The functionality of BASIC Compiler is backed by over 1500 unit test programs in BASIC. The implemented BASIC language is oriented at Microsoft BASIC. The BASIC Compiler source code is available under the MIT license.
+BASIC Compiler is self-contained. It uses only a minimum set of Java Virtual Machine methods and by intention no other frameworks as I wanted to write the compiler from scratch. The functionality of BASIC Compiler is backed by over 1500 unit test programs in BASIC. The implemented BASIC language is oriented at Microsoft BASIC.
+
+The BASIC Compiler source code is available under the MIT license.
 
 Enjoy! -- Lorenz
 
@@ -14,15 +16,18 @@ Enjoy! -- Lorenz
 
 **Prerequisites:** You have Java SDK 5 (or higher) installed on your system.
 
-Download the project ZIP-file from GitHub and unzip it to a temporary folder ("root" folder).
+Download the project ZIP file from GitHub and unzip it to a temporary folder ("root" folder).
 
 **To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the root folder as an import source _General > Existing Projects into Workspace_.
 
-**To compile BASIC Compiler into a convenient JAR-file**, open a command prompt in the root folder and enter (Windows only, `%JAVA_HOME%` must point to the installation folder of your Java SDK):
+**To compile BASIC Compiler into a convenient JAR file**, open a command prompt in the root folder and enter (Windows only, `%JAVA_HOME%` must point to the installation folder of your Java SDK):
 
 ```
 > makejar
 ```
+This produces the `BASICCompiler.jar` file, containg the compiled BASIC Compiler.
+
+**Tip:** I added the `BASICCompiler.jar` file to this GitHub repository.
 
 **To run BASIC Compiler and get command-line options**, enter
 
