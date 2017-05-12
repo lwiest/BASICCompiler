@@ -25,7 +25,7 @@ Download the project ZIP file from GitHub and unzip it to a temporary folder ("r
 ```
 > makejar
 ```
-This produces the `BASICCompiler.jar` file, containg the compiled BASIC Compiler.
+This produces the `BASICCompiler.jar` file, containing the compiled BASIC Compiler.
 
 **Tip:** I added the `BASICCompiler.jar` file to this GitHub repository.
 
