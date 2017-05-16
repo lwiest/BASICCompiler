@@ -1,5 +1,4 @@
 bin/
 src/org/basiccompiler/tests/etc/
 .settings
-*.jar
 *.docx
