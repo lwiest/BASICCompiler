@@ -14,9 +14,9 @@ Enjoy! -- Lorenz
 
 ## Table of Contents
 
-* [Getting Started](https://github.com/lwiest/BASICCompiler#getting-started)
-* [BASIC Compiler Language Specification](https://github.com/lwiest/BASICCompiler#basic-compiler-language-specification)
-* [Samples](https://github.com/lwiest/BASICCompiler#samples)
+* [Getting Started](#getting-started)
+* [BASIC Compiler Language Specification](#basic-compiler-language-specification)
+* [Samples](#samples)
 
 ## Getting Started
 
