@@ -12,6 +12,12 @@ The BASIC Compiler source code is available under the MIT license.
 
 Enjoy! -- Lorenz
 
+## Table of Contents
+
+* [Getting Started](https://github.com/lwiest/BASICCompiler#getting-started)
+* [BASIC Compiler Language Specification](https://github.com/lwiest/BASICCompiler#basic-compiler-language-specification)
+* [Samples](https://github.com/lwiest/BASICCompiler#samples)
+
 ## Getting Started
 
 **Prerequisites:** You have Java SDK 5 (or higher) installed on your system.
