@@ -825,7 +825,7 @@ public class Compiler {
 			}
 		}
 
-		emitStrExpressionToStack(StrNode.createStringNode(typeBuffer.toString()));
+		emitStrExpressionToStack(StrNode.create(typeBuffer.toString()));
 		this.libraryManager.getMethod(LibraryManager.MethodEnum.INPUT).emitCall(this.o);
 
 		for (int i = 0; i < vars.length; i++) {

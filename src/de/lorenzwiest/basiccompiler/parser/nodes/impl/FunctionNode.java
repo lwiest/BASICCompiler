@@ -37,7 +37,7 @@ public class FunctionNode implements INode {
 		this.argNodes = argNodes;
 	}
 
-	public static FunctionNode createFunctionNode(FunctionToken functionToken, INode... argNodes) {
+	public static FunctionNode create(FunctionToken functionToken, INode... argNodes) {
 		return new FunctionNode(functionToken, argNodes);
 	}
 
@@ -49,7 +49,6 @@ public class FunctionNode implements INode {
 		return this.argNodes;
 	}
 
-	// @Override commented for JDK 5 compatibility
 	@Override
 	public NodeType getType() {
 		return this.functionToken.getReturnType();

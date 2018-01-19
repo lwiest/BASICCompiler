@@ -35,7 +35,7 @@ public class TokenNode implements INode {
 		this.token = token;
 	}
 
-	public static INode createTokenNode(Token token) {
+	public static INode create(Token token) {
 		return new TokenNode(token);
 	}
 
@@ -43,7 +43,6 @@ public class TokenNode implements INode {
 		return this.token;
 	}
 
-	// @Override commented for JDK 5 compatibility
 	@Override
 	public NodeType getType() {
 		return NodeType.UNKNOWN;

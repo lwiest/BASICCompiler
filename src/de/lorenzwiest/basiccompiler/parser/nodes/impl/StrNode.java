@@ -34,7 +34,7 @@ public class StrNode implements INode {
 		this.value = value;
 	}
 
-	public static StrNode createStringNode(String value) {
+	public static StrNode create(String value) {
 		return new StrNode(value);
 	}
 
@@ -42,7 +42,6 @@ public class StrNode implements INode {
 		return this.value;
 	}
 
-	// @Override commented for JDK 5 compatibility
 	@Override
 	public NodeType getType() {
 		return NodeType.STR;

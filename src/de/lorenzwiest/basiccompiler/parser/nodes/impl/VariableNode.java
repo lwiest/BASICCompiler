@@ -44,7 +44,7 @@ public class VariableNode implements INode {
 		this(variableName, type, EMPTY);
 	}
 
-	public static VariableNode createVariableNode(String variableName, NodeType type, INode... dimExpressions) {
+	public static VariableNode create(String variableName, NodeType type, INode... dimExpressions) {
 		return new VariableNode(variableName, type, dimExpressions);
 	}
 
@@ -60,7 +60,6 @@ public class VariableNode implements INode {
 		return this.dimExpressions;
 	}
 
-	// @Override commented for JDK 5 compatibility
 	@Override
 	public NodeType getType() {
 		return this.type;

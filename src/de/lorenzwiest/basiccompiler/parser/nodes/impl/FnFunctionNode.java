@@ -38,7 +38,7 @@ public class FnFunctionNode implements INode {
 		this.funcArgExprs = funcArgExprs;
 	}
 
-	public static FnFunctionNode createFnFunctionNode(String funcName, NodeType funcType, INode... funcArgExprs) {
+	public static FnFunctionNode create(String funcName, NodeType funcType, INode... funcArgExprs) {
 		return new FnFunctionNode(funcName, funcType, funcArgExprs);
 	}
 
@@ -50,7 +50,6 @@ public class FnFunctionNode implements INode {
 		return this.funcArgExprs;
 	}
 
-	// @Override commented for JDK 5 compatibility
 	@Override
 	public NodeType getType() {
 		return this.funcType;

@@ -34,7 +34,7 @@ public class NumNode implements INode {
 		this.strValue = strValue;
 	}
 
-	public static NumNode createNumberNode(String strValue) {
+	public static NumNode create(String strValue) {
 		return new NumNode(strValue);
 	}
 
@@ -46,7 +46,6 @@ public class NumNode implements INode {
 		return Float.valueOf(this.strValue);
 	}
 
-	// @Override commented for JDK 5 compatibility
 	@Override
 	public NodeType getType() {
 		return NodeType.NUM;

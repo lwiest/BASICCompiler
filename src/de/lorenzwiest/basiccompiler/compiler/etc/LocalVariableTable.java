@@ -38,7 +38,7 @@ public class LocalVariableTable {
 	public LocalVariableNode addAndGetLocalVariableNode(String variableName, NodeType type) {
 		if (this.map.containsKey(variableName) == false) {
 			int localIndex = this.map.size() + 1;
-			LocalVariableNode locVarNode = LocalVariableNode.createLocalVariableNode(variableName, type, localIndex);
+			LocalVariableNode locVarNode = LocalVariableNode.create(variableName, type, localIndex);
 			this.map.put(variableName, locVarNode);
 		}
 		return this.map.get(variableName);

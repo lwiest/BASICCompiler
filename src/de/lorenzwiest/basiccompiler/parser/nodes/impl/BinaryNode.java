@@ -39,7 +39,7 @@ public class BinaryNode implements INode {
 		this.rightNode = rightNode;
 	}
 
-	public static INode createBinaryNode(Token op, INode leftNode, INode rightNode) {
+	public static INode create(Token op, INode leftNode, INode rightNode) {
 		if ((leftNode == null) || (rightNode == null)) {
 			return null;
 		}
@@ -58,7 +58,6 @@ public class BinaryNode implements INode {
 		return this.rightNode;
 	}
 
-	// @Override commented for JDK 5 compatibility
 	@Override
 	public NodeType getType() {
 		if ((this.op == Token.STRING_ADD)) {

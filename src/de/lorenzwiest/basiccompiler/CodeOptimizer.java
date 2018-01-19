@@ -82,9 +82,9 @@ public class CodeOptimizer {
 		List<INode> normalizedPrintExprs = new ArrayList<INode>(); // we need a copy here!
 		normalizedPrintExprs.addAll(Arrays.asList(printExprs));
 		if ((printExprs.length == 0) || (!isTokenExpr(printExprs[printExprs.length - 1], Token.SEMICOLON) && !isTokenExpr(printExprs[printExprs.length - 1], Token.COMMA))) {
-			normalizedPrintExprs.add(TokenNode.createTokenNode(Token.SEMICOLON));
-			normalizedPrintExprs.add(StrNode.createStringNode(Compiler.CR));
-			normalizedPrintExprs.add(TokenNode.createTokenNode(Token.SEMICOLON));
+			normalizedPrintExprs.add(TokenNode.create(Token.SEMICOLON));
+			normalizedPrintExprs.add(StrNode.create(Compiler.CR));
+			normalizedPrintExprs.add(TokenNode.create(Token.SEMICOLON));
 		}
 		return normalizedPrintExprs;
 	}
@@ -121,7 +121,7 @@ public class CodeOptimizer {
 						String s2 = ((StrNode) printExpr2).getValue();
 						foldedExprs.remove(i);
 						foldedExprs.remove(i);
-						foldedExprs.add(i, StrNode.createStringNode(s1 + s2));
+						foldedExprs.add(i, StrNode.create(s1 + s2));
 						i--;
 					}
 				}

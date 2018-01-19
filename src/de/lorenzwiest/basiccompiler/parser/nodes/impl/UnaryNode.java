@@ -37,7 +37,7 @@ public class UnaryNode implements INode {
 		this.argNode = argNode;
 	}
 
-	public static INode createUnaryNode(Token op, INode argNode) {
+	public static INode create(Token op, INode argNode) {
 		if (argNode == null) {
 			return null;
 		}
@@ -52,7 +52,6 @@ public class UnaryNode implements INode {
 		return this.argNode;
 	}
 
-	// @Override commented for JDK 5 compatibility
 	@Override
 	public NodeType getType() {
 		return NodeType.NUM;

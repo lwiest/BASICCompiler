@@ -35,7 +35,7 @@ public class LocalVariableNode extends VariableNode {
 		this.localIndex = localIndex;
 	}
 
-	public static LocalVariableNode createLocalVariableNode(String variableName, NodeType type, int localIndex) {
+	public static LocalVariableNode create(String variableName, NodeType type, int localIndex) {
 		return new LocalVariableNode(variableName, type, localIndex);
 	}
 

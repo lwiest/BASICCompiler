@@ -466,7 +466,7 @@ public class Parser {
 				throw new CompileException("Missing or illegal number expression for step value in FOR statement.");
 			}
 		} else {
-			stepExpr = NumNode.createNumberNode("1");
+			stepExpr = NumNode.create("1");
 		}
 		return new ForStatement(loopVar, startExpr, endExpr, stepExpr);
 	}
@@ -692,12 +692,12 @@ public class Parser {
 			}
 			if (expr == null) {
 				if (isNextToken(SEMICOLON)) {
-					expr = TokenNode.createTokenNode(SEMICOLON);
+					expr = TokenNode.create(SEMICOLON);
 				}
 			}
 			if (expr == null) {
 				if (isNextToken(COMMA)) {
-					expr = TokenNode.createTokenNode(COMMA);
+					expr = TokenNode.create(COMMA);
 				}
 			}
 
@@ -896,7 +896,7 @@ public class Parser {
 				if (node == null) {
 					throw new CompileException("Missing or invalid number expression after logical operator \"" + token.getChars() + "\".");
 				}
-				result = BinaryNode.createBinaryNode(token, result, node);
+				result = BinaryNode.create(token, result, node);
 			}
 		}
 		return result;
@@ -905,7 +905,7 @@ public class Parser {
 	private INode parseNumNotExpr() {
 		INode result = null;
 		if (isNextKeyword(NOT)) {
-			result = UnaryNode.createUnaryNode(NOT, parseNumNotExpr());
+			result = UnaryNode.create(NOT, parseNumNotExpr());
 		} else {
 			result = parseNumRelExpr();
 		}
@@ -921,7 +921,7 @@ public class Parser {
 				if (node == null) {
 					throw new CompileException("Missing or invalid number expression after relational operator \"" + token.getChars() + "\".");
 				}
-				result = BinaryNode.createBinaryNode(token, result, node);
+				result = BinaryNode.create(token, result, node);
 			}
 		}
 		return result;
@@ -936,7 +936,7 @@ public class Parser {
 				if (node == null) {
 					throw new CompileException("Missing or invalid number expression after arithmetic operator \"" + token.getChars() + "\".");
 				}
-				result = BinaryNode.createBinaryNode(token, result, node);
+				result = BinaryNode.create(token, result, node);
 			}
 		}
 		return result;
@@ -950,7 +950,7 @@ public class Parser {
 				if (node == null) {
 					throw new CompileException("Missing or invalid number expression after arithmetic operator \"MOD\".");
 				}
-				result = BinaryNode.createBinaryNode(MOD, result, node);
+				result = BinaryNode.create(MOD, result, node);
 			}
 		}
 		return result;
@@ -964,7 +964,7 @@ public class Parser {
 				if (node == null) {
 					throw new CompileException("Missing or invalid number expression after arithmetic operator \"\\\".");
 				}
-				result = BinaryNode.createBinaryNode(INT_DIVIDE, result, node);
+				result = BinaryNode.create(INT_DIVIDE, result, node);
 			}
 		}
 		return result;
@@ -979,7 +979,7 @@ public class Parser {
 				if (node == null) {
 					throw new CompileException("Missing or invalid number expression after arithmetic operator \"" + token.getChars() + "\".");
 				}
-				result = BinaryNode.createBinaryNode(token, result, node);
+				result = BinaryNode.create(token, result, node);
 			}
 		}
 		return result;
@@ -993,7 +993,7 @@ public class Parser {
 				if (node == null) {
 					throw new CompileException("Missing or invalid number expression after arithmetic operator \"^\".");
 				}
-				result = BinaryNode.createBinaryNode(POWER, result, node);
+				result = BinaryNode.create(POWER, result, node);
 			}
 		}
 		return result;
@@ -1021,12 +1021,12 @@ public class Parser {
 		}
 		if (result == null) {
 			if (isNextToken(UNARY_MINUS)) {
-				result = UnaryNode.createUnaryNode(UNARY_MINUS, parseNumFactor());
+				result = UnaryNode.create(UNARY_MINUS, parseNumFactor());
 			}
 		}
 		if (result == null) {
 			if (isNextToken(OPEN)) {
-				result = UnaryNode.createUnaryNode(OPEN, parseNumExpr());
+				result = UnaryNode.create(OPEN, parseNumExpr());
 				if (isNextToken(CLOSE) == false) {
 					throw new CompileException("Missing closing parentheses in number expression.");
 				}
@@ -1064,7 +1064,7 @@ public class Parser {
 						ArrayVariableInfo info = new ArrayVariableInfo(2, false /* usedInDimStatement */);
 						this.arrayVariables.put(varName, info);
 					}
-					return VariableNode.createVariableNode(varName, NodeType.NUM, dim1Expr, dim2Expr);
+					return VariableNode.create(varName, NodeType.NUM, dim1Expr, dim2Expr);
 				}
 				throw new CompileException("Missing closing parentheses after second index of number array variable " + varName + ").");
 			}
@@ -1077,7 +1077,7 @@ public class Parser {
 					ArrayVariableInfo info = new ArrayVariableInfo(1, false /* usedInDimStatement */);
 					this.arrayVariables.put(varName, info);
 				}
-				return VariableNode.createVariableNode(varName, NodeType.NUM, dim1Expr);
+				return VariableNode.create(varName, NodeType.NUM, dim1Expr);
 			}
 			throw new CompileException("Missing closing parentheses after first index of number array variable " + varName + ").");
 		}
@@ -1095,7 +1095,7 @@ public class Parser {
 	private NumNode parseNumConst() {
 		String strNumber = getNumConstant();
 		if (strNumber != null) {
-			return NumNode.createNumberNode(strNumber);
+			return NumNode.create(strNumber);
 		}
 		return null;
 	}
@@ -1111,7 +1111,7 @@ public class Parser {
 			if (node == null) {
 				throw new CompileException("Missing or invalid string expression after relational string operator \"" + token.getChars() + "\".");
 			}
-			result = BinaryNode.createBinaryNode(token, result, node);
+			result = BinaryNode.create(token, result, node);
 		}
 		return result;
 	}
@@ -1124,7 +1124,7 @@ public class Parser {
 				if (isNextToken(STRING_ADD)) {
 					INode node = parseStrTerm();
 					if (node != null) {
-						result = BinaryNode.createBinaryNode(STRING_ADD, result, node);
+						result = BinaryNode.create(STRING_ADD, result, node);
 					} else {
 						// "+ <numExpr>" encountered -> unparse "+ <numExpr>"
 						this.pos = tmpPos;
@@ -1180,7 +1180,7 @@ public class Parser {
 				} else if (arg1Expr.getType() == NodeType.STR) {
 					// INSTR(X$, Y$)
 					arg2Expr = arg1Expr;
-					arg1Expr = NumNode.createNumberNode("1");
+					arg1Expr = NumNode.create("1");
 				}
 
 				INode arg3Expr = parseStrExpr();
@@ -1188,7 +1188,7 @@ public class Parser {
 					throw new CompileException("INSTR(): Missing or illegal last argument.");
 				}
 
-				result = FunctionNode.createFunctionNode(INSTR, arg1Expr, arg2Expr, arg3Expr);
+				result = FunctionNode.create(INSTR, arg1Expr, arg2Expr, arg3Expr);
 				if (isNextToken(CLOSE) == false) {
 					throw new CompileException("INSTR(): Cannot find closing parenthesis.");
 				}
@@ -1250,7 +1250,7 @@ public class Parser {
 				if (node == null) {
 					throw new CompileException("Missing or invalid string expression after +.");
 				}
-				result = BinaryNode.createBinaryNode(STRING_ADD, result, node);
+				result = BinaryNode.create(STRING_ADD, result, node);
 			}
 		}
 		return result;
@@ -1297,10 +1297,10 @@ public class Parser {
 						throw new CompileException("MID$(): Missing or illegal third argument.");
 					}
 				} else {
-					arg3Expr = NumNode.createNumberNode("255");
+					arg3Expr = NumNode.create("255");
 				}
 
-				result = FunctionNode.createFunctionNode(MID, arg1Expr, arg2Expr, arg3Expr);
+				result = FunctionNode.create(MID, arg1Expr, arg2Expr, arg3Expr);
 				if (isNextToken(CLOSE) == false) {
 					throw new CompileException("MID$(): Missing closing parenthesis.");
 				}
@@ -1347,7 +1347,7 @@ public class Parser {
 						ArrayVariableInfo info = new ArrayVariableInfo(2, false /* usedInDimStatement */);
 						this.arrayVariables.put(varName, info);
 					}
-					return VariableNode.createVariableNode(varName, NodeType.STR, dim1Expr, dim2Expr);
+					return VariableNode.create(varName, NodeType.STR, dim1Expr, dim2Expr);
 				}
 				throw new CompileException("Closing parentheses missing after second index of string array variable " + varName + ".");
 			}
@@ -1360,7 +1360,7 @@ public class Parser {
 					ArrayVariableInfo info = new ArrayVariableInfo(1, false /* usedInDimStatement */);
 					this.arrayVariables.put(varName, info);
 				}
-				return VariableNode.createVariableNode(varName, NodeType.STR, dim1Expr);
+				return VariableNode.create(varName, NodeType.STR, dim1Expr);
 			}
 			throw new CompileException("Closing parentheses missing after first index of string array variable " + varName + ".");
 		}
@@ -1381,7 +1381,7 @@ public class Parser {
 			if (strConst.length() > 255) { // NOTE: will never happen, code lines are 255 chars maximum
 				throw new CompileException("String constant has more than 255 characters.");
 			}
-			return StrNode.createStringNode(strConst);
+			return StrNode.create(strConst);
 		}
 		return null;
 	}
@@ -1392,7 +1392,7 @@ public class Parser {
 			if (str.length() > 255) { // NOTE: will never happen, code lines are 255 chars maximum
 				throw new CompileException("DATA Element has more than 255 characters.");
 			}
-			return StrNode.createStringNode(str);
+			return StrNode.create(str);
 		}
 		return null;
 	}
@@ -1432,7 +1432,7 @@ public class Parser {
 				}
 				args.add(argExpr);
 			}
-			result = FunctionNode.createFunctionNode(functionToken, args.toArray(new INode[numArgs]));
+			result = FunctionNode.create(functionToken, args.toArray(new INode[numArgs]));
 			if (isNextToken(CLOSE) == false) {
 				throw new CompileException("Missing closing parenthesis while parsing function " + functionToken.getChars() + ").");
 			}
@@ -1516,7 +1516,7 @@ public class Parser {
 			}
 		}
 
-		FnFunctionNode fnFunctionNode = FnFunctionNode.createFnFunctionNode(funcNameString, funcType, funcArgExprs.toArray(new INode[funcArgExprs.size()]));
+		FnFunctionNode fnFunctionNode = FnFunctionNode.create(funcNameString, funcType, funcArgExprs.toArray(new INode[funcArgExprs.size()]));
 		this.fnMap.put(funcNameString, fnFunctionNode);
 
 		return fnFunctionNode;
