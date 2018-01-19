@@ -5,7 +5,7 @@
 1040 REM *** (3) Corrected direction calculation
 1050 REM *** (4) Added HLP command
 1060 REM *** (5) Accept lowercase commands
-1070 PRINT
+1070 DIM G(8,8),K(3,3),N(3),Z(8,8),D(8)
 1080 PRINT
 1090 PRINT
 1100 PRINT
@@ -16,19 +16,19 @@
 1150 PRINT
 1160 PRINT
 1170 PRINT
-1180 PRINT TAB(21);"                ,------*------,"
-1190 PRINT TAB(21);",-------------   '---  ------'"
-1200 PRINT TAB(21);" '-------- --'      / /"
-1210 PRINT TAB(21);"     ,---' '-------/ /--,"
-1220 PRINT TAB(21);"      '----------------'"
-1230 PRINT
-1240 PRINT TAB(21);"The USS ENTERPRISE --- NCC-1701"
-1250 PRINT
+1180 PRINT
+1190 PRINT TAB(21);"                ,------*------,"
+1200 PRINT TAB(21);",-------------   '---  ------'"
+1210 PRINT TAB(21);" '-------- --'      / /"
+1220 PRINT TAB(21);"     ,---' '-------/ /--,"
+1230 PRINT TAB(21);"      '----------------'"
+1240 PRINT
+1250 PRINT TAB(21);"The USS ENTERPRISE --- NCC-1701"
 1260 PRINT
 1270 PRINT
 1280 PRINT
 1290 PRINT
-1300 DIM G(8,8),K(3,3),N(3),Z(8,8),D(8)
+1300 PRINT
 1310 T=INT(RND(1)*20+20)*100 : T0=T : T9=25+INT(RND(1)*10)
 1320 D0=0
 1330 E=3000 : E0=E
@@ -453,7 +453,7 @@
 5520 IF B9=0 THEN 5560
 5530 PRINT "The Federation is in need of a new Starship commander for a similar mission."
 5540 INPUT "If there is a volunteer, let him step forward and enter 'AYE' ";A$
-5550 IF A$="AYE" THEN 1070
+5550 IF A$="AYE" THEN 1080
 5560 END
 5570 PRINT
 5580 PRINT "CONGRATULATIONS, Captain!"
