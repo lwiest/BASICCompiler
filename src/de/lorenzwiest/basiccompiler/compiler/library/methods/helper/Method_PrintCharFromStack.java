@@ -24,12 +24,12 @@
 
 package de.lorenzwiest.basiccompiler.compiler.library.methods.helper;
 
-import static de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaField.SYSTEM_OUT;
-import static de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaMethod.PRINT_STREAM_PRINT;
+import static de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaField.SYSTEM_OUT;
+import static de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaMethod.PRINT_STREAM_PRINT;
 
 import java.util.List;
 
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 import de.lorenzwiest.basiccompiler.compiler.Compiler;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;

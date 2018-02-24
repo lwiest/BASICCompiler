@@ -22,8 +22,26 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode.info;
+package de.lorenzwiest.basiccompiler.classfile.constantpoolinfo;
 
-public class AttributeInfo {
-	// not implemented
+import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
+
+public class ConstantPoolInfo {
+	protected static final byte TAG_UTF8 = 1;
+	protected static final byte TAG_FLOAT = 4;
+	protected static final byte TAG_CLASS = 7;
+	protected static final byte TAG_STRING = 8;
+	protected static final byte TAG_FIELDREF = 9;
+	protected static final byte TAG_METHODREF = 10;
+	protected static final byte TAG_NAME_AND_TYPE = 12;
+
+	private byte tag;
+
+	protected ConstantPoolInfo(byte tag) {
+		this.tag = tag;
+	}
+
+	public void write(ByteOutStream o) {
+		o.write_u1(this.tag);
+	}
 }

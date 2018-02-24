@@ -22,32 +22,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode.info;
+package de.lorenzwiest.basiccompiler.classfile.info;
 
-import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
-
-public class ExceptionTableInfo {
-	// u2 start_pc;
-	// u2 end_pc;
-	// u2 handler_pc;
-	// u2 catch_type;
-
-	private final int start_pc;   // u2
-	private final int end_pc;     // u2
-	private final int handler_pc; // u2
-	private final int catch_type; // u2
-
-	public ExceptionTableInfo(int start_pc, int end_pc, int handler_pc, int catch_type) {
-		this.start_pc = start_pc;
-		this.end_pc = end_pc;
-		this.handler_pc = handler_pc;
-		this.catch_type = catch_type;
-	}
-
-	public void write(ByteOutStream o) {
-		o.write_u2(this.start_pc);
-		o.write_u2(this.end_pc);
-		o.write_u2(this.handler_pc);
-		o.write_u2(this.catch_type);
-	}
+public class InterfaceInfo {
+	// not implemented
 }

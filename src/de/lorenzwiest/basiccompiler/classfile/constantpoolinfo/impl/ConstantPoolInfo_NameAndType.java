@@ -22,57 +22,52 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode.info;
+package de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl;
 
+import de.lorenzwiest.basiccompiler.classfile.ConstantPool;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.ConstantPoolInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
-public class FieldInfo {
-	// u2 access_flags;
-	// u2 name_index;
-	// u2 descriptor_index;
-	// u2 attributes_count;
-	// attribute_info attributes[attributes_count];
-
-	private final int accessFlags;     // u2
+public class ConstantPoolInfo_NameAndType extends ConstantPoolInfo {
 	private final int nameIndex;       // u2
 	private final int descriptorIndex; // u2
-	// private int attributeCount;     // u2
-	private final Object[] attributes; // attribute_info[]
 
-	public FieldInfo(int nameIndex, int descriptorIndex, int accessFlags) {
-		this.accessFlags = accessFlags;
+	public ConstantPoolInfo_NameAndType(int nameIndex, int descriptorIndex) {
+		super(TAG_NAME_AND_TYPE);
 		this.nameIndex = nameIndex;
 		this.descriptorIndex = descriptorIndex;
-		// this.attributeCount calculated implicitly in write()
-		this.attributes = new Object[0];
 	}
 
+	public int getNameIndex() {
+		return this.nameIndex;
+	}
+
+	public int getDescriptorIndex() {
+		return this.descriptorIndex;
+	}
+
+	@Override
 	public void write(ByteOutStream o) {
-		o.write_u2(this.accessFlags);
+		super.write(o);
 		o.write_u2(this.nameIndex);
 		o.write_u2(this.descriptorIndex);
-		o.write_u2(this.attributes.length);
-		for (int i = 0; i < this.attributes.length; i++) {
-			// not implemented, not needed yet
-		}
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof FieldInfo) {
-			FieldInfo toCompare = (FieldInfo) obj;
-			if ((this.nameIndex == toCompare.nameIndex) && (this.descriptorIndex == toCompare.descriptorIndex)) {
-				return true;
-			}
+	public static int addAndGetIndex(ConstantPool constantPool, String name, String descriptor) {
+		String key = getKey(name, descriptor);
+		if (constantPool.contains(key) == false) {
+			constantPool.put(key, createInfo(constantPool, name, descriptor));
 		}
-		return false;
+		return constantPool.getIndex(key);
 	}
 
-	@Override
-	public int hashCode() {
-		int hashCode = 17;
-		hashCode += 37 * this.nameIndex;
-		hashCode += 37 * this.descriptorIndex;
-		return hashCode;
+	private static String getKey(String name, String descriptor) {
+		return "NAME_AND_TYPE_" + name + descriptor;
+	}
+
+	private static ConstantPoolInfo_NameAndType createInfo(ConstantPool constantPool, String name, String descriptor) {
+		int nameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, name);
+		int descriptorIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, descriptor);
+		return new ConstantPoolInfo_NameAndType(nameIndex, descriptorIndex);
 	}
 }

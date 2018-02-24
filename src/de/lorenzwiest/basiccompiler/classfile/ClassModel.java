@@ -22,7 +22,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode;
+package de.lorenzwiest.basiccompiler.classfile;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,19 +31,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Class;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_FieldRef;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Float;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_MethodRef;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_NameAndType;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_String;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Utf8;
-import de.lorenzwiest.basiccompiler.bytecode.info.AttributeInfo;
-import de.lorenzwiest.basiccompiler.bytecode.info.CodeAttributeInfo;
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
-import de.lorenzwiest.basiccompiler.bytecode.info.FieldInfo;
-import de.lorenzwiest.basiccompiler.bytecode.info.InterfaceInfo;
-import de.lorenzwiest.basiccompiler.bytecode.info.MethodInfo;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_Class;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_FieldRef;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_Float;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_MethodRef;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_NameAndType;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_String;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_Utf8;
+import de.lorenzwiest.basiccompiler.classfile.info.AttributeInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.CodeAttributeInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.FieldInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.InterfaceInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.MethodInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
 public class ClassModel {

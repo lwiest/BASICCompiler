@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import de.lorenzwiest.basiccompiler.bytecode.ClassModel;
+import de.lorenzwiest.basiccompiler.classfile.ClassModel;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.arrays.Method_Check1DFloatArrayAccess;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.arrays.Method_Check1DStringArrayAccess;

@@ -24,11 +24,11 @@
 
 package de.lorenzwiest.basiccompiler.compiler.library.methods.helper;
 
-import static de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaMethod.STRING_TO_CHAR_ARRAY;
+import static de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaMethod.STRING_TO_CHAR_ARRAY;
 
 import java.util.List;
 
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;

@@ -22,10 +22,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode.info;
+package de.lorenzwiest.basiccompiler.classfile.info;
 
-import de.lorenzwiest.basiccompiler.bytecode.ConstantPool;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Utf8;
+import de.lorenzwiest.basiccompiler.classfile.ConstantPool;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_Utf8;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
 public class CodeAttributeInfo {

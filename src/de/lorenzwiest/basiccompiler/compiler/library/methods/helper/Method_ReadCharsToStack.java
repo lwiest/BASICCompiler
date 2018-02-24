@@ -26,10 +26,10 @@ package de.lorenzwiest.basiccompiler.compiler.library.methods.helper;
 
 import java.util.List;
 
-import de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaClass;
-import de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaField;
-import de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaMethod;
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaClass;
+import de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaField;
+import de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaMethod;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 import de.lorenzwiest.basiccompiler.compiler.Compiler;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;

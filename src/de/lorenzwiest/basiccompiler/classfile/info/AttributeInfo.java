@@ -22,36 +22,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode.info;
+package de.lorenzwiest.basiccompiler.classfile.info;
 
-import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
-
-public class MethodInfo {
-	// u2 access_flags;
-	// u2 name_index;
-	// u2 descriptor_index;
-	// u2 attributes_count;
-	// attribute_info attributes[attributes_count];
-
-	private final int accessFlags;        // u2
-	private final int nameIndex;          // u2
-	private final int descriptorIndex;    // u2
-	private final int attributeCount;     // u2
-	private CodeAttributeInfo attributes; // attribute_info[]
-
-	public MethodInfo(int nameIndex, int descriptorIndex, int accessFlags, CodeAttributeInfo codeAttributeInfo) {
-		this.accessFlags = accessFlags;
-		this.nameIndex = nameIndex;
-		this.descriptorIndex = descriptorIndex;
-		this.attributeCount = 1; // code attribute
-		this.attributes = codeAttributeInfo;
-	}
-
-	public void write(ByteOutStream o) {
-		o.write_u2(this.accessFlags);
-		o.write_u2(this.nameIndex);
-		o.write_u2(this.descriptorIndex);
-		o.write_u2(this.attributeCount);
-		this.attributes.write(o);
-	}
+public class AttributeInfo {
+	// not implemented
 }

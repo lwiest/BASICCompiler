@@ -22,52 +22,49 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl;
+package de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl;
 
-import de.lorenzwiest.basiccompiler.bytecode.ConstantPool;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
+import de.lorenzwiest.basiccompiler.classfile.ConstantPool;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.ConstantPoolInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
-public class ConstantPoolInfo_NameAndType extends ConstantPoolInfo {
-	private final int nameIndex;       // u2
-	private final int descriptorIndex; // u2
+public class ConstantPoolInfo_Class extends ConstantPoolInfo {
+	private final int nameIndex; // u2
 
-	public ConstantPoolInfo_NameAndType(int nameIndex, int descriptorIndex) {
-		super(TAG_NAME_AND_TYPE);
+	public ConstantPoolInfo_Class(int nameIndex) {
+		super(TAG_CLASS);
 		this.nameIndex = nameIndex;
-		this.descriptorIndex = descriptorIndex;
 	}
 
 	public int getNameIndex() {
 		return this.nameIndex;
 	}
 
-	public int getDescriptorIndex() {
-		return this.descriptorIndex;
-	}
-
 	@Override
 	public void write(ByteOutStream o) {
 		super.write(o);
 		o.write_u2(this.nameIndex);
-		o.write_u2(this.descriptorIndex);
 	}
 
-	public static int addAndGetIndex(ConstantPool constantPool, String name, String descriptor) {
-		String key = getKey(name, descriptor);
+	public static int getIndex(ConstantPool constantPool, String className) {
+		String key = getKey(className);
+		return constantPool.getIndex(key);
+	}
+
+	private static String getKey(String className) {
+		return "CLASS_" + className;
+	}
+
+	public static int addAndGetIndex(ConstantPool constantPool, String className) {
+		String key = getKey(className);
 		if (constantPool.contains(key) == false) {
-			constantPool.put(key, createInfo(constantPool, name, descriptor));
+			constantPool.put(key, createInfo(constantPool, className));
 		}
 		return constantPool.getIndex(key);
 	}
 
-	private static String getKey(String name, String descriptor) {
-		return "NAME_AND_TYPE_" + name + descriptor;
-	}
-
-	private static ConstantPoolInfo_NameAndType createInfo(ConstantPool constantPool, String name, String descriptor) {
-		int nameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, name);
-		int descriptorIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, descriptor);
-		return new ConstantPoolInfo_NameAndType(nameIndex, descriptorIndex);
+	private static ConstantPoolInfo_Class createInfo(ConstantPool constantPool, String className) {
+		int nameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, className);
+		return new ConstantPoolInfo_Class(nameIndex);
 	}
 }

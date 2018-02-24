@@ -22,18 +22,18 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode;
+package de.lorenzwiest.basiccompiler.classfile;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl.ConstantPoolInfo_Class;
-import de.lorenzwiest.basiccompiler.bytecode.info.AttributeInfo;
-import de.lorenzwiest.basiccompiler.bytecode.info.FieldInfo;
-import de.lorenzwiest.basiccompiler.bytecode.info.InterfaceInfo;
-import de.lorenzwiest.basiccompiler.bytecode.info.MethodInfo;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.ConstantPoolInfo;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_Class;
+import de.lorenzwiest.basiccompiler.classfile.info.AttributeInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.FieldInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.InterfaceInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.MethodInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
 public class ClassModelWriter {

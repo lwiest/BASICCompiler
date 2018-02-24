@@ -24,8 +24,8 @@
 
 package de.lorenzwiest.basiccompiler.compiler;
 
-import static de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaClass.RUNTIME_EXCEPTION;
-import static de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaMethod.EXCEPTION_GET_MESSAGE;
+import static de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaClass.RUNTIME_EXCEPTION;
+import static de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaMethod.EXCEPTION_GET_MESSAGE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,8 +39,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
 
-import de.lorenzwiest.basiccompiler.bytecode.ClassModel;
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.ClassModel;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 import de.lorenzwiest.basiccompiler.compiler.etc.CompileException;
 import de.lorenzwiest.basiccompiler.compiler.etc.LineNumberTable;

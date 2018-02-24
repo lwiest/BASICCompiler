@@ -22,49 +22,44 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl;
+package de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl;
 
-import de.lorenzwiest.basiccompiler.bytecode.ConstantPool;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
+import de.lorenzwiest.basiccompiler.classfile.ConstantPool;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.ConstantPoolInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
-public class ConstantPoolInfo_Class extends ConstantPoolInfo {
-	private final int nameIndex; // u2
+public class ConstantPoolInfo_Float extends ConstantPoolInfo {
+	private final float aFloat;
 
-	public ConstantPoolInfo_Class(int nameIndex) {
-		super(TAG_CLASS);
-		this.nameIndex = nameIndex;
+	public ConstantPoolInfo_Float(float aFloat) {
+		super(TAG_FLOAT);
+		this.aFloat = aFloat;
 	}
 
-	public int getNameIndex() {
-		return this.nameIndex;
+	public float getFloat() {
+		return this.aFloat;
 	}
 
 	@Override
 	public void write(ByteOutStream o) {
 		super.write(o);
-		o.write_u2(this.nameIndex);
+		int bitsOfFloat = Float.floatToRawIntBits(this.aFloat);
+		o.write_u4(bitsOfFloat);
 	}
 
-	public static int getIndex(ConstantPool constantPool, String className) {
-		String key = getKey(className);
-		return constantPool.getIndex(key);
-	}
-
-	private static String getKey(String className) {
-		return "CLASS_" + className;
-	}
-
-	public static int addAndGetIndex(ConstantPool constantPool, String className) {
-		String key = getKey(className);
+	public static int addAndGetIndex(ConstantPool constantPool, float aFloat) {
+		String key = getKey(aFloat);
 		if (constantPool.contains(key) == false) {
-			constantPool.put(key, createInfo(constantPool, className));
+			constantPool.put(key, createInfo(constantPool, aFloat));
 		}
 		return constantPool.getIndex(key);
 	}
 
-	private static ConstantPoolInfo_Class createInfo(ConstantPool constantPool, String className) {
-		int nameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, className);
-		return new ConstantPoolInfo_Class(nameIndex);
+	private static String getKey(float aFloat) {
+		return "FLOAT_" + aFloat;
+	}
+
+	private static ConstantPoolInfo_Float createInfo(ConstantPool constantPool, float aFloat) {
+		return new ConstantPoolInfo_Float(aFloat);
 	}
 }

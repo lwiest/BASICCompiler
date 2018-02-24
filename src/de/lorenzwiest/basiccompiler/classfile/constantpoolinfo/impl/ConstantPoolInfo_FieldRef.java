@@ -22,10 +22,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl;
+package de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl;
 
-import de.lorenzwiest.basiccompiler.bytecode.ConstantPool;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
+import de.lorenzwiest.basiccompiler.classfile.ConstantPool;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.ConstantPoolInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
 public class ConstantPoolInfo_FieldRef extends ConstantPoolInfo {

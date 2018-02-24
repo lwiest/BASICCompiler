@@ -27,8 +27,8 @@ package de.lorenzwiest.basiccompiler.compiler.library.methods;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.lorenzwiest.basiccompiler.bytecode.ClassModel;
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.ClassModel;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;

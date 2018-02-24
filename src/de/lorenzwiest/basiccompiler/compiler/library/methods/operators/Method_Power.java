@@ -24,11 +24,11 @@
 
 package de.lorenzwiest.basiccompiler.compiler.library.methods.operators;
 
-import static de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaMethod.MATH_POW;
+import static de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaMethod.MATH_POW;
 
 import java.util.List;
 
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;

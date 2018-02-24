@@ -24,12 +24,12 @@
 
 package de.lorenzwiest.basiccompiler.compiler.library.methods.helper;
 
-import static de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaClass.RUNTIME_EXCEPTION;
-import static de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaMethod.RUNTIME_EXCEPTION_INIT;
+import static de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaClass.RUNTIME_EXCEPTION;
+import static de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaMethod.RUNTIME_EXCEPTION_INIT;
 
 import java.util.List;
 
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;

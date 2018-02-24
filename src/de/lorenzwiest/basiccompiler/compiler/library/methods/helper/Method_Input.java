@@ -28,7 +28,7 @@ import static de.lorenzwiest.basiccompiler.compiler.Compiler.CR;
 
 import java.util.List;
 
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;

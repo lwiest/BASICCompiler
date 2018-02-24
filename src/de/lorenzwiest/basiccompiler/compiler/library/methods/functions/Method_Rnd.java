@@ -24,11 +24,11 @@
 
 package de.lorenzwiest.basiccompiler.compiler.library.methods.functions;
 
-import static de.lorenzwiest.basiccompiler.bytecode.ClassModel.JavaMethod.MATH_RANDOM;
+import static de.lorenzwiest.basiccompiler.classfile.ClassModel.JavaMethod.MATH_RANDOM;
 
 import java.util.List;
 
-import de.lorenzwiest.basiccompiler.bytecode.info.ExceptionTableInfo;
+import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 import de.lorenzwiest.basiccompiler.compiler.Compiler;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;

@@ -22,44 +22,36 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.impl;
+package de.lorenzwiest.basiccompiler.classfile.info;
 
-import de.lorenzwiest.basiccompiler.bytecode.ConstantPool;
-import de.lorenzwiest.basiccompiler.bytecode.constantpoolinfo.ConstantPoolInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
-public class ConstantPoolInfo_Float extends ConstantPoolInfo {
-	private final float aFloat;
+public class MethodInfo {
+	// u2 access_flags;
+	// u2 name_index;
+	// u2 descriptor_index;
+	// u2 attributes_count;
+	// attribute_info attributes[attributes_count];
 
-	public ConstantPoolInfo_Float(float aFloat) {
-		super(TAG_FLOAT);
-		this.aFloat = aFloat;
+	private final int accessFlags;        // u2
+	private final int nameIndex;          // u2
+	private final int descriptorIndex;    // u2
+	private final int attributeCount;     // u2
+	private CodeAttributeInfo attributes; // attribute_info[]
+
+	public MethodInfo(int nameIndex, int descriptorIndex, int accessFlags, CodeAttributeInfo codeAttributeInfo) {
+		this.accessFlags = accessFlags;
+		this.nameIndex = nameIndex;
+		this.descriptorIndex = descriptorIndex;
+		this.attributeCount = 1; // code attribute
+		this.attributes = codeAttributeInfo;
 	}
 
-	public float getFloat() {
-		return this.aFloat;
-	}
-
-	@Override
 	public void write(ByteOutStream o) {
-		super.write(o);
-		int bitsOfFloat = Float.floatToRawIntBits(this.aFloat);
-		o.write_u4(bitsOfFloat);
-	}
-
-	public static int addAndGetIndex(ConstantPool constantPool, float aFloat) {
-		String key = getKey(aFloat);
-		if (constantPool.contains(key) == false) {
-			constantPool.put(key, createInfo(constantPool, aFloat));
-		}
-		return constantPool.getIndex(key);
-	}
-
-	private static String getKey(float aFloat) {
-		return "FLOAT_" + aFloat;
-	}
-
-	private static ConstantPoolInfo_Float createInfo(ConstantPool constantPool, float aFloat) {
-		return new ConstantPoolInfo_Float(aFloat);
+		o.write_u2(this.accessFlags);
+		o.write_u2(this.nameIndex);
+		o.write_u2(this.descriptorIndex);
+		o.write_u2(this.attributeCount);
+		this.attributes.write(o);
 	}
 }
