@@ -42,11 +42,6 @@ public class CompileException extends RuntimeException {
 		return this.lineNumber;
 	}
 
-	@Override
-	public String getMessage() {
-		return super.getMessage();
-	}
-
 	public String getFullMessage() {
 		return "Compile error at line " + this.lineNumber + ": " + super.getMessage();
 	}

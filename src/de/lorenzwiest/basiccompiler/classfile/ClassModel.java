@@ -94,7 +94,7 @@ public class ClassModel {
 		int nameIndex = nameAndTypeRef.getNameIndex();
 		int descriptorIndex = nameAndTypeRef.getDescriptorIndex();
 		int maxLocals = numLocals + 0; // NOTE: static methods have no "this" field => offset 0!
-		CodeAttributeInfo codeAttributeInfo = new CodeAttributeInfo(this.constantPool, maxLocals, bytecode, exceptionTable);
+		CodeAttributeInfo codeAttributeInfo = new CodeAttributeInfo(this.constantPool, maxLocals, bytecode, exceptionTable, methodRefIndex);
 		MethodInfo methodInfo = new MethodInfo(nameIndex, descriptorIndex, ACC_PUBLIC | ACC_STATIC, codeAttributeInfo);
 		this.methods.add(methodInfo);
 	}
@@ -164,7 +164,7 @@ public class ClassModel {
 		o.flushAndCloseGracefully();
 		byte[] constructorByteCode = o.toByteArray();
 
-		CodeAttributeInfo codeAttributeInfo = new CodeAttributeInfo(this.constantPool, 1, constructorByteCode, new ExceptionTableInfo[0]);
+		CodeAttributeInfo codeAttributeInfo = new CodeAttributeInfo(this.constantPool, 1, constructorByteCode, new ExceptionTableInfo[0], methodSuperConstructorIndex);
 		int nameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(this.constantPool, CONSTRUCTOR_METHOD_NAME);
 		int descriptorIndex = ConstantPoolInfo_Utf8.addAndGetIndex(this.constantPool, CONSTRUCTOR_METHOD_DESCRIPTOR);
 		MethodInfo methodInfo = new MethodInfo(nameIndex, descriptorIndex, ACC_PUBLIC, codeAttributeInfo);

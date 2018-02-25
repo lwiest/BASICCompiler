@@ -24,6 +24,7 @@
 
 package de.lorenzwiest.basiccompiler.classfile.info;
 
+import de.lorenzwiest.basiccompiler.bytecode.BytecodeFlowAnalysis;
 import de.lorenzwiest.basiccompiler.classfile.ConstantPool;
 import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPoolInfo_Utf8;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
@@ -57,10 +58,10 @@ public class CodeAttributeInfo {
 	// private int attributesCount;                    // u2
 	private final Object[] attributeInfos;             // attribute_info[]
 
-	public CodeAttributeInfo(ConstantPool constantPool, int maxLocals, byte[] code, ExceptionTableInfo[] exceptionTable) {
+	public CodeAttributeInfo(ConstantPool constantPool, int maxLocals, byte[] code, ExceptionTableInfo[] exceptionTable, int methodRefIndex) {
 		this.attributeNameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(constantPool, CODE_ID);
 		// this.attributeLength calculated implicitly in write()
-		this.maxStack = 100; // TODO: variable max operand stack size
+		this.maxStack = BytecodeFlowAnalysis.calculateStackSize(code, constantPool, exceptionTable, methodRefIndex);
 		this.maxLocals = maxLocals;
 		// this.codeLength calculated implicitly in write()
 		this.code = code;

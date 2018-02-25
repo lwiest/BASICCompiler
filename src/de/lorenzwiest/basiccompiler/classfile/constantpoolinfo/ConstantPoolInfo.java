@@ -27,12 +27,15 @@ package de.lorenzwiest.basiccompiler.classfile.constantpoolinfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
 public class ConstantPoolInfo {
-	protected static final byte TAG_UTF8 = 1;
-	protected static final byte TAG_FLOAT = 4;
-	protected static final byte TAG_CLASS = 7;
-	protected static final byte TAG_STRING = 8;
-	protected static final byte TAG_FIELDREF = 9;
-	protected static final byte TAG_METHODREF = 10;
+	protected static final byte TAG_UTF8          = 1;
+	protected static final byte TAG_INTEGER       = 3;
+	protected static final byte TAG_FLOAT         = 4;
+	protected static final byte TAG_LONG          = 5;
+	protected static final byte TAG_DOUBLE        = 6;
+	protected static final byte TAG_CLASS         = 7;
+	protected static final byte TAG_STRING        = 8;
+	protected static final byte TAG_FIELDREF      = 9;
+	protected static final byte TAG_METHODREF     = 10;
 	protected static final byte TAG_NAME_AND_TYPE = 12;
 
 	private byte tag;

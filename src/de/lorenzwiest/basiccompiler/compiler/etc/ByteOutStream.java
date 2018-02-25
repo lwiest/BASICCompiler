@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import de.lorenzwiest.basiccompiler.bytecode.Bytecode;
+
 public class ByteOutStream extends ByteArrayOutputStream {
 	private final int maxLength;
 
@@ -65,6 +67,17 @@ public class ByteOutStream extends ByteArrayOutputStream {
 		write_u1(value);
 	}
 
+	public void write_u8(long value) {
+		write_u1((int) (value >> 56));
+		write_u1((int) (value >> 48));
+		write_u1((int) (value >> 40));
+		write_u1((int) (value >> 32));
+		write_u1((int) (value >> 24));
+		write_u1((int) (value >> 16));
+		write_u1((int) (value >> 8));
+		write_u1((int) (value));
+	}
+
 	private void patch_u1(int patchPos, int value) {
 		this.buf[patchPos] = (byte) (value & 0xff);
 	}
@@ -88,31 +101,31 @@ public class ByteOutStream extends ByteArrayOutputStream {
 	}
 
 	public void aaload() {
-		write_u1(0x32);
+		write_u1(Bytecode.AALOAD.getBytecode());
 	}
 
 	public void aastore() {
-		write_u1(0x53);
+		write_u1(Bytecode.AASTORE.getBytecode());
 	}
 
 	public void aload_0() {
-		write_u1(0x2a);
+		write_u1(Bytecode.ALOAD_0.getBytecode());
 	}
 
 	public void aload_1() {
-		write_u1(0x2b);
+		write_u1(Bytecode.ALOAD_1.getBytecode());
 	}
 
 	public void aload_2() {
-		write_u1(0x2c);
+		write_u1(Bytecode.ALOAD_2.getBytecode());
 	}
 
 	public void aload_3() {
-		write_u1(0x2d);
+		write_u1(Bytecode.ALOAD_3.getBytecode());
 	}
 
 	public void aload(int local_index) {
-		write_u1(0x19);
+		write_u1(Bytecode.ALOAD.getBytecode());
 		write_u1(local_index);
 	}
 
@@ -131,36 +144,36 @@ public class ByteOutStream extends ByteArrayOutputStream {
 	}
 
 	public void anewarray(int cp_index) {
-		write_u1(0xbd);
+		write_u1(Bytecode.ANEWARRAY.getBytecode());
 		write_u2(cp_index);
 	}
 
 	public void areturn() {
-		write_u1(0xb0);
+		write_u1(Bytecode.ARETURN.getBytecode());
 	}
 
 	public void arraylength() {
-		write_u1(0xbe);
+		write_u1(Bytecode.ARRAYLENGTH.getBytecode());
 	}
 
 	public void astore_0() {
-		write_u1(0x4b);
+		write_u1(Bytecode.ASTORE_0.getBytecode());
 	}
 
 	public void astore_1() {
-		write_u1(0x4c);
+		write_u1(Bytecode.ASTORE_1.getBytecode());
 	}
 
 	public void astore_2() {
-		write_u1(0x4d);
+		write_u1(Bytecode.ASTORE_2.getBytecode());
 	}
 
 	public void astore_3() {
-		write_u1(0x4e);
+		write_u1(Bytecode.ASTORE_3.getBytecode());
 	}
 
 	public void astore(int local_index) {
-		write_u1(0x3a);
+		write_u1(Bytecode.ASTORE.getBytecode());
 		write_u1(local_index);
 	}
 
@@ -179,92 +192,92 @@ public class ByteOutStream extends ByteArrayOutputStream {
 	}
 
 	public void athrow() {
-		write_u1(0xbf);
+		write_u1(Bytecode.ATHROW.getBytecode());
 	}
 
 	public void baload() {
-		write_u1(0x33);
+		write_u1(Bytecode.BALOAD.getBytecode());
 	}
 
 	public void bipush(int value) {
-		write_u1(0x10);
+		write_u1(Bytecode.BIPUSH.getBytecode());
 		write_u1(value);
 	}
 
 	public void caload() {
-		write_u1(0x34);
+		write_u1(Bytecode.CALOAD.getBytecode());
 	}
 
 	public void castore() {
-		write_u1(0x55);
+		write_u1(Bytecode.CASTORE.getBytecode());
 	}
 
 	public void d2f() {
-		write_u1(0x90);
+		write_u1(Bytecode.D2F.getBytecode());
 	}
 
 	public void d2i() {
-		write_u1(0x8e);
+		write_u1(Bytecode.D2I.getBytecode());
 	}
 
 	public void dup() {
-		write_u1(0x59);
+		write_u1(Bytecode.DUP.getBytecode());
 	}
 
 	public void f2d() {
-		write_u1(0x8d);
+		write_u1(Bytecode.F2D.getBytecode());
 	}
 
 	public void f2i() {
-		write_u1(0x8b);
+		write_u1(Bytecode.F2I.getBytecode());
 	}
 
 	public void fadd() {
-		write_u1(0x62);
+		write_u1(Bytecode.FADD.getBytecode());
 	}
 
 	public void faload() {
-		write_u1(0x30);
+		write_u1(Bytecode.FALOAD.getBytecode());
 	}
 
 	public void fastore() {
-		write_u1(0x51);
+		write_u1(Bytecode.FASTORE.getBytecode());
 	}
 
 	public void fcmpg() {
-		write_u1(0x96);
+		write_u1(Bytecode.FCMPG.getBytecode());
 	}
 
 	public void fconst_0() {
-		write_u1(0x0b);
+		write_u1(Bytecode.FCONST_0.getBytecode());
 	}
 
 	public void fconst_1() {
-		write_u1(0x0c);
+		write_u1(Bytecode.FCONST_1.getBytecode());
 	}
 
 	public void fconst_2() {
-		write_u1(0x0d);
+		write_u1(Bytecode.FCONST_2.getBytecode());
 	}
 
 	public void fdiv() {
-		write_u1(0x6e);
+		write_u1(Bytecode.FDIV.getBytecode());
 	}
 
 	public void fload_0() {
-		write_u1(0x22);
+		write_u1(Bytecode.FLOAD_0.getBytecode());
 	}
 
 	public void fload_1() {
-		write_u1(0x23);
+		write_u1(Bytecode.FLOAD_1.getBytecode());
 	}
 
 	public void fload_2() {
-		write_u1(0x24);
+		write_u1(Bytecode.FLOAD_2.getBytecode());
 	}
 
 	public void fload_3() {
-		write_u1(0x25);
+		write_u1(Bytecode.FLOAD_3.getBytecode());
 	}
 
 	public void fload_opt(int local_index) {
@@ -282,40 +295,40 @@ public class ByteOutStream extends ByteArrayOutputStream {
 	}
 
 	public void fload(int local_index) {
-		write_u1(0x17);
+		write_u1(Bytecode.FLOAD.getBytecode());
 		write_u1(local_index);
 	}
 
 	public void fmul() {
-		write_u1(0x6a);
+		write_u1(Bytecode.FMUL.getBytecode());
 	}
 
 	public void fneg() {
-		write_u1(0x76);
+		write_u1(Bytecode.FNEG.getBytecode());
 	}
 
 	public void freturn() {
-		write_u1(0xae);
+		write_u1(Bytecode.FRETURN.getBytecode());
 	}
 
 	public void fstore_0() {
-		write_u1(0x43);
+		write_u1(Bytecode.FSTORE_0.getBytecode());
 	}
 
 	public void fstore_1() {
-		write_u1(0x44);
+		write_u1(Bytecode.FSTORE_1.getBytecode());
 	}
 
 	public void fstore_2() {
-		write_u1(0x45);
+		write_u1(Bytecode.FSTORE_2.getBytecode());
 	}
 
 	public void fstore_3() {
-		write_u1(0x46);
+		write_u1(Bytecode.FSTORE_3.getBytecode());
 	}
 
 	public void fstore(int local_index) {
-		write_u1(0x38);
+		write_u1(Bytecode.FSTORE.getBytecode());
 		write_u1(local_index);
 	}
 
@@ -334,50 +347,50 @@ public class ByteOutStream extends ByteArrayOutputStream {
 	}
 
 	public void fsub() {
-		write_u1(0x66);
+		write_u1(Bytecode.FSUB.getBytecode());
 	}
 
 	public void getstatic(int cp_index) {
-		write_u1(0xb2);
+		write_u1(Bytecode.GETSTATIC.getBytecode());
 		write_u2(cp_index);
 	}
 
 	public void goto_() {
-		write_u1(0xa7);
+		write_u1(Bytecode.GOTO.getBytecode());
 	}
 
 	public void goto_(String label) {
-		write_u1(0xa7);
+		write_u1(Bytecode.GOTO.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void i2c() {
-		write_u1(0x92);
+		write_u1(Bytecode.I2C.getBytecode());
 	}
 
 	public void i2d() {
-		write_u1(0x87);
+		write_u1(Bytecode.I2D.getBytecode());
 	}
 
 	public void i2f() {
-		write_u1(0x86);
+		write_u1(Bytecode.I2F.getBytecode());
 	}
 
 	public void iadd() {
-		write_u1(0x60);
+		write_u1(Bytecode.IADD.getBytecode());
 	}
 
 	public void iaload() {
-		write_u1(0x2e);
+		write_u1(Bytecode.IALOAD.getBytecode());
 	}
 
 	public void iand() {
-		write_u1(0x7e);
+		write_u1(Bytecode.IAND.getBytecode());
 	}
 
 	public void iastore() {
-		write_u1(0x4f);
+		write_u1(Bytecode.IASTORE.getBytecode());
 	}
 
 	public void iconst(int value) {
@@ -400,157 +413,157 @@ public class ByteOutStream extends ByteArrayOutputStream {
 	}
 
 	public void iconst_m1() {
-		write_u1(0x02);
+		write_u1(Bytecode.ICONST_M1.getBytecode());
 	}
 
 	public void iconst_0() {
-		write_u1(0x03);
+		write_u1(Bytecode.ICONST_0.getBytecode());
 	}
 
 	public void iconst_1() {
-		write_u1(0x04);
+		write_u1(Bytecode.ICONST_1.getBytecode());
 	}
 
 	public void iconst_2() {
-		write_u1(0x05);
+		write_u1(Bytecode.ICONST_2.getBytecode());
 	}
 
 	public void idiv() {
-		write_u1(0x6c);
+		write_u1(Bytecode.IDIV.getBytecode());
 	}
 
 	public void ifeq() {
-		write_u1(0x99);
+		write_u1(Bytecode.IFEQ.getBytecode());
 	}
 
 	public void ifeq(String label) {
-		write_u1(0x99);
+		write_u1(Bytecode.IFEQ.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void ifge() {
-		write_u1(0x9c);
+		write_u1(Bytecode.IFGE.getBytecode());
 	}
 
 	public void ifge(String label) {
-		write_u1(0x9c);
+		write_u1(Bytecode.IFGE.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void ifgt() {
-		write_u1(0x9d);
+		write_u1(Bytecode.IFGT.getBytecode());
 	}
 
 	public void ifgt(String label) {
-		write_u1(0x9d);
+		write_u1(Bytecode.IFGT.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void ifle() {
-		write_u1(0x9e);
+		write_u1(Bytecode.IFLE.getBytecode());
 	}
 
 	public void ifle(String label) {
-		write_u1(0x9e);
+		write_u1(Bytecode.IFLE.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void iflt() {
-		write_u1(0x9b);
+		write_u1(Bytecode.IFLT.getBytecode());
 	}
 
 	public void iflt(String label) {
-		write_u1(0x9b);
+		write_u1(Bytecode.IFLT.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void ifne() {
-		write_u1(0x9a);
+		write_u1(Bytecode.IFNE.getBytecode());
 	}
 
 	public void ifne(String label) {
-		write_u1(0x9a);
+		write_u1(Bytecode.IFNE.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void ifnonnull(String label) {
-		write_u1(0xc7);
+		write_u1(Bytecode.IFNONULL.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void ifnull(String label) {
-		write_u1(0xc6);
+		write_u1(Bytecode.IFNULL.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void iinc(int local_index, int increment) {
-		write_u1(0x84);
+		write_u1(Bytecode.IINC.getBytecode());
 		write_u1(local_index);
 		write_u1(increment);
 	}
 
 	public void if_icmpeq(String label) {
-		write_u1(0x9f);
+		write_u1(Bytecode.IF_ICMPEQ.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void if_icmpge(String label) {
-		write_u1(0xa2);
+		write_u1(Bytecode.IF_ICMPGE.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void if_icmpgt(String label) {
-		write_u1(0xa3);
+		write_u1(Bytecode.IF_ICMPGT.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void if_icmple(String label) {
-		write_u1(0xa4);
+		write_u1(Bytecode.IF_ICMPLE.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void if_icmplt(String label) {
-		write_u1(0xa1);
+		write_u1(Bytecode.IF_ICMPLT.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void if_icmpne(String label) {
-		write_u1(0xa0);
+		write_u1(Bytecode.IF_ICMPNE.getBytecode());
 		patchHereToLabel(label);
 		write_u2(0x00);
 	}
 
 	public void iload_0() {
-		write_u1(0x1a);
+		write_u1(Bytecode.ILOAD_0.getBytecode());
 	}
 
 	public void iload_1() {
-		write_u1(0x1b);
+		write_u1(Bytecode.ILOAD_1.getBytecode());
 	}
 
 	public void iload_2() {
-		write_u1(0x1c);
+		write_u1(Bytecode.ILOAD_2.getBytecode());
 	}
 
 	public void iload_3() {
-		write_u1(0x1d);
+		write_u1(Bytecode.ILOAD_3.getBytecode());
 	}
 
 	public void iload(int local_index) {
-		write_u1(0x15);
+		write_u1(Bytecode.ILOAD.getBytecode());
 		write_u1(local_index);
 	}
 
@@ -569,66 +582,66 @@ public class ByteOutStream extends ByteArrayOutputStream {
 	}
 
 	public void imul() {
-		write_u1(0x68);
+		write_u1(Bytecode.IMUL.getBytecode());
 	}
 
 	public void ineg() {
-		write_u1(0x74);
+		write_u1(Bytecode.INEG.getBytecode());
 	}
 
 	public void invokespecial(int cp_index) {
-		write_u1(0xb7);
+		write_u1(Bytecode.INVOKESPECIAL.getBytecode());
 		write_u2(cp_index);
 	}
 
 	public void invokestatic(int cp_index) {
-		write_u1(0xb8);
+		write_u1(Bytecode.INVOKESTATIC.getBytecode());
 		write_u2(cp_index);
 	}
 
 	public void invokevirtual(int cp_index) {
-		write_u1(0xb6);
+		write_u1(Bytecode.INVOKEVIRTUAL.getBytecode());
 		write_u2(cp_index);
 	}
 
 	public void ior() {
-		write_u1(0x80);
+		write_u1(Bytecode.IOR.getBytecode());
 	}
 
 	public void irem() {
-		write_u1(0x70);
+		write_u1(Bytecode.IREM.getBytecode());
 	}
 
 	public void ireturn() {
-		write_u1(0xac);
+		write_u1(Bytecode.IRETURN.getBytecode());
 	}
 
 	public void ishl() {
-		write_u1(0x78);
+		write_u1(Bytecode.ISHL.getBytecode());
 	}
 
 	public void ishr() {
-		write_u1(0x7a);
+		write_u1(Bytecode.ISHR.getBytecode());
 	}
 
 	public void istore_0() {
-		write_u1(0x3b);
+		write_u1(Bytecode.ISTORE_0.getBytecode());
 	}
 
 	public void istore_1() {
-		write_u1(0x3c);
+		write_u1(Bytecode.ISTORE_1.getBytecode());
 	}
 
 	public void istore_2() {
-		write_u1(0x3d);
+		write_u1(Bytecode.ISTORE_2.getBytecode());
 	}
 
 	public void istore_3() {
-		write_u1(0x3e);
+		write_u1(Bytecode.ISTORE_3.getBytecode());
 	}
 
 	public void istore(int local_index) {
-		write_u1(0x36);
+		write_u1(Bytecode.ISTORE.getBytecode());
 		write_u1(local_index);
 	}
 
@@ -647,78 +660,78 @@ public class ByteOutStream extends ByteArrayOutputStream {
 	}
 
 	public void isub() {
-		write_u1(0x64);
+		write_u1(Bytecode.ISUB.getBytecode());
 	}
 
 	public void ixor() {
-		write_u1(0x82);
+		write_u1(Bytecode.IXOR.getBytecode());
 	}
 
 	public void ldc(int cp_index) {
 		if (cp_index < 256) {
-			write_u1(0x12);
+			write_u1(Bytecode.LDC.getBytecode());
 			write_u1(cp_index);
 		} else {
-			write_u1(0x13);
+			write_u1(Bytecode.LDC_W.getBytecode());
 			write_u2(cp_index);
 		}
 	}
 
 	public void multianewarray(int arrayClassIndex, int numDims) {
-		write_u1(0xc5);
+		write_u1(Bytecode.MULTINEWARRAY.getBytecode());
 		write_u2(arrayClassIndex);
 		write_u1(numDims);
 	}
 
 	public void new_(int cp_index) {
-		write_u1(0xbb);
+		write_u1(Bytecode.NEW.getBytecode());
 		write_u2(cp_index);
 	}
 
 	public void newarray_byte() {
-		write_u1(0xbc);
+		write_u1(Bytecode.NEWARRAY.getBytecode());
 		write_u1(0x08);
 	}
 
 	public void newarray_char() {
-		write_u1(0xbc);
+		write_u1(Bytecode.NEWARRAY.getBytecode());
 		write_u1(0x05);
 	}
 
 	public void newarray_float() {
-		write_u1(0xbc);
+		write_u1(Bytecode.NEWARRAY.getBytecode());
 		write_u1(0x06);
 	}
 
 	public void newarray_int() {
-		write_u1(0xbc);
+		write_u1(Bytecode.NEWARRAY.getBytecode());
 		write_u1(0x0a);
 	}
 
 	public void pop() {
-		write_u1(0x57);
+		write_u1(Bytecode.POP.getBytecode());
 	}
 
 	public void putstatic(int cp_index) {
-		write_u1(0xb3);
+		write_u1(Bytecode.PUTSTATIC.getBytecode());
 		write_u2(cp_index);
 	}
 
 	public void return_() {
-		write_u1(0xb1);
+		write_u1(Bytecode.RETURN.getBytecode());
 	}
 
 	public void sipush(int value) {
-		write_u1(0x11);
+		write_u1(Bytecode.SIPUSH.getBytecode());
 		write_u2(value);
 	}
 
 	public void swap() {
-		write_u1(0x5f);
+		write_u1(Bytecode.SWAP.getBytecode());
 	}
 
 	public void tableswitch() {
-		write_u1(0xaa);
+		write_u1(Bytecode.TABLESWITCH.getBytecode());
 	}
 
 	//////////////////////////////////////////////////////////////////////////////

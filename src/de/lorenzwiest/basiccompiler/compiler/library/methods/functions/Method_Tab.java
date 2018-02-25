@@ -91,6 +91,7 @@ public class Method_Tab extends Method {
 		o.iload_1();
 		o.ifgt("loop");
 
+		o.pop();
 		o.return_();
 	}
 }

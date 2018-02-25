@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Lorenz Wiest
+ * Copyright (c) 2018 Lorenz Wiest
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,36 +22,44 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package de.lorenzwiest.basiccompiler.classfile.info;
+package de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl;
 
+import de.lorenzwiest.basiccompiler.classfile.ConstantPool;
+import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.ConstantPoolInfo;
 import de.lorenzwiest.basiccompiler.compiler.etc.ByteOutStream;
 
-public class ExceptionTableInfo {
-	// u2 start_pc;
-	// u2 end_pc;
-	// u2 handler_pc;
-	// u2 catch_type;
+public class ConstantPoolInfo_Double extends ConstantPoolInfo {
+	private final double aDouble;
 
-	private final int start_pc;   // u2
-	private final int end_pc;     // u2
-	private final int handler_pc; // u2
-	private final int catch_type; // u2
-
-	public ExceptionTableInfo(int start_pc, int end_pc, int handler_pc, int catch_type) {
-		this.start_pc = start_pc;
-		this.end_pc = end_pc;
-		this.handler_pc = handler_pc;
-		this.catch_type = catch_type;
+	public ConstantPoolInfo_Double(Double aDouble) {
+		super(TAG_DOUBLE);
+		this.aDouble = aDouble;
 	}
 
+	public double getDouble() {
+		return this.aDouble;
+	}
+
+	@Override
 	public void write(ByteOutStream o) {
-		o.write_u2(this.start_pc);
-		o.write_u2(this.end_pc);
-		o.write_u2(this.handler_pc);
-		o.write_u2(this.catch_type);
+		super.write(o);
+		long bitsOfDouble = Double.doubleToRawLongBits(this.aDouble);
+		o.write_u8(bitsOfDouble);
 	}
 
-	public int getHandler_pc() {
-		return this.handler_pc;
+	public static int addAndGetIndex(ConstantPool constantPool, double aDouble) {
+		String key = getKey(aDouble);
+		if (constantPool.contains(key) == false) {
+			constantPool.put(key, createInfo(constantPool, aDouble));
+		}
+		return constantPool.getIndex(key);
+	}
+
+	private static String getKey(double aDouble) {
+		return "DOUBLE_" + aDouble;
+	}
+
+	private static ConstantPoolInfo_Double createInfo(ConstantPool constantPool, double aDouble) {
+		return new ConstantPoolInfo_Double(aDouble);
 	}
 }
