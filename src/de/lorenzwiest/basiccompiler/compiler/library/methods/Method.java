@@ -69,7 +69,7 @@ public abstract class Method {
 		addMethodByteCode(o, exInfo);
 
 		o.flushAndCloseGracefully();
-		this.classModel.addMethod(this.methodName, this.descriptor, this.numLocals, o.toByteArray());
+		this.classModel.addMethod(this.methodName, this.descriptor, this.numLocals, o.toByteArray(), exInfo.toArray(new ExceptionTableInfo[0]));
 	}
 
 	// implemented by subclasses
