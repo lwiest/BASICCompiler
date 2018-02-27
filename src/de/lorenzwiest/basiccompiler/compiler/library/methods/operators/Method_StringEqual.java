@@ -41,7 +41,7 @@ public class Method_StringEqual extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: [C char array1 reference
 		// local 1: [C char array2 reference

@@ -42,7 +42,7 @@ public class Method_Or extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: F=>I argument 1
 		// local 1: F=>I argument 2

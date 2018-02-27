@@ -42,7 +42,7 @@ public class Method_ReadStringFromDataToStack extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// SOURCE CODE (PSEUDO CODE)
 		//

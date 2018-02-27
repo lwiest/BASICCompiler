@@ -43,7 +43,7 @@ public class Method_Left extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: [C src char[]
 		// local 1: F  length of substring

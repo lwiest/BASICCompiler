@@ -219,17 +219,17 @@ public class Compiler {
 		flushExceptionHandler();
 
 		this.o.flush();
-		byte[] bodyByteCode = this.o.toByteArray();
+		byte[] bodyBytecode = this.o.toByteArray();
 
-		flushDefFns(); // after flushing body byte code, before initialization byte code!
+		flushDefFns(); // after flushing body bytecode, before initialization bytecode!
 
-		byte[] initByteCode = getInitializationByteCode();
+		byte[] initBytecode = getInitializationBytecode();
 
-		byte[] byteCode = combineByteCodeParts(initByteCode, bodyByteCode);
-		ExceptionTableInfo[] exceptionTable = getExceptionTable(initByteCode.length + posExceptionHandler);
+		byte[] bytecode = combineBytecodeParts(initBytecode, bodyBytecode);
+		ExceptionTableInfo[] exceptionTable = getExceptionTable(initBytecode.length + posExceptionHandler);
 
 		int numLocals = this.localVariables.size();
-		this.classModel.addMainMethod(numLocals, byteCode, exceptionTable);
+		this.classModel.addMainMethod(numLocals, bytecode, exceptionTable);
 
 		this.libraryManager.flush();
 
@@ -292,7 +292,7 @@ public class Compiler {
 		this.o.goto_(LABEL_END);
 	}
 
-	private byte[] getInitializationByteCode() {
+	private byte[] getInitializationBytecode() {
 		ByteOutStream o = new ByteOutStream();
 
 		initStrVars(o);
@@ -397,13 +397,13 @@ public class Compiler {
 		}
 	}
 
-	private byte[] combineByteCodeParts(byte[] initByteCode, byte[] bodyByteCode) {
-		int lenInit = initByteCode.length;
-		int lenBody = bodyByteCode.length;
-		byte[] byteCode = new byte[lenInit + lenBody];
-		System.arraycopy(initByteCode, 0, byteCode, 0, lenInit);
-		System.arraycopy(bodyByteCode, 0, byteCode, lenInit, lenBody);
-		return byteCode;
+	private byte[] combineBytecodeParts(byte[] initBytecode, byte[] bodyBytecode) {
+		int lenInit = initBytecode.length;
+		int lenBody = bodyBytecode.length;
+		byte[] bytecode = new byte[lenInit + lenBody];
+		System.arraycopy(initBytecode, 0, bytecode, 0, lenInit);
+		System.arraycopy(bodyBytecode, 0, bytecode, lenInit, lenBody);
+		return bytecode;
 	}
 
 	private ExceptionTableInfo[] getExceptionTable(int posCatch) {

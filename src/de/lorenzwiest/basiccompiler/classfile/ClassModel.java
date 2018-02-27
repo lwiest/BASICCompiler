@@ -162,9 +162,9 @@ public class ClassModel {
 		o.return_();
 
 		o.flushAndCloseGracefully();
-		byte[] constructorByteCode = o.toByteArray();
+		byte[] constructorBytecode = o.toByteArray();
 
-		CodeAttributeInfo codeAttributeInfo = new CodeAttributeInfo(this.constantPool, 1, constructorByteCode, new ExceptionTableInfo[0], methodSuperConstructorIndex);
+		CodeAttributeInfo codeAttributeInfo = new CodeAttributeInfo(this.constantPool, 1, constructorBytecode, new ExceptionTableInfo[0], methodSuperConstructorIndex);
 		int nameIndex = ConstantPoolInfo_Utf8.addAndGetIndex(this.constantPool, CONSTRUCTOR_METHOD_NAME);
 		int descriptorIndex = ConstantPoolInfo_Utf8.addAndGetIndex(this.constantPool, CONSTRUCTOR_METHOD_DESCRIPTOR);
 		MethodInfo methodInfo = new MethodInfo(nameIndex, descriptorIndex, ACC_PUBLIC, codeAttributeInfo);

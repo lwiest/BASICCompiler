@@ -42,7 +42,7 @@ public class Method_StoreStringIn2DArray extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: [C    value
 		// local 1: [[[[C reference to array reference

@@ -42,7 +42,7 @@ public class Method_ReadNumFromDataToStack extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 		this.libraryManager.getMethod(MethodEnum.READ_STRING_FROM_DATA_TO_STACK).emitCall(o);
 		this.libraryManager.getMethod(MethodEnum.VAL).emitCall(o);
 		o.freturn();

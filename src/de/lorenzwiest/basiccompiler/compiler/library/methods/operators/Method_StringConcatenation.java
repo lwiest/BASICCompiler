@@ -41,7 +41,7 @@ public class Method_StringConcatenation extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: [C array1 reference, loop counter 2
 		// local 1: [C array2 reference

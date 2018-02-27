@@ -45,7 +45,7 @@ public class Method_PrintCharFromStack extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 		final int TAB_ZONE_WIDTH = 14;
 
 		// local 0: C char to be printed

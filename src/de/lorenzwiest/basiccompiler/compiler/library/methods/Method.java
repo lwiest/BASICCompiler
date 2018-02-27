@@ -66,12 +66,12 @@ public abstract class Method {
 		ByteOutStream o = new ByteOutStream(ClassModel.MAX_METHOD_LENGTH);
 
 		List<ExceptionTableInfo> exInfo = new ArrayList<ExceptionTableInfo>();
-		addMethodByteCode(o, exInfo);
+		addMethodBytecode(o, exInfo);
 
 		o.flushAndCloseGracefully();
 		this.classModel.addMethod(this.methodName, this.descriptor, this.numLocals, o.toByteArray(), exInfo.toArray(new ExceptionTableInfo[0]));
 	}
 
 	// implemented by subclasses
-	public abstract void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e);
+	public abstract void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e);
 }

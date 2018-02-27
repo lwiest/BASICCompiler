@@ -57,7 +57,7 @@ public class Method_CharsToFloat extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// TODO: Improve precision near zero, when IEEE 754-1985 denormalization and gradual underflow start
 

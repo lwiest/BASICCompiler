@@ -191,7 +191,7 @@ public class BytecodeFlowAnalysis {
 				logln(String.format("%s -> Exit (Bytecode %s)", strPos, oBytecode.getName()));
 				return;
 			} else if (oBytecode == Bytecode.WIDE) {
-				Bytecode oNestedBytecode = Bytecode.getNestedByteCode(bytecodes, pos);
+				Bytecode oNestedBytecode = Bytecode.getNestedBytecode(bytecodes, pos);
 				if (oNestedBytecode == Bytecode.RET) {
 					logln(String.format("%s -> Exit (Bytecode WIDE(RET))", strPos));
 					return;
@@ -526,7 +526,7 @@ public class BytecodeFlowAnalysis {
 			}
 			buffer.append(String.format(" %s", strType));
 		} else if (oBytecode == Bytecode.WIDE) {
-			Bytecode oNestedBytecode = Bytecode.getNestedByteCode(bytecodes, pos);
+			Bytecode oNestedBytecode = Bytecode.getNestedBytecode(bytecodes, pos);
 			if (oNestedBytecode == Bytecode.IINC) {
 				int index = BytecodeUtils.get_u2(bytecodes, pos + 2);
 				int increment = BytecodeUtils.get_s2(bytecodes, pos + 4);

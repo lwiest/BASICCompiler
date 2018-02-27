@@ -42,7 +42,7 @@ public class Method_Dim1DStringArray extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: [[[C reference to array reference
 		// local 1: F=>I dim max element index (= size - 1), loop counter

@@ -42,7 +42,7 @@ public class Method_GosubStackPop extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 		int gosubStackFieldRef = this.classModel.getFieldRefIndex(Compiler.FIELD_GOSUB_STACK, "[I");
 		int gosubStackIndexFieldRef = this.classModel.getFieldRefIndex(Compiler.FIELD_GOSUB_STACK_INDEX, "I");
 

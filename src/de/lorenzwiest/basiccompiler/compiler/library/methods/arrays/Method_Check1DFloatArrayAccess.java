@@ -42,7 +42,7 @@ public class Method_Check1DFloatArrayAccess extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: [[F reference to array reference
 		// local 1: I   array index

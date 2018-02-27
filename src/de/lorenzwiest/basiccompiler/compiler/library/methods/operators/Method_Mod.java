@@ -42,7 +42,7 @@ public class Method_Mod extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: F=>I numerator (determines sign of result when division by zero)
 		// local 1: F=>I denominator

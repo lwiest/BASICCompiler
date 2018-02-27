@@ -44,7 +44,7 @@ public class Method_Rnd extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// TODO: Implement RND(X) with X < 0
 

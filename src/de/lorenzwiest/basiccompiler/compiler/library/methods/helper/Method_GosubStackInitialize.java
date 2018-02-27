@@ -42,7 +42,7 @@ public class Method_GosubStackInitialize extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 		int gosubStackFieldRef = this.classModel.getFieldRefIndex(Compiler.FIELD_GOSUB_STACK, "[I");
 
 		o.iconst(Compiler.GOSUB_STACK_SIZE * Compiler.GOSUB_STACK_FRAME_SIZE);

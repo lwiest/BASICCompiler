@@ -42,7 +42,7 @@ public class Method_StoreFloatIn2DArray extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: F    value
 		// local 1: [[[F  reference to array reference

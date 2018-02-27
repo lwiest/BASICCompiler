@@ -42,7 +42,7 @@ public class Method_Pos extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		int posFieldRef = this.classModel.getFieldRefIndex(Compiler.FIELD_CURSOR_POS, "I");
 

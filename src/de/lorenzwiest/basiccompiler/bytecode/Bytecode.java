@@ -382,7 +382,7 @@ public enum Bytecode {
 		return String.format("Bytecode %s at position %d: Can't determine which stack operands to use.", oBytecode.getName(), pos);
 	}
 
-	public static Bytecode getNestedByteCode(int[] bytecodes, int posWideBytecode) {
+	public static Bytecode getNestedBytecode(int[] bytecodes, int posWideBytecode) {
 		return get(bytecodes[posWideBytecode + 1]);
 	}
 

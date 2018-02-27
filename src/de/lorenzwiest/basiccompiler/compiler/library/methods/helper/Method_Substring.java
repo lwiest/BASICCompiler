@@ -41,7 +41,7 @@ public class Method_Substring extends Method {
 	}
 
 	@Override
-	public void addMethodByteCode(ByteOutStream o, List<ExceptionTableInfo> e) {
+	public void addMethodBytecode(ByteOutStream o, List<ExceptionTableInfo> e) {
 
 		// local 0: [C source char[]
 		// local 1: I  start index, inclusive
