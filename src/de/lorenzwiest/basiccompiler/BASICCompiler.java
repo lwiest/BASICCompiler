@@ -54,7 +54,7 @@ public class BASICCompiler {
 			+ "| _ \\/ _ \\\\__ \\| | (__  | (__/ _ \\ '  \\| '_ \\ | | -_) '_|" + CR //
 			+ "|___/_/ \\_\\___/|_|\\___|  \\___\\___/_|_|_| .__/_|_|___|_|" + CR //
 			+ "                                       |_|" + CR //
-			+ "Version 1.4 (09-AUG-2016) by Lorenz Wiest" + CR //
+			+ "Version 1.5 (04-MAR-2018) by Lorenz Wiest" + CR //
 			+ CR //
 			+ "Usage:   java BASICCompiler <BASIC source filename> <Java class filename> [<options>]" + CR //
 			+ "Options: -formatted=<filename> | Writes a formatted BASIC source file" + CR //

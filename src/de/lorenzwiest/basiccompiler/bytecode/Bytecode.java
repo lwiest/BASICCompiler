@@ -313,7 +313,7 @@ public enum Bytecode {
 		return this.bytecode;
 	}
 
-	private static Map<Integer, Bytecode> BYTECODE_MAP = new HashMap<>();
+	private static Map<Integer, Bytecode> BYTECODE_MAP = new HashMap<Integer, Bytecode>();
 
 	static {
 		for (Bytecode oBytecode : Bytecode.values()) {
@@ -411,7 +411,7 @@ public enum Bytecode {
 			newPos += 4;  // skip <low>
 			int high = BytecodeUtils.get_s4(bytecodes, newPos);
 			newPos += 4; // skip <high>
-			newPos += (high - low + 1) * 4;
+			newPos += ((high - low) + 1) * 4;
 			length = newPos - pos;
 		} else if (oBytecode == Bytecode.WIDE) {
 			Bytecode oNestedBytecode = get(bytecodes[pos + 1]);
