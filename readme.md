@@ -14,26 +14,41 @@ Enjoy! -- Lorenz
 
 ## Table of Contents
 
+* [Quick Start](#quick-start)
 * [Getting Started](#getting-started)
 * [BASIC Compiler Language Specification](#basic-compiler-language-specification)
 * [Samples](#samples)
+
+## Quick Start
+
+I have prepared a runnable JAR file for you.
+
+**Prerequisites:**
+
+* You have Java SDK 5 (or higher) installed on your system.
+
+1. Download this project's ZIP file from GitHub.
+2. Extract the file `BASICCompiler.jar` from the ZIP file to a folder.
+3. Open a command prompt in this folder and enter:
+   ```
+   > java -jar BASICCompiler
+   ```
+   _(This runs BASIC Compiler and lists command-line options.)_
 
 ## Getting Started
 
 **Prerequisites:** You have Java SDK 5 (or higher) installed on your system.
 
-Download the project ZIP file from GitHub and unzip it to a temporary folder ("root" folder).
+Download this project's ZIP file from GitHub and unzip it to a temporary folder ("root" folder).
 
 **To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the root folder as an import source _General > Existing Projects into Workspace_.
 
-**To compile BASIC Compiler into a convenient JAR file**, open a command prompt in the root folder and enter (Windows only, `%JAVA_HOME%` must point to the installation folder of your Java SDK):
+**To compile BASIC Compiler into a convenient JAR file** (Windows only), open a command prompt in the root folder and enter (`%JAVA_HOME%` must point to the installation folder of your Java SDK):
 
 ```
 > makejar
 ```
 This produces the `BASICCompiler.jar` file, containing the compiled BASIC Compiler.
-
-**Tip:** I added the `BASICCompiler.jar` file to this GitHub repository.
 
 **To run BASIC Compiler and get command-line options**, enter
 
