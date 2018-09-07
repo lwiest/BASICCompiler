@@ -112,7 +112,7 @@ import de.lorenzwiest.basiccompiler.compiler.library.methods.operators.Method_Xo
 public class LibraryManager {
 	private final ClassModel classModel;
 	private final Map<MethodEnum, Method> methodMap = new HashMap<MethodEnum, Method>();
-	private final LinkedList<MethodEnum> usedMethods = new LinkedList<MethodEnum>();
+	private final LinkedList<MethodEnum> usedMethodsDeque = new LinkedList<MethodEnum>();
 
 	public static enum MethodEnum {
 		ABS,
@@ -443,16 +443,15 @@ public class LibraryManager {
 				break;
 			}
 			this.methodMap.put(m, method);
-			this.usedMethods.add(m);
+			this.usedMethodsDeque.addLast(m);
 		}
 		return this.methodMap.get(m);
 	}
 
 	public void flush() {
 		// methods must be flushed in the order they were added,
-		// otherwise a concurrent modification exception is thrown
-		for (int i = 0; i < this.usedMethods.size(); i++) {
-			MethodEnum m = this.usedMethods.get(i);
+		while (this.usedMethodsDeque.size() > 0) {
+			MethodEnum m = this.usedMethodsDeque.removeFirst();
 			this.methodMap.get(m).addMethod();
 		}
 	}
