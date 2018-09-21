@@ -47,16 +47,11 @@ public class BytecodeUtils {
 	}
 
 	public static int get_u4_paddedPos(int pos) {
-		int rem = pos % 4;
-		if (rem == 0) {
-			return pos;
-		} else if (rem == 1) {
-			return pos + 3;
-		} else if (rem == 2) {
-			return pos + 2;
-		} else { // (if rem == 3) {
-			return pos + 1;
+		int remainder = pos % 4;
+		if (remainder > 0) {
+		  return pos + (4 - remainder);
 		}
+		return pos;
 	}
 
 	public static boolean endsWithCompatibleTypes(String desc, String descTail) {
