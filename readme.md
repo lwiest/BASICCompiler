@@ -27,7 +27,7 @@ I have prepared for you a [release](https://github.com/lwiest/BASICCompiler/rele
 * You have installed a Java SDK 5 (or higher) on your system.
 
 ### Instructions
-1. Download [BASICCompiler.jar](https://github.com/lwiest/BASICCompiler/releases/download/v2.0/BASICCompiler.jar) to a folder.
+1. Download [BASICCompiler.jar](https://github.com/lwiest/BASICCompiler/releases/download/v1.5/BASICCompiler.jar) to a folder.
 2. Open a command prompt in that folder and enter:
    ``` 
    java -jar BASICCompiler.jar
