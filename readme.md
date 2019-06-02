@@ -14,44 +14,26 @@ Enjoy! -- Lorenz
 
 ## Table of Contents
 
-* [Quick Start](#quick-start)
 * [Getting Started](#getting-started)
 * [BASIC Compiler Language Specification](#basic-compiler-language-specification)
 * [Samples](#samples)
-
-## Quick Start
-
-I have prepared a runnable JAR file for you.
-
-**Prerequisites:** You have Java SDK 5 (or higher) installed on your system.
-
-1. Download this project's ZIP file from GitHub.
-2. Extract the file `BASICCompiler.jar` from the ZIP file to a folder.
-3. Open a command prompt in this folder and enter:
-   ```
-   > java -jar BASICCompiler
-   ```
-   _(This runs BASIC Compiler and lists command-line options.)_
+* [Build Instructions](#build-instructions)
 
 ## Getting Started
 
-**Prerequisites:** You have Java SDK 5 (or higher) installed on your system.
+I have prepared for you a [release](https://github.com/lwiest/BASICCompiler/releases/latest) of BASICCompiler.
 
-Download this project's ZIP file from GitHub and unzip it to a temporary folder ("root" folder).
+### Prerequisites
+* You have installed a Java SDK 5 (or higher) on your system.
 
-**To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the root folder as an import source _General > Existing Projects into Workspace_.
-
-**To compile BASIC Compiler into a convenient JAR file** (Windows only), open a command prompt in the root folder and enter (`%JAVA_HOME%` must point to the installation folder of your Java SDK):
-
+### Instructions
+1. Download [BASICCompiler.jar](https://github.com/lwiest/BASICCompiler/releases/download/v2.0/BASICCompiler.jar) to a folder.
+2. Open a command prompt in that folder and enter:
+   ``` 
+   java -jar BASICCompiler.jar
+   ```
+This runs BASIC Compiler and lists command-line options:
 ```
-> makejar
-```
-This produces the `BASICCompiler.jar` file, containing the compiled BASIC Compiler.
-
-**To run BASIC Compiler and get command-line options**, enter
-
-```
-> java -jar BASICCompiler.jar
  ___   _   ___  _  ___    ___                _ _
 | _ ) /_\ / __|| |/ __|  / __|___ _ __  _ __(_) |___ _ _
 | _ \/ _ \\__ \| | (__  | (__/ _ \ '  \| '_ \ | | -_) '_|
@@ -71,13 +53,13 @@ Option `-optimize` applies compiler optimizations. As of now, the only implement
 **To compile a BASIC program**, for example [STARTREK.BAS](samples/STARTREK.BAS) in folder [samples](samples), enter
 
 ```
-> java -jar BASICCompiler.jar samples/STARTREK.BAS StarTrek
+java -jar BASICCompiler.jar samples/STARTREK.BAS StarTrek
 ```
 
 **To run the compiled program**, enter
 
 ```
-> java StarTrek
+java StarTrek
 ```
 
 ## BASIC Compiler Language Specification
@@ -651,3 +633,18 @@ YYYIIIIEEEE ... FELL IN PIT!
 HA HA HA - YOU LOSE!
 SAME SET-UP (Y-N)?
 ```
+
+## Build Instructions
+
+**Prerequisites:** You have Java SDK 5 (or higher) installed on your system.
+
+Download this project's ZIP file from GitHub and unzip it to a temporary folder ("root" folder).
+
+**To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the root folder as an import source _General > Existing Projects into Workspace_.
+
+**To compile BASIC Compiler into a convenient JAR file** (Windows only), open a command prompt in the root folder and enter (`%JAVA_HOME%` must point to the installation folder of your Java SDK):
+
+```
+makejar
+```
+This produces the `BASICCompiler.jar` file, containing the compiled BASIC Compiler.
