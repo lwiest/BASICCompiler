@@ -39,7 +39,7 @@ This runs BASIC Compiler and lists command-line options:
 | _ \/ _ \\__ \| | (__  | (__/ _ \ '  \| '_ \ | | -_) '_|
 |___/_/ \_\___/|_|\___|  \___\___/_|_|_| .__/_|_|___|_|
                                        |_|
-Version 1.5 (04-MAR-2018) by Lorenz Wiest
+Version 1.6 (22-DEC-2019) by Lorenz Wiest
 
 Usage: java BASICCompiler <BASIC source filename> <Java class filename> [<options>]
 Options: -formatted=<filename> | Writes a formatted BASIC source file
