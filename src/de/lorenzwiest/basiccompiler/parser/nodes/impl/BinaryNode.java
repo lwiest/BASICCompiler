@@ -32,18 +32,20 @@ public class BinaryNode implements INode {
 	private final Token op;
 	private final INode leftNode;
 	private final INode rightNode;
+	private NodeType nodeType;
 
-	private BinaryNode(Token op, INode leftNode, INode rightNode) {
+	private BinaryNode(Token op, INode leftNode, INode rightNode, NodeType nodeType) {
 		this.op = op;
 		this.leftNode = leftNode;
 		this.rightNode = rightNode;
+		this.nodeType = nodeType;
 	}
 
-	public static INode create(Token op, INode leftNode, INode rightNode) {
+	public static INode create(Token op, INode leftNode, INode rightNode, NodeType nodeType) {
 		if ((leftNode == null) || (rightNode == null)) {
 			return null;
 		}
-		return new BinaryNode(op, leftNode, rightNode);
+		return new BinaryNode(op, leftNode, rightNode, nodeType);
 	}
 
 	public Token getOp() {
@@ -60,9 +62,6 @@ public class BinaryNode implements INode {
 
 	@Override
 	public NodeType getType() {
-		if ((this.op == Token.STRING_ADD)) {
-			return NodeType.STR;
-		}
-		return NodeType.NUM;
+		return this.nodeType;
 	}
 }

@@ -200,7 +200,7 @@ public class Compiler {
 		} else if (statement instanceof WhileStatement) {
 			emitWhile((WhileStatement) statement);
 		} else {
-			throw new CompileException("Unknown statement");
+			throw new CompileException("Unknown statement.");
 		}
 	}
 
@@ -410,7 +410,7 @@ public class Compiler {
 		int posTryBegin = 0;
 		int posTryEnd = posCatch;
 		return new ExceptionTableInfo[] { //
-				new ExceptionTableInfo(posTryBegin, posTryEnd, posCatch, this.classModel.getJavaClassRefIndex(RUNTIME_EXCEPTION)), //
+			new ExceptionTableInfo(posTryBegin, posTryEnd, posCatch, this.classModel.getJavaClassRefIndex(RUNTIME_EXCEPTION)), //
 		};
 	}
 
@@ -583,7 +583,7 @@ public class Compiler {
 
 	private void emitInternalNext(VariableNode nextLoopVar) {
 		if (this.forCompiletimeStack.isEmpty()) {
-			throw new CompileException("NEXT without FOR");
+			throw new CompileException("NEXT without FOR statement.");
 		}
 		ForInfo forInfo = this.forCompiletimeStack.pop();
 		String forLabel = forInfo.getForLabel();
@@ -594,7 +594,7 @@ public class Compiler {
 			String forLoopVarName = forLoopVar.getVariableName();
 			String nextLoopVarName = nextLoopVar.getVariableName();
 			if (forLoopVarName.equals(nextLoopVarName) == false) {
-				throw new CompileException("NEXT does not match FOR");
+				throw new CompileException("NEXT does not match FOR statement.");
 			}
 		}
 
@@ -978,7 +978,7 @@ public class Compiler {
 		for (Entry<String /* line number */, List<RestoreInfo> /* RestoreInfo */> e : this.restoreMap.entrySet()) {
 			String lineNumber = e.getKey();
 			if (dataInfoIndexMap.containsKey(lineNumber) == false) {
-				throw new CompileException("No DATA to RESTORE at " + lineNumber);
+				throw new CompileException("No data to restore at " + lineNumber + ".");
 			}
 			List<RestoreInfo> restoreInfos = e.getValue();
 			for (RestoreInfo restoreInfo : restoreInfos) {
@@ -1044,7 +1044,7 @@ public class Compiler {
 
 	private void emitWend() {
 		if (this.whileCompiletimeStack.isEmpty()) {
-			throw new CompileException("WEND without WHILE");
+			throw new CompileException("WEND without WHILE statement.");
 		}
 		WhileInfo whileInfo = this.whileCompiletimeStack.pop();
 		String whileLabel = whileInfo.getWhileLabel();
@@ -1159,7 +1159,7 @@ public class Compiler {
 				} else if (opToken == Token.XOR) {
 					this.libraryManager.getMethod(LibraryManager.MethodEnum.XOR).emitCall(this.o);
 				}
-			} else if (isNumRelationalOpToken(opToken)) {
+			} else if (isNumRelationalOpToken(binNode)) {
 				String label1 = ByteOutStream.generateLabel();
 				String label2 = ByteOutStream.generateLabel();
 
@@ -1183,18 +1183,18 @@ public class Compiler {
 				this.o.fconst_1();
 				this.o.fneg();
 				this.o.label(label2);
-			} else if (isStrRelationalOpToken(opToken)) {
-				if (opToken == Token.STRING_LESS) {
+			} else if (isStrRelationalOpToken(binNode)) {
+				if (opToken == Token.LESS) {
 					this.libraryManager.getMethod(LibraryManager.MethodEnum.STRING_LESS_THAN).emitCall(this.o);
-				} else if (opToken == Token.STRING_LESS_OR_EQUAL) {
+				} else if (opToken == Token.LESS_OR_EQUAL) {
 					this.libraryManager.getMethod(LibraryManager.MethodEnum.STRING_LESS_OR_EQUAL).emitCall(this.o);
-				} else if (opToken == Token.STRING_EQUAL) {
+				} else if (opToken == Token.EQUAL) {
 					this.libraryManager.getMethod(LibraryManager.MethodEnum.STRING_EQUAL).emitCall(this.o);
-				} else if (opToken == Token.STRING_GREATER_OR_EQUAL) {
+				} else if (opToken == Token.GREATER_OR_EQUAL) {
 					this.libraryManager.getMethod(LibraryManager.MethodEnum.STRING_GREATER_OR_EQUAL).emitCall(this.o);
-				} else if (opToken == Token.STRING_GREATER) {
+				} else if (opToken == Token.GREATER) {
 					this.libraryManager.getMethod(LibraryManager.MethodEnum.STRING_GREATER_THAN).emitCall(this.o);
-				} else if (opToken == Token.STRING_NOT_EQUAL) {
+				} else if (opToken == Token.NOT_EQUAL) {
 					this.libraryManager.getMethod(LibraryManager.MethodEnum.STRING_NOT_EQUAL).emitCall(this.o);
 				}
 			}
@@ -1208,7 +1208,7 @@ public class Compiler {
 				this.libraryManager.getMethod(LibraryManager.MethodEnum.NOT).emitCall(this.o);
 			} else if (opToken == Token.OPEN) {
 				// do nothing
-			} else if (opToken == Token.UNARY_MINUS) {
+			} else if (opToken == Token.SUBTRACT) {
 				this.o.fneg();
 			}
 		} else if (expr instanceof NumNode) {
@@ -1311,7 +1311,7 @@ public class Compiler {
 		if (expr instanceof BinaryNode) {
 			BinaryNode binNode = (BinaryNode) expr;
 			Token opToken = binNode.getOp();
-			if (opToken == Token.STRING_ADD) {
+			if (opToken == Token.ADD) {
 				emitStrExpressionToStack(binNode.getLeftNode());
 				emitStrExpressionToStack(binNode.getRightNode());
 				this.libraryManager.getMethod(LibraryManager.MethodEnum.STRING_CONCATENATION).emitCall(this.o); // TOOD
@@ -1426,26 +1426,38 @@ public class Compiler {
 		return false;
 	}
 
-	private boolean isStrRelationalOpToken(Token opToken) {
-		if ((opToken == Token.STRING_EQUAL) || //
-				(opToken == Token.STRING_NOT_EQUAL) || //
-				(opToken == Token.STRING_LESS) || //
-				(opToken == Token.STRING_LESS_OR_EQUAL) || //
-				(opToken == Token.STRING_GREATER_OR_EQUAL) || //
-				(opToken == Token.STRING_GREATER)) {
-			return true;
+	private boolean isStrRelationalOpToken(BinaryNode node) {
+		NodeType leftNodeType = node.getLeftNode().getType();
+		NodeType rightNodeType = node.getRightNode().getType();
+
+		if ((leftNodeType == NodeType.STR) && (rightNodeType == NodeType.STR)) {
+			Token opToken = node.getOp();
+			if ((opToken == Token.EQUAL) || //
+					(opToken == Token.NOT_EQUAL) || //
+					(opToken == Token.LESS) || //
+					(opToken == Token.LESS_OR_EQUAL) || //
+					(opToken == Token.GREATER_OR_EQUAL) || //
+					(opToken == Token.GREATER)) {
+				return true;
+			}
 		}
 		return false;
 	}
 
-	private boolean isNumRelationalOpToken(Token opToken) {
-		if ((opToken == Token.EQUAL) || //
-				(opToken == Token.NOT_EQUAL) || //
-				(opToken == Token.LESS) || //
-				(opToken == Token.LESS_OR_EQUAL) || //
-				(opToken == Token.GREATER_OR_EQUAL) || //
-				(opToken == Token.GREATER)) {
-			return true;
+	private boolean isNumRelationalOpToken(BinaryNode node) {
+		NodeType leftNodeType = node.getLeftNode().getType();
+		NodeType rightNodeType = node.getRightNode().getType();
+
+		if ((leftNodeType == NodeType.NUM) && (rightNodeType == NodeType.NUM)) {
+			Token opToken = node.getOp();
+			if ((opToken == Token.EQUAL) || //
+					(opToken == Token.NOT_EQUAL) || //
+					(opToken == Token.LESS) || //
+					(opToken == Token.LESS_OR_EQUAL) || //
+					(opToken == Token.GREATER_OR_EQUAL) || //
+					(opToken == Token.GREATER)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -1454,7 +1466,7 @@ public class Compiler {
 		if (expr instanceof BinaryNode) {
 			BinaryNode binaryNode = (BinaryNode) expr;
 			Token opToken = binaryNode.getOp();
-			return isNumRelationalOpToken(opToken);
+			return isNumRelationalOpToken(binaryNode);
 		}
 		return false;
 	}

@@ -271,7 +271,7 @@ public class CodeFormatter {
 				o.write("WHILE ");
 				o.write(toString(s.getExpression()));
 			} else {
-				throw new CompileException("Cannot format unknown statement");
+				throw new CompileException("Cannot format unknown statement.");
 			}
 		}
 	}
@@ -442,7 +442,7 @@ public class CodeFormatter {
 				sb.append("(");
 				sb.append(toString(unaryExpression));
 				sb.append(")");
-			} else if (op == Token.UNARY_MINUS) {
+			} else if (op == Token.SUBTRACT) {
 				sb.append("-");
 				sb.append(toString(unaryExpression));
 			}

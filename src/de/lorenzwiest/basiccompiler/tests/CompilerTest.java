@@ -775,7 +775,8 @@ public class CompilerTest {
 
 		// syntax errors
 		assertCompileError(compileAndRun("10 FOR I = 0 TO 1 : FOR J = 0 TO 2 : PRINT I;J; : NEXT I : NEXT J"));
-		assertCompileError(compileAndRun("10 FOR I = 0 TO 1 : FOR J = 0 TO 2 : PRINT I;J; : NEXT I,J,"));
+		assertCompileError(compileAndRun("10 FOR I = 0 TO 1 : FOR J = 0 TO 2 : PRINT I;J; : NEXT I,J"));
+		assertCompileError(compileAndRun("10 FOR I = 0 TO 1 : FOR J = 0 TO 2 : PRINT I;J; : NEXT J,I,"));
 
 		assertCompileError(compileAndRun("10 FOR = 0 TO 4 : PRINT I; : NEXT I"));
 		assertCompileError(compileAndRun("10 FOR 1 = 0 TO 4 : PRINT I; : NEXT I"));
@@ -1206,6 +1207,11 @@ public class CompilerTest {
 		assertEquals(compileAndRun("10 READ A, A$, B : DATA 1,AB C,3 : PRINT A;A$;B"), " 1 AB C 3 ");
 		assertEquals(compileAndRun("10 READ A, A$, B : DATA 1, AB C,3 : PRINT A;A$;B"), " 1 AB C 3 ");
 		assertEquals(compileAndRun("10 DATA 1 : READ A, B, C : DATA 2,3 : PRINT A;B;C"), " 1  2  3 ");
+		assertEquals(compileAndRun("10 READ A$, A, B : DATA AB C,1,3 : PRINT A$;A;B"), "AB C 1  3 ");
+
+		assertEquals(compileAndRun("10 READ A$, A, B : DATA  AB C,1,3 : PRINT A$;A;B"), "AB C 1  3 ");
+		assertEquals(compileAndRun("10 READ A$, A, B : DATA AB C ,1,3 : PRINT A$;A;B"), "AB C 1  3 ");
+		assertEquals(compileAndRun("10 READ A$, A, B : DATA AB C , 1 , 3 : PRINT A$;A;B"), "AB C 1  3 ");
 
 		assertEquals(compileAndRun("10 READ A, B : RESTORE : READ C, D : DATA 1,2,3 : PRINT A;B;C;D"), " 1  2  1  2 ");
 		assertEquals(compileAndRun("10 DATA 1 : READ A, B" + CR + "15 RESTORE 10 : READ C, D" + CR + "20 DATA 2,3 : PRINT A;B;C;D"), " 1  2  1  2 ");
@@ -1213,6 +1219,7 @@ public class CompilerTest {
 
 		assertCompileError(compileAndRun("10 READ : DATA 1,2,3"));
 		assertCompileError(compileAndRun("10 READ A, : DATA 1,2,3"));
+		assertCompileError(compileAndRun("10 READ A, B, C: DATA 1,2,3,"));
 		assertCompileError(compileAndRun("10 DATA 1 : READ A, B" + CR + "15 RESTORE 100 : READ C, D" + CR + "20 DATA 2,3 : PRINT A;B;C;D"));
 		assertEquals(compileAndRun("10 DATA 1 : READ A, B" + CR + "15 RESTORE 10 : READ C, D" + CR + "20 DATA 2,3 : PRINT A;B;C;D"), " 1  2  1  2 ");
 
@@ -1223,6 +1230,11 @@ public class CompilerTest {
 		assertRuntimeError(compileAndRun("10 READ A, B, C, D : DATA 1,\"ABC\",3 : PRINT A;B;C"));
 
 		assertEquals(compileAndRun("10 READ A$,B$,C$ : DATA \"HELLO \", HELLO, \" HELLO\" : PRINT A$;B$;C$"), "HELLO HELLO HELLO");
+
+		assertEquals(compileAndRun("10 READ A : DATA -1 : PRINT A"), "-1 ");
+		assertEquals(compileAndRun("10 READ A : DATA +1 : PRINT A"), " 1 ");
+		assertEquals(compileAndRun("10 READ A$, B$, C$ : PRINT A$; B$; C$ : DATA \"HEL,LO\", HELLO, HEL\"LO"), "HEL,LOHELLOHEL\"LO");
+		assertEquals(compileAndRun("10 READ A, B$, C : PRINT A; B$; C : DATA -3, -3A, -3.14"), "-3 -3A-3.14 ");
 	}
 
 	@Test
@@ -1374,10 +1386,25 @@ public class CompilerTest {
 	}
 
 	@Test
-	public void testUnaryMinus() {
+	public void testUnaryMinusAndPlus() {
 		assertEquals(compileAndRun("10 PRINT 1+-2*3"), "-5 ");
 		assertEquals(compileAndRun("10 PRINT -1*-2+-3"), "-1 ");
 		assertEquals(compileAndRun("10 PRINT -1+-2*-3+-4"), " 1 ");
+		assertEquals(compileAndRun("10 PRINT 1--2"), " 3 ");
+		assertEquals(compileAndRun("10 PRINT 1---2"), "-1 ");
+
+		assertEquals(compileAndRun("10 PRINT 1++2"), " 3 ");
+		assertEquals(compileAndRun("10 PRINT 1+++2"), " 3 ");
+
+		assertEquals(compileAndRun("10 PRINT 1-+2"), "-1 ");
+		assertEquals(compileAndRun("10 PRINT 1+-2"), "-1 ");
+
+		assertEquals(compileAndRun("10 PRINT 1--+2"), " 3 ");
+		assertEquals(compileAndRun("10 PRINT 1-++2"), "-1 ");
+
+		assertEquals(compileAndRun("10 PRINT 1+-+2"), "-1 ");
+		assertEquals(compileAndRun("10 PRINT 1+--+2"), " 3 ");
+		assertEquals(compileAndRun("10 PRINT 1+-+-+2"), " 3 ");
 	}
 
 	@Test
@@ -1648,6 +1675,7 @@ public class CompilerTest {
 		assertEquals(compileAndRun("10 A = \"ABC\" > \"ABC\" + 1 : PRINT A"), " 1 ");
 		assertEquals(compileAndRun("10 A = 1 + \"ABC\" > \"ABC\" : PRINT A"), " 1 ");
 		assertEquals(compileAndRun("10 A = 1 + \"AB\" + \"CD\" = \"AB\" + \"C\" + \"D\" : PRINT A"), " 0 ");
+		assertEquals(compileAndRun("10 A = \"AB\" + \"CD\" = \"AB\" + \"C\" + \"D\" + 1 : PRINT A"), " 0 ");
 
 		// code coverage
 		assertCompileError(compileAndRun("10 PRINT (1"));
@@ -2437,10 +2465,10 @@ public class CompilerTest {
 
 	public static File createTempFolder() throws IOException {
 		final File tempFolder = File.createTempFile("~BASICCompilerTest", "");
-		if(tempFolder.delete() == false) {
+		if (tempFolder.delete() == false) {
 			throw new IOException("Could not delete temporary file " + tempFolder.getAbsolutePath());
 		}
-		if(tempFolder.mkdir() == false) {
+		if (tempFolder.mkdir() == false) {
 			throw new IOException("Could not create temporary directory: " + tempFolder.getAbsolutePath());
 		}
 		return tempFolder;
@@ -2453,7 +2481,7 @@ public class CompilerTest {
 					deleteFolderRecursively(file);
 				}
 			}
-			fileOrFolder.delete();  // this may fail and leave a folder, which is deleted by deleteOnExit()
+			fileOrFolder.delete(); // this may fail and leave a folder, which is deleted by deleteOnExit()
 		}
 	}
 }

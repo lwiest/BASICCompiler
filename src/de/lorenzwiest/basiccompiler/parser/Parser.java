@@ -89,32 +89,19 @@ import static de.lorenzwiest.basiccompiler.parser.tokens.Token.RETURN;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.SEMICOLON;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.STEP;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.STOP;
-import static de.lorenzwiest.basiccompiler.parser.tokens.Token.STRING_ADD;
-import static de.lorenzwiest.basiccompiler.parser.tokens.Token.STRING_EQUAL;
-import static de.lorenzwiest.basiccompiler.parser.tokens.Token.STRING_GREATER;
-import static de.lorenzwiest.basiccompiler.parser.tokens.Token.STRING_GREATER_OR_EQUAL;
-import static de.lorenzwiest.basiccompiler.parser.tokens.Token.STRING_LESS;
-import static de.lorenzwiest.basiccompiler.parser.tokens.Token.STRING_LESS_OR_EQUAL;
-import static de.lorenzwiest.basiccompiler.parser.tokens.Token.STRING_NOT_EQUAL;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.SUBTRACT;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.SWAP;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.THEN;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.TO;
-import static de.lorenzwiest.basiccompiler.parser.tokens.Token.UNARY_MINUS;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.WEND;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.WHILE;
 import static de.lorenzwiest.basiccompiler.parser.tokens.Token.XOR;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import de.lorenzwiest.basiccompiler.compiler.etc.CompileException;
 import de.lorenzwiest.basiccompiler.parser.nodes.INode;
@@ -153,38 +140,51 @@ import de.lorenzwiest.basiccompiler.parser.statements.impl.WendStatement;
 import de.lorenzwiest.basiccompiler.parser.statements.impl.WhileStatement;
 import de.lorenzwiest.basiccompiler.parser.tokens.FunctionToken;
 import de.lorenzwiest.basiccompiler.parser.tokens.Token;
+import de.lorenzwiest.basiccompiler.parser.tokens.Token.TokenType;
 
 public class Parser {
-	public static final String BEFORE_FIRST_LINE_NUMBER = "";
+	private static final String BEFORE_FIRST_LINE_NUMBER = "";
 	public static final String RESTORE_DEFAULT_LINE_NUMBER = "";
 
-	private String currentLineNumber;
-	private String stringToParse;
-	private int pos;
+	private static final INode[] EMPTY_INODE_ARRAY = new INode[0];
+	private static final String[] EMPTY_STRING_ARRAY = new String[0];
+	private static final Statement[] EMPTY_STATEMENT_ARRAY = new Statement[0];
+	private static final VariableNode[] EMPTY_VARIABLE_NODE_ARRAY = new VariableNode[0];
 
 	private final Map<String /* function name */, DefFnStatement> defFnMap = new HashMap<String, DefFnStatement>();
-
 	private final Map<String /* function name */, FnFunctionNode> fnMap = new HashMap<String, FnFunctionNode>();
+
+	private String stringToParse;
+
+	private int pos;
+	private Token token;
+	private boolean hasCachedToken;
+
+	private boolean isParsingDATAElement;
+
+	private String currentLineNumber;
 
 	//////////////////////////////////////////////////////////////////////////////
 
 	private class ArrayVariableInfo {
 		private int numDims;
-		private boolean usedInDimStatement;
+		private boolean isUsedInDimStatement;
 
-		public ArrayVariableInfo(int numDims, boolean usedInDimStatement) {
+		public ArrayVariableInfo(int numDims, boolean isUsedInDimStatement) {
 			this.numDims = numDims;
-			this.usedInDimStatement = usedInDimStatement;
+			this.isUsedInDimStatement = isUsedInDimStatement;
 		}
 
 		public int getNumDims() {
 			return this.numDims;
 		}
 
-		public boolean usedInDimStatement() {
-			return this.usedInDimStatement;
+		public boolean isUsedInDimStatement() {
+			return this.isUsedInDimStatement;
 		}
 	}
+
+	//////////////////////////////////////////////////////////////////////////////
 
 	private Map<String /* array variable name */, ArrayVariableInfo> arrayVariables = new HashMap<String, ArrayVariableInfo>();
 
@@ -194,7 +194,12 @@ public class Parser {
 
 	public List<Statement> parseLine(String stringToParse) {
 		this.stringToParse = stringToParse;
+
 		this.pos = 0;
+		this.token = null;
+		this.hasCachedToken = false;
+
+		this.isParsingDATAElement = false;
 
 		if (stringToParse.trim().isEmpty()) {
 			return Collections.emptyList();
@@ -206,7 +211,8 @@ public class Parser {
 		List<Statement> statements = new ArrayList<Statement>();
 		statements.add(parseLineNumberStatement());
 		statements.addAll(parseStatements());
-		if (this.pos < this.stringToParse.length()) {
+
+		if (this.token != Token.END_OF_INPUT) {
 			throw new CompileException("Not fully parsed. Invalid characters at position " + this.pos + ".");
 		}
 		return statements;
@@ -214,9 +220,9 @@ public class Parser {
 
 	public void flush() {
 		// verify that all FN have a DEF FN
-		for (String funcName : this.fnMap.keySet()) {
-			if (this.defFnMap.containsKey(funcName) == false) {
-				throw new CompileException("Function " + funcName + " is undefined.");
+		for (String fnFuncName : this.fnMap.keySet()) {
+			if (this.defFnMap.containsKey(fnFuncName) == false) {
+				throw new CompileException("Function " + fnFuncName + "() is undefined.");
 			}
 		}
 	}
@@ -224,10 +230,22 @@ public class Parser {
 	private Statement parseLineNumberStatement() {
 		String strLineNumber = parseLineNumber();
 		if (strLineNumber == null) {
-			throw new CompileException("Line has no line number.");
+			throw new CompileException("Line has no or an invalid line number.");
 		}
-		return(new LineNumberStatement(strLineNumber));
+		return (new LineNumberStatement(strLineNumber));
 	}
+
+	private String parseLineNumber() {
+		String strLineNumber = getLineNumber();
+		if (strLineNumber != null) {
+			int lineNumber = Integer.parseInt(strLineNumber);
+			strLineNumber = String.valueOf(lineNumber);
+			this.currentLineNumber = strLineNumber;
+		}
+		return strLineNumber;
+	}
+
+	// Parse statements //////////////////////////////////////////////////////////
 
 	private List<Statement> parseStatements() {
 		List<Statement> statements = new ArrayList<Statement>();
@@ -243,47 +261,47 @@ public class Parser {
 
 	private Statement parseStatement() {
 		Statement result;
-		if (isNextKeyword(DATA)) {
+		if (isNextToken(DATA)) {
 			result = parseDATA();
-		} else if (isNextKeyword(DEF)) {
+		} else if (isNextToken(DEF)) {
 			result = parseDEF();
-		} else if (isNextKeyword(DIM)) {
+		} else if (isNextToken(DIM)) {
 			result = parseDIM();
-		} else if (isNextKeyword(END)) {
+		} else if (isNextToken(END)) {
 			result = parseEND();
-		} else if (isNextKeyword(FOR)) {
+		} else if (isNextToken(FOR)) {
 			result = parseFOR();
-		} else if (isNextKeyword(IF)) {
+		} else if (isNextToken(IF)) {
 			result = parseIF();
-		} else if (isNextKeyword(INPUT)) {
+		} else if (isNextToken(INPUT)) {
 			result = parseINPUT();
-		} else if (isNextKeyword(GOTO)) {
+		} else if (isNextToken(GOTO)) {
 			result = parseGOTO();
-		} else if (isNextKeyword(GOSUB)) {
+		} else if (isNextToken(GOSUB)) {
 			result = parseGOSUB();
-		} else if (isNextKeyword(LET)) {
+		} else if (isNextToken(LET)) {
 			result = parseLET();
-		} else if (isNextKeyword(NEXT)) {
+		} else if (isNextToken(NEXT)) {
 			result = parseNEXT();
-		} else if (isNextKeyword(ON)) {
+		} else if (isNextToken(ON)) {
 			result = parseON();
-		} else if (isNextKeyword(PRINT)) {
+		} else if (isNextToken(PRINT)) {
 			result = parsePRINT();
-		} else if (isNextKeyword(READ)) {
+		} else if (isNextToken(READ)) {
 			result = parseREAD();
-		} else if (isNextKeyword(REM)) {
+		} else if (isNextToken(REM)) {
 			result = parseREM();
-		} else if (isNextKeyword(RESTORE)) {
+		} else if (isNextToken(RESTORE)) {
 			result = parseRESTORE();
-		} else if (isNextKeyword(RETURN)) {
+		} else if (isNextToken(RETURN)) {
 			result = parseRETURN();
-		} else if (isNextKeyword(STOP)) {
+		} else if (isNextToken(STOP)) {
 			result = parseSTOP();
-		} else if (isNextKeyword(SWAP)) {
+		} else if (isNextToken(SWAP)) {
 			result = parseSWAP();
-		} else if (isNextKeyword(WEND)) {
+		} else if (isNextToken(WEND)) {
 			result = parseWEND();
-		} else if (isNextKeyword(WHILE)) {
+		} else if (isNextToken(WHILE)) {
 			result = parseWHILE();
 		} else { // no keyword found
 			result = parseImplicitLET();
@@ -299,98 +317,86 @@ public class Parser {
 		//   <constant> := "<string>" | ^[,:]*
 
 		List<String> constants = new ArrayList<String>();
-		while (true) {
-			String constant = null;
-
-			StrNode strNode = parseStrConst();
-			if (strNode != null) {
-				constant = strNode.getValue();
-			} else {
-				strNode = parseAnyConstant();
-				if (strNode != null) {
-					constant = strNode.getValue().trim();
-				}
-			}
+		do {
+			StrNode strNode = parseDataElement();
 			if (strNode == null) {
-				throw new CompileException("Cannot parse DATA.");
+				throw new CompileException("Missing or invalid DATA element.");
 			}
-
+			String constant = strNode.getValue();
 			constants.add(constant);
-			if (isNextToken(COMMA) == false) {
-				break;
-			}
-		}
-		return new DataStatement(this.currentLineNumber, constants.toArray(new String[0]));
+		} while (isNextToken(COMMA));
+
+		return new DataStatement(this.currentLineNumber, constants.toArray(EMPTY_STRING_ARRAY));
 	}
 
 	private Statement parseDEF() {
-		// DEF <funcName>(<var>[,<var>]*)=<expression>
+		// DEF <fnFuncName>(<var>[,<var>]*)=<expression>
 
-		String funcName = getStrFunctionName();
-		if (funcName == null) {
-			funcName = getNumFunctionName();
+		NodeType fnFuncType = NodeType.STR;
+		String fnFuncName = getStrFNFunctionName();
+		if (fnFuncName == null) {
+			fnFuncType = NodeType.NUM;
+			fnFuncName = getNumFNFunctionName();
 		}
-		if (funcName == null) {
-			throw new CompileException("DEF FN: Cannot parse function name. It must start with FN.");
+		if (fnFuncName == null) {
+			throw new CompileException("DEF FN: Missing or invalid function name. It must start with FN.");
 		}
-		funcName = funcName.substring(0, funcName.length() - 1);
 
-		List<VariableNode> funcVars = new ArrayList<VariableNode>();
+		List<VariableNode> fnFuncVars = new ArrayList<VariableNode>();
 		do {
-			VariableNode funcVar = parseStrVar();
-			if (funcVar == null) {
-				funcVar = parseNumVar();
+			VariableNode fnFuncVar = parseStrVar();
+			if (fnFuncVar == null) {
+				fnFuncVar = parseNumVar();
 			}
-			if (funcVar == null) {
-				throw new CompileException("DEF FN: Cannot parse or invalid function variable with function " + funcName + ".");
+			if (fnFuncVar == null) {
+				throw new CompileException("DEF FN: Missing or invalid function variable with function " + fnFuncName + "().");
 			}
-			funcVars.add(funcVar);
+			fnFuncVars.add(fnFuncVar);
 		} while (isNextToken(COMMA));
 
 		if (isNextToken(CLOSE) == false) {
-			throw new CompileException("DEF FN: Missing ) in function " + funcName + ".");
+			throw new CompileException("DEF FN: Missing closing parenthesis ()) in function " + fnFuncName + "().");
 		}
 
-		if (funcVars.isEmpty()) {
-			throw new CompileException("DEF FN: Function " + funcName + " has zero function variables.");
+		if (fnFuncVars.isEmpty()) {
+			throw new CompileException("DEF FN: Function " + fnFuncName + "() has no function variables.");
 		}
 
 		if (isNextToken(EQUAL) == false) {
-			throw new CompileException("DEF FN: Missing = in function " + funcName + " .");
+			throw new CompileException("DEF FN: Missing equal sign (=) in function " + fnFuncName + "().");
 		}
 
-		INode funcExpr = parseExpr();
-		if (funcExpr == null) {
-			throw new CompileException("DEF FN: Cannot parse expression of function " + funcName + ".");
+		INode fnFuncExpr = parseExpr();
+		if (fnFuncExpr == null) {
+			throw new CompileException("DEF FN: Missing or invalid expression in function " + fnFuncName + "().");
 		}
 
-		NodeType funcType = funcName.endsWith("$") ? NodeType.STR : NodeType.NUM;
-		if (funcType != funcExpr.getType()) {
-			throw new CompileException("DEF FN: Function type and expression type of function " + funcName + " are not the same.");
+		if (fnFuncType != fnFuncExpr.getType()) {
+			throw new CompileException("DEF FN: Function type and expression type of function " + fnFuncName + "() are not the same.");
 		}
 
-		if (this.defFnMap.containsKey(funcName)) {
-			throw new CompileException("DEF FN: Function " + funcName + " already defined.");
+		if (this.defFnMap.containsKey(fnFuncName)) {
+			throw new CompileException("DEF FN: Function " + fnFuncName + "() is already defined.");
 		}
 
-		DefFnStatement statement = new DefFnStatement(funcName, funcVars.toArray(new VariableNode[0]), funcExpr);
+		DefFnStatement statement = new DefFnStatement(fnFuncName, fnFuncVars.toArray(EMPTY_VARIABLE_NODE_ARRAY), fnFuncExpr);
 
 		// compare signatures of DEF FN<name> against previous FN<name> calls
-		if (this.fnMap.containsKey(funcName)) {
-			FnFunctionNode fnFuncNode = this.fnMap.get(funcName);
+		if (this.fnMap.containsKey(fnFuncName)) {
+			FnFunctionNode fnFuncNode = this.fnMap.get(fnFuncName);
 
-			if (funcVars.size() != fnFuncNode.getFuncArgExprs().length) {
-				throw new CompileException("DEF FN: Number of arguments of function " + funcName + " are not the same as in earlier call of function.");
+			if (fnFuncVars.size() != fnFuncNode.getFuncArgExprs().length) {
+				throw new CompileException("DEF FN: Number of arguments of function " + fnFuncName + "() is not the same as in earlier call of function.");
 			}
 
-			for (int i = 0; i < funcVars.size(); i++) {
-				if (funcVars.get(i).getType() != fnFuncNode.getFuncArgExprs()[i].getType()) {
-					throw new CompileException("DEF FN: Arguments " + i + " of function " + funcName + " has not the same type as argument in earlier call of function.");
+			for (int i = 0; i < fnFuncVars.size(); i++) {
+				if (fnFuncVars.get(i).getType() != fnFuncNode.getFuncArgExprs()[i].getType()) {
+					throw new CompileException("DEF FN: Argument #" + (i + 1) + " of function " + fnFuncName + "() has not the same type as argument in earlier call of function.");
 				}
 			}
 		}
 
-		this.defFnMap.put(funcName, statement);
+		this.defFnMap.put(fnFuncName, statement);
 		return statement;
 	}
 
@@ -398,38 +404,34 @@ public class Parser {
 		// DIM <arrayVar>[,<arrayVar>]*
 
 		List<VariableNode> arrayVars = new ArrayList<VariableNode>();
-		while (true) {
+		do {
 			VariableNode arrayVar = parseStrArrayVar();
 			if (arrayVar == null) {
 				arrayVar = parseNumArrayVar();
 			}
 			if (arrayVar == null) {
-				throw new CompileException("Missing or illegal variable name(s) after DIM.");
+				throw new CompileException("Missing or invalid variable name(s) after DIM statement.");
 			}
 
 			String arrayVarName = arrayVar.getVariableName();
 			if (this.arrayVariables.containsKey(arrayVarName)) {
 				ArrayVariableInfo info = this.arrayVariables.get(arrayVarName);
-				if (info.usedInDimStatement()) {
+				if (info.isUsedInDimStatement()) {
 					NodeType arrayVarType = arrayVar.getType();
-					String message = "";
 					if (arrayVarType == NodeType.NUM) {
-						message = "Number array variable " + arrayVarName + ") has already been used in a DIM statement.";
+						throw new CompileException("Number array variable " + arrayVarName + "() already has been used in a DIM statement.");
 					} else if (arrayVarType == NodeType.STR) {
-						message = "String array variable " + arrayVarName + ") has already been used in a DIM statement.";
+						throw new CompileException("String array variable " + arrayVarName + "() already has been used in a DIM statement.");
 					}
-					throw new CompileException(message);
 				}
 			}
-			ArrayVariableInfo info = new ArrayVariableInfo(arrayVar.getDimExpressions().length, true /* usedInDimStatement */);
+			ArrayVariableInfo info = new ArrayVariableInfo(arrayVar.getDimExpressions().length, true /* isUsedInDimStatement */);
 			this.arrayVariables.put(arrayVarName, info);
 
 			arrayVars.add(arrayVar);
-			if (isNextToken(COMMA) == false) {
-				break;
-			}
-		}
-		return new DimStatement(arrayVars.toArray(new VariableNode[0]));
+		} while (isNextToken(COMMA));
+
+		return new DimStatement(arrayVars.toArray(EMPTY_VARIABLE_NODE_ARRAY));
 	}
 
 	private Statement parseEND() {
@@ -443,27 +445,27 @@ public class Parser {
 
 		VariableNode loopVar = parseNumVar();
 		if (loopVar == null) {
-			throw new CompileException("Missing or illegal loop variable in FOR statement.");
+			throw new CompileException("Missing or invalid loop variable in FOR statement.");
 		}
 		if (isNextToken(EQUAL) == false) {
-			throw new CompileException("Missing equal sign after loop variable in FOR statement.");
+			throw new CompileException("Missing equal sign (=) after loop variable in FOR statement.");
 		}
 		INode startExpr = parseNumExpr();
 		if (startExpr == null) {
-			throw new CompileException("Missing or illegal number expression for start value in FOR statement.");
+			throw new CompileException("Missing or invalid number expression for start value in FOR statement.");
 		}
-		if (isNextKeyword(TO) == false) {
+		if (isNextToken(TO) == false) {
 			throw new CompileException("Missing TO in FOR statement.");
 		}
 		INode endExpr = parseNumExpr();
 		if (endExpr == null) {
-			throw new CompileException("Missing or illegal number expression for end value in FOR statement.");
+			throw new CompileException("Missing or invalid number expression for end value in FOR statement.");
 		}
 		INode stepExpr = null;
-		if (isNextKeyword(STEP)) {
+		if (isNextToken(STEP)) {
 			stepExpr = parseNumExpr();
 			if (stepExpr == null) {
-				throw new CompileException("Missing or illegal number expression for step value in FOR statement.");
+				throw new CompileException("Missing or invalid number expression for step value in FOR statement.");
 			}
 		} else {
 			stepExpr = NumNode.create("1");
@@ -481,17 +483,17 @@ public class Parser {
 		}
 
 		List<Statement> thenStatements = new ArrayList<Statement>();
-		if (isNextKeyword(THEN)) {
+		if (isNextToken(THEN)) {
 			String lineNumber = parseLineNumber();
 			if (lineNumber != null) {
 				thenStatements.add(new GotoStatement(lineNumber));
 			} else {
 				thenStatements = parseStatements();
 			}
-			if (thenStatements.isEmpty()) { // NOTE: Never happens: parseStatement() will cause an exception first...
+			if (thenStatements.isEmpty()) { // NOTE: Never happens, parseStatement() will throw an exception first
 				throw new CompileException("Missing or invalid line number or statements after THEN in IF statement.");
 			}
-		} else if (isNextKeyword(GOTO)) {
+		} else if (isNextToken(GOTO)) {
 			String lineNumber = parseLineNumber();
 			if (lineNumber == null) {
 				throw new CompileException("Missing or invalid line number after GOTO io IF statement.");
@@ -502,18 +504,18 @@ public class Parser {
 		}
 
 		List<Statement> elseStatements = new ArrayList<Statement>();
-		if (isNextKeyword(ELSE)) {
+		if (isNextToken(ELSE)) {
 			String lineNumber = parseLineNumber();
 			if (lineNumber != null) {
 				elseStatements.add(new GotoStatement(lineNumber));
 			} else {
 				elseStatements = parseStatements();
 			}
-			if (elseStatements.isEmpty()) { // NOTE: Never happens: parseStatement() will cause an exception first...
+			if (elseStatements.isEmpty()) { // NOTE: Never happens, parseStatement() will throw an exception first
 				throw new CompileException("Missing or invalid line number or statements after ELSE in IF statement.");
 			}
 		}
-		return new IfStatement(numExpr, thenStatements.toArray(new Statement[0]), elseStatements.toArray(new Statement[0]));
+		return new IfStatement(numExpr, thenStatements.toArray(EMPTY_STATEMENT_ARRAY), elseStatements.toArray(EMPTY_STATEMENT_ARRAY));
 	}
 
 	private Statement parseINPUT() {
@@ -526,25 +528,23 @@ public class Parser {
 		if (promptNode != null) {
 			separator = getNextTokenOutOf(COMMA, SEMICOLON);
 			if (separator == null) {
-				throw new CompileException("Missing comma or semicolon in INPUT statement.");
+				throw new CompileException("Missing comma (,) or semicolon (;) in INPUT statement.");
 			}
 		}
 
 		List<VariableNode> vars = new ArrayList<VariableNode>();
-		while (true) {
-			VariableNode var = parseStrOrStrArrayVar();
+		do {
+			VariableNode var = parseStrVarOrStrArrayVar();
 			if (var == null) {
-				var = parseNumOrNumArrayVar();
+				var = parseNumVarOrNumArrayVar();
 			}
 			if (var == null) {
-				throw new CompileException("Missing or illegal variable in INPUT statement.");
+				throw new CompileException("Missing or invalid variable in INPUT statement.");
 			}
 			vars.add(var);
-			if (isNextToken(COMMA) == false) {
-				break;
-			}
-		}
-		return new InputStatement(prompt, separator, vars.toArray(new VariableNode[0]));
+		} while (isNextToken(COMMA));
+
+		return new InputStatement(prompt, separator, vars.toArray(EMPTY_VARIABLE_NODE_ARRAY));
 	}
 
 	private Statement parseGOTO() {
@@ -552,7 +552,7 @@ public class Parser {
 
 		String lineNumber = parseLineNumber();
 		if (lineNumber == null) {
-			throw new CompileException("Missing or illegal line number in GOTO statement.");
+			throw new CompileException("Missing or invalid line number in GOTO statement.");
 		}
 		return new GotoStatement(lineNumber);
 	}
@@ -562,7 +562,7 @@ public class Parser {
 
 		String lineNumber = parseLineNumber();
 		if (lineNumber == null) {
-			throw new CompileException("Missing or illegal line number in GOSUB statement.");
+			throw new CompileException("Missing or invalid line number in GOSUB statement.");
 		}
 		return new GosubStatement(lineNumber);
 	}
@@ -570,51 +570,51 @@ public class Parser {
 	private Statement parseImplicitLET() {
 		// <varName>=<expr>
 
-		return parseInternalLET(true /* isImplicit */);
+		return parseInternalLET(true /* isImplicitLET */);
 	}
 
 	private Statement parseLET() {
-		// [LET ]<varName>=<expr>
+		// LET <varName>=<expr>
 
-		return parseInternalLET(false /* isImplicit */);
+		return parseInternalLET(false /* isImplicitLET */);
 	}
 
-	private Statement parseInternalLET(boolean isImplicit) {
+	private Statement parseInternalLET(boolean isImplicitLET) {
 		Statement statement = null;
 
-		FnFunctionNode strFuncNode = parseStrFN();
-		if (strFuncNode != null) {
-			throw new CompileException("You cannot assign an expression to a function call.");
+		FnFunctionNode strFnFuncNode = parseStrFN();
+		if (strFnFuncNode != null) {
+			throw new CompileException("You cannot assign an expression to a string function call.");
 		}
-		FnFunctionNode numFuncNode = parseNumFN();
-		if (numFuncNode != null) {
-			throw new CompileException("You cannot assign an expression to a function call.");
+		FnFunctionNode numFnFuncNode = parseNumFN();
+		if (numFnFuncNode != null) {
+			throw new CompileException("You cannot assign an expression to a number function call.");
 		}
 
-		VariableNode var = parseStrOrStrArrayVar();
+		VariableNode var = parseStrVarOrStrArrayVar();
 		if (var != null) {
 			if (isNextToken(EQUAL)) {
 				INode strExpr = parseStrExpr();
 				if (strExpr == null) {
-					throw new CompileException("Missing or invalid expression after equals (=), or type mismatch. You can assign only a string expression to a string variable.");
+					throw new CompileException("Missing or invalid expression after equal sign (=) or type mismatch. You can assign only a string expression to a string variable.");
 				}
-				statement = new LetStatement(var, strExpr, isImplicit);
+				statement = new LetStatement(var, strExpr, isImplicitLET);
 			} else {
-				throw new CompileException("Equals (=) missing after string variable name.");
+				throw new CompileException("Missing equal sign (=) after string variable name.");
 			}
 		}
 
 		if (var == null) {
-			var = parseNumOrNumArrayVar();
+			var = parseNumVarOrNumArrayVar();
 			if (var != null) {
 				if (isNextToken(EQUAL)) {
 					INode numExpr = parseNumExpr();
 					if (numExpr == null) {
-						throw new CompileException("Missing or invalid expression after equals (=), or type mismatch. You can assign only a number expression to a number variable.");
+						throw new CompileException("Missing or invalid expression after equals (=) or type mismatch. You can assign only a number expression to a number variable.");
 					}
-					statement = new LetStatement(var, numExpr, isImplicit);
+					statement = new LetStatement(var, numExpr, isImplicitLET);
 				} else {
-					throw new CompileException("Equals (=) missing after number variable name.");
+					throw new CompileException("Missing equal sign (=) after number variable name.");
 				}
 			}
 		}
@@ -625,20 +625,17 @@ public class Parser {
 		// NEXT [<loopVarName>[,<loopVarName>]*]
 
 		List<VariableNode> loopVars = new ArrayList<VariableNode>();
-		boolean expectNextLoopVar = false;
-		while (true) {
+		do {
 			VariableNode loopVar = parseNumVar();
 			if (loopVar != null) {
 				loopVars.add(loopVar);
-			} else {
-				if (expectNextLoopVar) {
-					throw new CompileException("Missing or illegal number variable after comma in NEXT statement.");
-				}
-				break;
 			}
-			expectNextLoopVar = isNextToken(COMMA);
-		}
-		return new NextStatement(loopVars.toArray(new VariableNode[0]));
+			if ((loopVar == null) && (loopVars.size() > 0)) {
+				throw new CompileException("Missing or invalid number variable after comma (,) in NEXT statement.");
+			}
+		} while (isNextToken(COMMA));
+
+		return new NextStatement(loopVars.toArray(EMPTY_VARIABLE_NODE_ARRAY));
 	}
 
 	private Statement parseON() {
@@ -648,29 +645,29 @@ public class Parser {
 
 		INode numExpr = parseNumExpr();
 		if (numExpr == null) {
-			throw new CompileException("Missing or illegal number expression in ON statement.");
+			throw new CompileException("Missing or invalid number expression in ON statement.");
 		}
 
 		boolean isOnGoto = false;
-		if (isNextKeyword(GOTO)) {
+		if (isNextToken(GOTO)) {
 			isOnGoto = true;
-		} else if (isNextKeyword(GOSUB)) {
+		} else if (isNextToken(GOSUB)) {
 			isOnGoto = false;
 		} else {
 			throw new CompileException("Missing GOTO or GOSUB in ON statement.");
 		}
 
-		while (true) {
+		do {
 			String lineNumber = parseLineNumber();
 			if (lineNumber == null) {
-				String strGo = isOnGoto ? "GOTO" : "GOSUB";
-				throw new CompileException("Missing or illegal line number in ON " + strGo + " statement.");
+				if (isOnGoto) {
+					throw new CompileException("Missing or invalid line number in ON GOTO statement.");
+				} else {
+					throw new CompileException("Missing or invalid line number in ON GOSUB statement.");
+				}
 			}
 			lineNumbers.add(lineNumber);
-			if (isNextToken(COMMA) == false) {
-				break;
-			}
-		}
+		} while (isNextToken(COMMA));
 
 		if (isOnGoto) {
 			return new OnGotoStatement(numExpr, lineNumbers.toArray(new String[lineNumbers.size()]));
@@ -707,27 +704,25 @@ public class Parser {
 				break;
 			}
 		}
-		return new PrintStatement(exprs.toArray(new INode[0]));
+		return new PrintStatement(exprs.toArray(EMPTY_INODE_ARRAY));
 	}
 
 	private Statement parseREAD() {
 		// READ <varName>[,<varName>]*
 
 		List<VariableNode> vars = new ArrayList<VariableNode>();
-		while (true) {
-			VariableNode var = parseStrOrStrArrayVar();
+		do {
+			VariableNode var = parseStrVarOrStrArrayVar();
 			if (var == null) {
-				var = parseNumOrNumArrayVar();
+				var = parseNumVarOrNumArrayVar();
 			}
 			if (var == null) {
-				throw new CompileException("Cannot parse variable in READ");
+				throw new CompileException("Missing or invalid variable in READ statement.");
 			}
 			vars.add(var);
-			if (isNextToken(COMMA) == false) {
-				break;
-			}
-		}
-		return new ReadStatement(vars.toArray(new VariableNode[0]));
+		} while (isNextToken(COMMA));
+
+		return new ReadStatement(vars.toArray(EMPTY_VARIABLE_NODE_ARRAY));
 	}
 
 	private Statement parseREM() {
@@ -763,22 +758,22 @@ public class Parser {
 	private Statement parseSWAP() {
 		// SWAP <varName1>,<varName2>
 
-		VariableNode var1 = parseStrOrStrArrayVar();
+		VariableNode var1 = parseStrVarOrStrArrayVar();
 		if (var1 == null) {
-			var1 = parseNumOrNumArrayVar();
+			var1 = parseNumVarOrNumArrayVar();
 		}
 		if (var1 == null) {
 			throw new CompileException("Missing or invalid first variable in SWAP statement.");
 		}
 		if (isNextToken(COMMA) == false) {
-			throw new CompileException("Missing comma in SWAP statement.");
+			throw new CompileException("Missing comma (,) in SWAP statement.");
 		}
 
 		VariableNode var2 = null;
 		if (var1.getType() == NodeType.NUM) {
-			var2 = parseNumOrNumArrayVar();
+			var2 = parseNumVarOrNumArrayVar();
 		} else if (var1.getType() == NodeType.STR) {
-			var2 = parseStrOrStrArrayVar();
+			var2 = parseStrVarOrStrArrayVar();
 		}
 		if (var2 == null) {
 			throw new CompileException("Missing or invalid second variable in SWAP statement.");
@@ -797,22 +792,22 @@ public class Parser {
 
 		INode numExpr = parseNumExpr();
 		if (numExpr == null) {
-			throw new CompileException("WHILE: Missing or illegal number expression in WHILE statement.");
+			throw new CompileException("Missing or invalid number expression in WHILE statement.");
 		}
 		return new WhileStatement(numExpr);
 	}
 
-	// parse expressions /////////////////////////////////////////////////////////
+	// Parse expressions /////////////////////////////////////////////////////////
 
 	/**
-	 * Expression grammar.
+	 * Expression grammar
 	 *
 	 * <expr> := <strExpr> | <numExpr>
 	 *
 	 * <strExpr> := <strAddExpr>
 	 * <strAddExpr> := <strTerm> [+ <strTerm>]*
 	 * <strTerm> := <strFN> | <strFunc> | <strOrStrArrayVar> | <strConst>
-	 * <strFN> := FN<varName>$([<expr>[,<expr>]*])
+	 * <strFN> := FN<varName>$(<expr>[,<expr>]*)
 	 * <strOrStrArrayVar> := <strArrayVar> | <strVar>
 	 * <strArrayVar> := <varName>$(<numExpr>[,<numExpr>])
 	 * <strVar> := <varName>$
@@ -825,45 +820,14 @@ public class Parser {
 	 * <numIntDivExpr> := <numMultDivExpr> [\ <numMultDivExp>]*
 	 * <numMultDivExpr> := <numPowerExpr> [*|/ <numPowerExpr>]*
 	 * <numPowerExpr> := <numFactor> [^ <numFactor>]*
-	 * <numFactor> := <numStrRelExpr> | <numFN> | <numFunc> | <strOrStrArrayVar> | <numOrNumArrayVar> | <numConst> | -<numFactor> | (<numExpr>)
-	 * <numFN> := FN<varName>([<expr>[,<expr>]*])
-	 *
+	 * <numFactor> := <numStrRelExpr> | <numFN> | <numFunc> | <numOrNumArrayVar> | <numConst> | -<numFactor> | +<numFactor> | (<numExpr>)
+	 * <numStrRelExpr> := <numStrAddExpr> [<>|<=|>=|<|=|> <numStrAddExpr>]*
+	 * <numStrAddExpr> := <strTerm> [+ <strTerm>]*
+	 * <numFN> := FN<varName>(<expr>[,<expr>]*)
 	 * <numOrNumArrayVar> := <numArrayVar> | <numVar>
 	 * <numArrayVar> := <varName>(<numExpr>[,<numExpr>])
 	 * <numVar> := <varName>
-	 *
-	 * <numStrRelExpr> := <numStrAddExpr> [<>|<=|>=|<|=|> <numStrAddExpr>]*
-	 * <numStrAddExpr> := <strTerm> [+ <strTerm>]*
 	 */
-
-	private Token getNextTokenOutOf(Token... tokens) {
-		for (Token token : tokens) {
-			if (isNextToken(token)) {
-				return token;
-			}
-		}
-		return null;
-	}
-
-	private boolean isNextToken(Token token) {
-		int savePos = this.pos;
-
-		// skip leading whitespace, terminate if EOL reached
-		while (true) {
-			if (this.pos >= this.stringToParse.length()) {
-				return false; // EOL
-			}
-			if (Character.isWhitespace(this.stringToParse.charAt(this.pos)) == false) {
-				break;
-			}
-			this.pos++;
-		}
-
-		String tokenChars = token.getChars();
-		boolean isNextToken = this.stringToParse.startsWith(tokenChars, this.pos);
-		this.pos = isNextToken ? this.pos + tokenChars.length() : savePos;
-		return isNextToken;
-	}
 
 	// Parse expression //////////////////////////////////////////////////////////
 
@@ -873,6 +837,173 @@ public class Parser {
 			result = parseNumExpr();
 		}
 		return result;
+	}
+
+	// Parse string expression ///////////////////////////////////////////////////
+
+	private INode parseStrExpr() {
+		ParserState state = saveParserState();
+		INode result = parseStrAddExpr();
+		if (result != null) {
+			Token token = getNextTokenOutOf(NOT_EQUAL, LESS_OR_EQUAL, GREATER_OR_EQUAL, LESS, EQUAL, GREATER); // op order matters!
+			if (token != null) {
+				restoreParserState(state);
+				result = null; // unparse "<strAddExpr> <>|<=|>=|<|=|>", it's not a string expression but a num expression
+			}
+		}
+		return result;
+	}
+
+	private INode parseStrAddExpr() {
+		INode result = parseStrTerm();
+		if (result != null) {
+			while (isNextToken(ADD)) {
+				INode node = parseStrTerm();
+				if (node == null) {
+					throw new CompileException("Missing or invalid string expression after string concatenation operator +.");
+				}
+				result = BinaryNode.create(ADD, result, node, NodeType.STR);
+			}
+		}
+		return result;
+	}
+
+	private INode parseStrTerm() {
+		INode result = parseStrFN(); // parse functions before variables
+		if (result == null) {
+			result = parseStrFunc();
+		}
+		if (result == null) { // parse array variable before non-array variables
+			result = parseStrVarOrStrArrayVar();
+		}
+		if (result == null) {
+			result = parseStrConst();
+		}
+		return result;
+	}
+
+	private FnFunctionNode parseStrFN() {
+		String fnFuncName = getStrFNFunctionName();
+		if (fnFuncName == null) {
+			return null;
+		}
+		return internalParseFNFunction(fnFuncName, NodeType.STR);
+	}
+
+	private FunctionNode parseStrFunc() {
+		FunctionNode result = internalParseFunction(CHR);
+		if (result == null) {
+			result = internalParseFunction(LEFT);
+		}
+		if (result == null) {
+			if (isNextToken(MID)) {
+				INode arg1Expr = parseStrExpr();
+				if (arg1Expr == null) {
+					throw new CompileException("MID$(): Missing or invalid first argument.");
+				}
+				if (isNextToken(COMMA) == false) {
+					throw new CompileException("MID$(): Missing first comma separator (,).");
+				}
+
+				INode arg2Expr = parseNumExpr();
+				if (arg2Expr == null) { // NOTE: Never happens, parseNumExpr() will throw an exception first
+					throw new CompileException("MID$(): Missing or invalid second argument.");
+				}
+
+				INode arg3Expr;
+				if (isNextToken(COMMA)) {
+					arg3Expr = parseNumExpr();
+					if (arg3Expr == null) { // NOTE: Never happens, parseNumExpr() will throw an exception first
+						throw new CompileException("MID$(): Missing or invalid third argument.");
+					}
+				} else {
+					arg3Expr = NumNode.create("255");
+				}
+
+				result = FunctionNode.create(MID, arg1Expr, arg2Expr, arg3Expr);
+				if (isNextToken(CLOSE) == false) {
+					throw new CompileException("MID$(): Missing closing parenthesis ()).");
+				}
+			}
+		}
+		if (result == null) {
+			result = internalParseFunction(RIGHT);
+		}
+		if (result == null) {
+			result = internalParseFunction(SPACE);
+		}
+		if (result == null) {
+			result = internalParseFunction(STR);
+		}
+		return result;
+	}
+
+	private VariableNode parseStrVarOrStrArrayVar() {
+		VariableNode strVar = parseStrArrayVar();
+		if (strVar == null) {
+			strVar = parseStrVar();
+		}
+		return strVar;
+	}
+
+	private VariableNode parseStrArrayVar() {
+		String varName = getStrArrayVariableName();
+		if (varName != null) {
+			INode dim1Expr = parseNumExpr();
+			if (dim1Expr == null) {
+				throw new CompileException("Missing or invalid expression for first index of string array variable " + varName + "().");
+			}
+			if (isNextToken(COMMA)) {
+				INode dim2Expr = parseNumExpr();
+				if (dim2Expr == null) {
+					throw new CompileException("Missing or invalid expression for second index of string array variable " + varName + "().");
+				}
+				if (isNextToken(CLOSE)) {
+					if (this.arrayVariables.containsKey(varName)) {
+						if (this.arrayVariables.get(varName).getNumDims() != 2) {
+							throw new CompileException("String array variable " + varName + "() does not have a single index like in earlier part of code.");
+						}
+					} else {
+						ArrayVariableInfo info = new ArrayVariableInfo(2, false /* isUsedInDimStatement */);
+						this.arrayVariables.put(varName, info);
+					}
+					return VariableNode.create(varName, NodeType.STR, dim1Expr, dim2Expr);
+				}
+				throw new CompileException("Missing closing parenthesis ()) after second index of string array variable " + varName + "().");
+			}
+			if (isNextToken(CLOSE)) {
+				if (this.arrayVariables.containsKey(varName)) {
+					if (this.arrayVariables.get(varName).getNumDims() != 1) {
+						throw new CompileException("String array variable " + varName + "() does not have two indexes like in earlier part of code.");
+					}
+				} else {
+					ArrayVariableInfo info = new ArrayVariableInfo(1, false /* isUsedInDimStatement */);
+					this.arrayVariables.put(varName, info);
+				}
+				return VariableNode.create(varName, NodeType.STR, dim1Expr);
+			}
+			throw new CompileException("Missing closing parenthesis ()) after first index of string array variable " + varName + "().");
+		}
+		return null;
+	}
+
+	private VariableNode parseStrVar() {
+		String varName = getStrVariableName();
+		if (varName != null) {
+			return VariableNode.createVariableNode(varName, NodeType.STR);
+		}
+		return null;
+	}
+
+	private StrNode parseStrConst() {
+		String strConst = getStrConstant();
+		if (strConst != null) {
+			if (strConst.length() > 255) { // NOTE: Never happens, code lines are 255 chars maximum
+				throw new CompileException("String constant has more than 255 characters.");
+			}
+			return StrNode.create(strConst);
+		}
+		return null;
 	}
 
 	// Parse number expression ///////////////////////////////////////////////////
@@ -894,9 +1025,9 @@ public class Parser {
 			while ((token = getNextTokenOutOf(AND, OR, XOR)) != null) {
 				INode node = parseNumNotExpr();
 				if (node == null) {
-					throw new CompileException("Missing or invalid number expression after logical operator \"" + token.getChars() + "\".");
+					throw new CompileException("Missing or invalid number expression after logical operator " + token.getChars() + ".");
 				}
-				result = BinaryNode.create(token, result, node);
+				result = BinaryNode.create(token, result, node, NodeType.NUM);
 			}
 		}
 		return result;
@@ -904,7 +1035,7 @@ public class Parser {
 
 	private INode parseNumNotExpr() {
 		INode result = null;
-		if (isNextKeyword(NOT)) {
+		if (isNextToken(NOT)) {
 			result = UnaryNode.create(NOT, parseNumNotExpr());
 		} else {
 			result = parseNumRelExpr();
@@ -919,9 +1050,9 @@ public class Parser {
 			while ((token = getNextTokenOutOf(NOT_EQUAL, LESS_OR_EQUAL, GREATER_OR_EQUAL, LESS, EQUAL, GREATER)) != null) { // op order matters!
 				INode node = parseNumAddSubExpr();
 				if (node == null) {
-					throw new CompileException("Missing or invalid number expression after relational operator \"" + token.getChars() + "\".");
+					throw new CompileException("Missing or invalid number expression after relational operator " + token.getChars() + ".");
 				}
-				result = BinaryNode.create(token, result, node);
+				result = BinaryNode.create(token, result, node, NodeType.NUM);
 			}
 		}
 		return result;
@@ -934,9 +1065,9 @@ public class Parser {
 			while ((token = getNextTokenOutOf(ADD, SUBTRACT)) != null) {
 				INode node = parseNumModExpr();
 				if (node == null) {
-					throw new CompileException("Missing or invalid number expression after arithmetic operator \"" + token.getChars() + "\".");
+					throw new CompileException("Missing or invalid number expression after arithmetic operator " + token.getChars() + ".");
 				}
-				result = BinaryNode.create(token, result, node);
+				result = BinaryNode.create(token, result, node, NodeType.NUM);
 			}
 		}
 		return result;
@@ -945,12 +1076,12 @@ public class Parser {
 	private INode parseNumModExpr() {
 		INode result = parseNumIntDivExpr();
 		if (result != null) {
-			while (isNextKeyword(MOD)) {
+			while (isNextToken(MOD)) {
 				INode node = parseNumIntDivExpr();
 				if (node == null) {
-					throw new CompileException("Missing or invalid number expression after arithmetic operator \"MOD\".");
+					throw new CompileException("Missing or invalid number expression after arithmetic operator MOD.");
 				}
-				result = BinaryNode.create(MOD, result, node);
+				result = BinaryNode.create(MOD, result, node, NodeType.NUM);
 			}
 		}
 		return result;
@@ -962,9 +1093,9 @@ public class Parser {
 			while (isNextToken(INT_DIVIDE)) {
 				INode node = parseNumMultDivExpr();
 				if (node == null) {
-					throw new CompileException("Missing or invalid number expression after arithmetic operator \"\\\".");
+					throw new CompileException("Missing or invalid number expression after arithmetic operator \\.");
 				}
-				result = BinaryNode.create(INT_DIVIDE, result, node);
+				result = BinaryNode.create(INT_DIVIDE, result, node, NodeType.NUM);
 			}
 		}
 		return result;
@@ -977,9 +1108,9 @@ public class Parser {
 			while ((token = getNextTokenOutOf(MULTIPLY, DIVIDE)) != null) {
 				INode node = parseNumPowerExpr();
 				if (node == null) {
-					throw new CompileException("Missing or invalid number expression after arithmetic operator \"" + token.getChars() + "\".");
+					throw new CompileException("Missing or invalid number expression after arithmetic operator " + token.getChars() + ".");
 				}
-				result = BinaryNode.create(token, result, node);
+				result = BinaryNode.create(token, result, node, NodeType.NUM);
 			}
 		}
 		return result;
@@ -991,9 +1122,9 @@ public class Parser {
 			while (isNextToken(POWER)) {
 				INode node = parseNumFactor();
 				if (node == null) {
-					throw new CompileException("Missing or invalid number expression after arithmetic operator \"^\".");
+					throw new CompileException("Missing or invalid number expression after arithmetic operator ^.");
 				}
-				result = BinaryNode.create(POWER, result, node);
+				result = BinaryNode.create(POWER, result, node, NodeType.NUM);
 			}
 		}
 		return result;
@@ -1008,110 +1139,50 @@ public class Parser {
 			result = parseNumFunc();
 		}
 		if (result == null) { // reject string array variables
-			result = parseStrOrStrArrayVar();
+			result = parseStrVarOrStrArrayVar();
 			if (result != null) {
-				throw new CompileException("Illegal string variable(s) in number expression.");
+				throw new CompileException("Invalid string variable(s) in number expression.");
 			}
 		}
-		if (result == null) { // parse arrays before (simple) variables
-			result = parseNumOrNumArrayVar();
+		if (result == null) { // parse array variable before non-array variables
+			result = parseNumVarOrNumArrayVar();
 		}
 		if (result == null) {
 			result = parseNumConst();
 		}
 		if (result == null) {
-			if (isNextToken(UNARY_MINUS)) {
-				result = UnaryNode.create(UNARY_MINUS, parseNumFactor());
+			if (isNextToken(SUBTRACT)) {
+				result = UnaryNode.create(SUBTRACT, parseNumFactor());
+			}
+		}
+		if (result == null) {
+			if (isNextToken(ADD)) {
+				result = UnaryNode.create(ADD, parseNumFactor());
 			}
 		}
 		if (result == null) {
 			if (isNextToken(OPEN)) {
 				result = UnaryNode.create(OPEN, parseNumExpr());
 				if (isNextToken(CLOSE) == false) {
-					throw new CompileException("Missing closing parentheses in number expression.");
+					throw new CompileException("Missing closing parenthesis ()) in number expression.");
 				}
 			}
 		}
 		return result;
 	}
 
-	private VariableNode parseNumOrNumArrayVar() {
-		VariableNode numVar = parseNumArrayVar();
-		if (numVar == null) {
-			numVar = parseNumVar();
-		}
-		return numVar;
-	}
-
-	private VariableNode parseNumArrayVar() {
-		String varName = getNumArrayVariableName();
-		if (varName != null) {
-			INode dim1Expr = parseNumExpr();
-			if (dim1Expr == null) {
-				throw new CompileException("Missing or invalid expression for first index of number array variable " + varName + ").");
-			}
-			if (isNextToken(COMMA)) {
-				INode dim2Expr = parseNumExpr();
-				if (dim2Expr == null) {
-					throw new CompileException("Missing or invalid expression for second index of number array variable " + varName + ").");
-				}
-				if (isNextToken(CLOSE)) {
-					if (this.arrayVariables.containsKey(varName)) {
-						if (this.arrayVariables.get(varName).getNumDims() != 2) {
-							throw new CompileException("Number array variable " + varName + ") does not have one index like in earlier part of code.");
-						}
-					} else {
-						ArrayVariableInfo info = new ArrayVariableInfo(2, false /* usedInDimStatement */);
-						this.arrayVariables.put(varName, info);
-					}
-					return VariableNode.create(varName, NodeType.NUM, dim1Expr, dim2Expr);
-				}
-				throw new CompileException("Missing closing parentheses after second index of number array variable " + varName + ").");
-			}
-			if (isNextToken(CLOSE)) {
-				if (this.arrayVariables.containsKey(varName)) {
-					if (this.arrayVariables.get(varName).getNumDims() != 1) {
-						throw new CompileException("Number array variable " + varName + ") does not have two indexes like in earlier part of code.");
-					}
-				} else {
-					ArrayVariableInfo info = new ArrayVariableInfo(1, false /* usedInDimStatement */);
-					this.arrayVariables.put(varName, info);
-				}
-				return VariableNode.create(varName, NodeType.NUM, dim1Expr);
-			}
-			throw new CompileException("Missing closing parentheses after first index of number array variable " + varName + ").");
-		}
-		return null;
-	}
-
-	private VariableNode parseNumVar() {
-		String varName = getNumVariableName();
-		if (varName != null) {
-			return VariableNode.createVariableNode(varName, NodeType.NUM);
-		}
-		return null;
-	}
-
-	private NumNode parseNumConst() {
-		String strNumber = getNumConstant();
-		if (strNumber != null) {
-			return NumNode.create(strNumber);
-		}
-		return null;
-	}
-
 	private INode parseNumStrRelExpr() {
 		INode result = parseNumStrAddExpr();
 		if (result != null) {
-			Token token = getNextTokenOutOf(STRING_NOT_EQUAL, STRING_LESS_OR_EQUAL, STRING_GREATER_OR_EQUAL, STRING_LESS, STRING_EQUAL, STRING_GREATER); // op order matters!
+			Token token = getNextTokenOutOf(NOT_EQUAL, LESS_OR_EQUAL, GREATER_OR_EQUAL, LESS, EQUAL, GREATER); // op order matters!
 			if (token == null) {
-				throw new CompileException("No relational string operator found to convert the string expression into a number.");
+				throw new CompileException("Missing relational string operator to convert the string expression into a number.");
 			}
 			INode node = parseNumStrAddExpr();
 			if (node == null) {
-				throw new CompileException("Missing or invalid string expression after relational string operator \"" + token.getChars() + "\".");
+				throw new CompileException("Missing or invalid string expression after relational string operator " + token.getChars() + ".");
 			}
-			result = BinaryNode.create(token, result, node);
+			result = BinaryNode.create(token, result, node, NodeType.NUM);
 		}
 		return result;
 	}
@@ -1120,23 +1191,31 @@ public class Parser {
 		INode result = parseStrTerm();
 		if (result != null) {
 			while (true) {
-				int tmpPos = this.pos;
-				if (isNextToken(STRING_ADD)) {
+				ParserState state = saveParserState();
+				if (isNextToken(ADD)) {
 					INode node = parseStrTerm();
 					if (node != null) {
-						result = BinaryNode.create(STRING_ADD, result, node);
+						result = BinaryNode.create(ADD, result, node, NodeType.STR);
 					} else {
-						// "+ <numExpr>" encountered -> unparse "+ <numExpr>"
-						this.pos = tmpPos;
+						// "<strTerm> + not-a-<strTerm>" encountered, unparse "+ not-a-<strTerm>"
+						restoreParserState(state);
 						break;
 					}
 				} else {
-					// no "+" encountered -> stop parsing for "+ <strExpr>"
+					// no "+" encountered -> stop parsing for "+ <strTerm>"
 					break;
 				}
 			}
 		}
 		return result;
+	}
+
+	private FnFunctionNode parseNumFN() {
+		String fnFuncName = getNumFNFunctionName();
+		if (fnFuncName == null) {
+			return null;
+		}
+		return internalParseFNFunction(fnFuncName, NodeType.NUM);
 	}
 
 	private FunctionNode parseNumFunc() {
@@ -1161,10 +1240,10 @@ public class Parser {
 				// INSTR([I,] X$, Y$)
 				INode arg1Expr = parseExpr(); // can be a number expression or a string expression
 				if (arg1Expr == null) {
-					throw new CompileException("INSTR(): Missing or illegal first argument.");
+					throw new CompileException("INSTR(): Missing or invalid first argument.");
 				}
 				if (isNextToken(COMMA) == false) {
-					throw new CompileException("INSTR(): Missing comma after first argument.");
+					throw new CompileException("INSTR(): Missing comma separator (,) after first argument.");
 				}
 
 				INode arg2Expr = null;
@@ -1172,10 +1251,10 @@ public class Parser {
 					// INSTR(I, X$, Y$)
 					arg2Expr = parseStrExpr();
 					if (arg2Expr == null) {
-						throw new CompileException("INSTR(): Missing or illegal but last argument.");
+						throw new CompileException("INSTR(): Missing or invalid but-last argument.");
 					}
 					if (isNextToken(COMMA) == false) {
-						throw new CompileException("INSTR(): Missing comma before last argument.");
+						throw new CompileException("INSTR(): Missing comma separator (,) before last argument.");
 					}
 				} else if (arg1Expr.getType() == NodeType.STR) {
 					// INSTR(X$, Y$)
@@ -1185,12 +1264,12 @@ public class Parser {
 
 				INode arg3Expr = parseStrExpr();
 				if (arg3Expr == null) {
-					throw new CompileException("INSTR(): Missing or illegal last argument.");
+					throw new CompileException("INSTR(): Missing or invalid last argument.");
 				}
 
 				result = FunctionNode.create(INSTR, arg1Expr, arg2Expr, arg3Expr);
 				if (isNextToken(CLOSE) == false) {
-					throw new CompileException("INSTR(): Cannot find closing parenthesis.");
+					throw new CompileException("INSTR(): Missing closing parenthesis ()).");
 				}
 			}
 		}
@@ -1227,188 +1306,87 @@ public class Parser {
 		return result;
 	}
 
-	// Parse string expressions //////////////////////////////////////////////////
-
-	private INode parseStrExpr() {
-		int tmpPos = this.pos;
-		INode result = parseStrAddExpr();
-		if (result != null) {
-			Token token = getNextTokenOutOf(STRING_NOT_EQUAL, STRING_LESS_OR_EQUAL, STRING_GREATER_OR_EQUAL, STRING_LESS, STRING_EQUAL, STRING_GREATER); // op order matters!
-			if (token != null) {
-				this.pos = tmpPos;
-				result = null;
-			}
+	private VariableNode parseNumVarOrNumArrayVar() {
+		VariableNode numVar = parseNumArrayVar();
+		if (numVar == null) {
+			numVar = parseNumVar();
 		}
-		return result;
+		return numVar;
 	}
 
-	private INode parseStrAddExpr() {
-		INode result = parseStrTerm();
-		if (result != null) {
-			while (isNextToken(STRING_ADD)) {
-				INode node = parseStrTerm();
-				if (node == null) {
-					throw new CompileException("Missing or invalid string expression after +.");
-				}
-				result = BinaryNode.create(STRING_ADD, result, node);
-			}
-		}
-		return result;
-	}
-
-	private INode parseStrTerm() {
-		INode result = parseStrFN(); // parse functions before variables
-		if (result == null) {
-			result = parseStrFunc();
-		}
-		if (result == null) { // parse arrays before (simple) variables
-			result = parseStrOrStrArrayVar();
-		}
-		if (result == null) {
-			result = parseStrConst();
-		}
-		return result;
-	}
-
-	private FunctionNode parseStrFunc() {
-		FunctionNode result = internalParseFunction(CHR);
-		if (result == null) {
-			result = internalParseFunction(LEFT);
-		}
-		if (result == null) {
-			if (isNextToken(MID)) {
-				INode arg1Expr = parseStrExpr();
-				if (arg1Expr == null) {
-					throw new CompileException("MID$(): Missing or illegal first argument.");
-				}
-				if (isNextToken(COMMA) == false) {
-					throw new CompileException("MID$(): Missing first comma.");
-				}
-
-				INode arg2Expr = parseNumExpr();
-				if (arg2Expr == null) { // NOTE: Will never happen - parseNumExpr() throws exception first
-					throw new CompileException("MID$(): Missing or illegal second argument.");
-				}
-
-				INode arg3Expr;
-				if (isNextToken(COMMA)) {
-					arg3Expr = parseNumExpr();
-					if (arg3Expr == null) { // NOTE: Will never happen - parseNumExpr() throws exception first
-						throw new CompileException("MID$(): Missing or illegal third argument.");
-					}
-				} else {
-					arg3Expr = NumNode.create("255");
-				}
-
-				result = FunctionNode.create(MID, arg1Expr, arg2Expr, arg3Expr);
-				if (isNextToken(CLOSE) == false) {
-					throw new CompileException("MID$(): Missing closing parenthesis.");
-				}
-			}
-		}
-		if (result == null) {
-			result = internalParseFunction(RIGHT);
-		}
-		if (result == null) {
-			result = internalParseFunction(SPACE);
-		}
-		if (result == null) {
-			result = internalParseFunction(STR);
-		}
-		return result;
-	}
-
-	private VariableNode parseStrOrStrArrayVar() {
-		VariableNode strVar = parseStrArrayVar();
-		if (strVar == null) {
-			strVar = parseStrVar();
-		}
-		return strVar;
-	}
-
-	private VariableNode parseStrArrayVar() {
-		String varName = getStrArrayVariableName();
+	private VariableNode parseNumArrayVar() {
+		String varName = getNumArrayVariableName();
 		if (varName != null) {
 			INode dim1Expr = parseNumExpr();
 			if (dim1Expr == null) {
-				throw new CompileException("Cannot parse expression for first index of string array variable " + varName + ".");
+				throw new CompileException("Missing or invalid expression for first index of number array variable " + varName + "().");
 			}
 			if (isNextToken(COMMA)) {
 				INode dim2Expr = parseNumExpr();
 				if (dim2Expr == null) {
-					throw new CompileException("Cannot parse expression for second index of string array variable " + varName + ".");
+					throw new CompileException("Missing or invalid expression for second index of number array variable " + varName + "().");
 				}
 				if (isNextToken(CLOSE)) {
 					if (this.arrayVariables.containsKey(varName)) {
 						if (this.arrayVariables.get(varName).getNumDims() != 2) {
-							throw new CompileException("String array variable " + varName + ") does not have one index like in earlier part of code.");
+							throw new CompileException("Number array variable " + varName + "() does not have a single index like in earlier part of code.");
 						}
 					} else {
-						ArrayVariableInfo info = new ArrayVariableInfo(2, false /* usedInDimStatement */);
+						ArrayVariableInfo info = new ArrayVariableInfo(2, false /* isUsedInDimStatement */);
 						this.arrayVariables.put(varName, info);
 					}
-					return VariableNode.create(varName, NodeType.STR, dim1Expr, dim2Expr);
+					return VariableNode.create(varName, NodeType.NUM, dim1Expr, dim2Expr);
 				}
-				throw new CompileException("Closing parentheses missing after second index of string array variable " + varName + ".");
+				throw new CompileException("Missing closing parentheses ()) after second index of number array variable " + varName + "().");
 			}
 			if (isNextToken(CLOSE)) {
 				if (this.arrayVariables.containsKey(varName)) {
 					if (this.arrayVariables.get(varName).getNumDims() != 1) {
-						throw new CompileException("String array variable " + varName + ") does not have two indexes like in earlier part of code.");
+						throw new CompileException("Number array variable " + varName + "() does not have two indexes like in earlier part of code.");
 					}
 				} else {
-					ArrayVariableInfo info = new ArrayVariableInfo(1, false /* usedInDimStatement */);
+					ArrayVariableInfo info = new ArrayVariableInfo(1, false /* isUsedInDimStatement */);
 					this.arrayVariables.put(varName, info);
 				}
-				return VariableNode.create(varName, NodeType.STR, dim1Expr);
+				return VariableNode.create(varName, NodeType.NUM, dim1Expr);
 			}
-			throw new CompileException("Closing parentheses missing after first index of string array variable " + varName + ".");
+			throw new CompileException("Missing closing parentheses ()) after first index of number array variable " + varName + "().");
 		}
 		return null;
 	}
 
-	private VariableNode parseStrVar() {
-		String varName = getStrVariableName();
+	private VariableNode parseNumVar() {
+		String varName = getNumVariableName();
 		if (varName != null) {
-			return VariableNode.createVariableNode(varName, NodeType.STR);
+			return VariableNode.createVariableNode(varName, NodeType.NUM);
 		}
 		return null;
 	}
 
-	private StrNode parseStrConst() {
-		String strConst = getStrConstant();
-		if (strConst != null) {
-			if (strConst.length() > 255) { // NOTE: will never happen, code lines are 255 chars maximum
-				throw new CompileException("String constant has more than 255 characters.");
+	private NumNode parseNumConst() {
+		String strNumber = getNumConstant();
+		if (strNumber != null) {
+			return NumNode.create(strNumber);
+		}
+		return null;
+	}
+
+	// Parse other things ////////////////////////////////////////////////////////
+
+	private StrNode parseDataElement() {
+		String constant = getDataElement();
+		if (constant != null) {
+			if (constant.length() > 255) { // NOTE: Never happens, code lines are 255 chars maximum
+				throw new CompileException("DATA element has more than 255 characters.");
 			}
-			return StrNode.create(strConst);
+			return StrNode.create(constant);
 		}
 		return null;
-	}
-
-	private StrNode parseAnyConstant() {
-		String str = getAnyConstant();
-		if (str != null) {
-			if (str.length() > 255) { // NOTE: will never happen, code lines are 255 chars maximum
-				throw new CompileException("DATA Element has more than 255 characters.");
-			}
-			return StrNode.create(str);
-		}
-		return null;
-	}
-
-	private String parseLineNumber() {
-		String strLineNumber = getLineNumber();
-		if (strLineNumber != null) {
-			int lineNumber = Integer.parseInt(strLineNumber);
-			strLineNumber = String.valueOf(lineNumber);
-			this.currentLineNumber = strLineNumber;
-		}
-		return strLineNumber;
 	}
 
 	private FunctionNode internalParseFunction(FunctionToken functionToken) {
 		FunctionNode result = null;
+
 		if (isNextToken(functionToken)) {
 			List<INode> args = new ArrayList<INode>();
 			NodeType[] argTypes = functionToken.getArgTypes();
@@ -1417,7 +1395,7 @@ public class Parser {
 			for (int i = 0; i < numArgs; i++) {
 				if (i > 0) {
 					if (isNextToken(COMMA) == false) {
-						throw new CompileException("Missing comma while parsing function " + functionToken.getChars() + ").");
+						throw new CompileException("Missing comma separator (,) while parsing function " + functionToken.getChars() + "().");
 					}
 				}
 
@@ -1428,406 +1406,358 @@ public class Parser {
 					argExpr = parseStrExpr();
 				}
 				if (argExpr == null) {
-					throw new CompileException("Missing or invalid argument(s) while parsing function " + functionToken.getChars() + ").");
+					throw new CompileException("Missing or invalid argument(s) while parsing function " + functionToken.getChars() + "().");
 				}
 				args.add(argExpr);
 			}
 			result = FunctionNode.create(functionToken, args.toArray(new INode[numArgs]));
 			if (isNextToken(CLOSE) == false) {
-				throw new CompileException("Missing closing parenthesis while parsing function " + functionToken.getChars() + ").");
+				throw new CompileException("Missing closing parenthesis ()) while parsing function " + functionToken.getChars() + "().");
 			}
 		}
+
 		return result;
 	}
 
-	private FnFunctionNode parseNumFN() {
-		String funcName = getNumFunctionName();
-		if (funcName == null) {
-			return null;
-		}
-		return parseInternalFN(funcName, NodeType.NUM);
-	}
-
-	private FnFunctionNode parseStrFN() {
-		String funcName = getStrFunctionName();
-		if (funcName == null) {
-			return null;
-		}
-		return parseInternalFN(funcName, NodeType.STR);
-	}
-
-	private FnFunctionNode parseInternalFN(String funcName, NodeType funcType) {
+	private FnFunctionNode internalParseFNFunction(String fnFuncName, NodeType fnFuncType) {
 		// FN<name>[$](<expr>[,<expr>]*)
 
-		String funcNameString = funcName.substring(0, funcName.length() - 1);
-
-		List<INode> funcArgExprs = new ArrayList<INode>();
+		List<INode> fnFuncArgExprs = new ArrayList<INode>();
 		do {
-			INode funcArgExpr = parseExpr();
-			if (funcArgExpr == null) {
-				throw new CompileException("FN: Cannot parse or invalid argument expression in function call of " + funcNameString + ".");
+			INode fnFuncArgExpr = parseExpr();
+			if (fnFuncArgExpr == null) {
+				throw new CompileException("FN: Missing or invalid argument expression in function call of " + fnFuncName + "().");
 			}
-			funcArgExprs.add(funcArgExpr);
+			fnFuncArgExprs.add(fnFuncArgExpr);
 		} while (isNextToken(COMMA));
 
 		if (isNextToken(CLOSE) == false) {
-			throw new CompileException("FN: Missing ) in function call of " + funcNameString + ".");
+			throw new CompileException("FN: Missing closing parenthesis ()) in function call of " + fnFuncName + "().");
 		}
 
-		if (funcArgExprs.isEmpty()) {
-			throw new CompileException("FN: Function call of " + funcNameString + " has zero arguments.");
+		if (fnFuncArgExprs.isEmpty()) {
+			throw new CompileException("FN: Function call of " + fnFuncName + "() has no arguments.");
 		}
 
 		// compare signature of this FN<name> against DEF FN<name> (if present)
-		if (this.defFnMap.containsKey(funcNameString)) {
-			DefFnStatement statement = this.defFnMap.get(funcNameString);
+		if (this.defFnMap.containsKey(fnFuncName)) {
+			DefFnStatement statement = this.defFnMap.get(fnFuncName);
 
-			if (funcType != statement.getFuncExpr().getType()) {
-				throw new CompileException("FN: Return type of function call of " + funcNameString + " does not match return type of definition.");
+			if (fnFuncType != statement.getFuncExpr().getType()) {
+				throw new CompileException("FN: Return type of function call of " + fnFuncName + "() does not match return type of definition.");
 			}
 
-			if (funcArgExprs.size() != statement.getFuncVars().length) {
-				throw new CompileException("FN: Number of arguments in function call of " + funcNameString + " does not match number of arguments in definition.");
+			if (fnFuncArgExprs.size() != statement.getFuncVars().length) {
+				throw new CompileException("FN: Number of arguments in function call of " + fnFuncName + "() does not match number of arguments in definition.");
 			}
 
-			for (int i = 0; i < funcArgExprs.size(); i++) {
-				if (funcArgExprs.get(i).getType() != statement.getFuncVars()[i].getType()) {
-					throw new CompileException("FN: type of argument " + i + " in function call of " + funcNameString + " does not match argument type in definition.");
+			for (int i = 0; i < fnFuncArgExprs.size(); i++) {
+				if (fnFuncArgExprs.get(i).getType() != statement.getFuncVars()[i].getType()) {
+					throw new CompileException("FN: Type of argument #" + (i + 1) + " in function call of " + fnFuncName + "() does not match argument type in definition.");
 				}
 			}
 		}
 
 		// compare signature of this FN<name> against previous FN<name> calls
-		if (this.fnMap.containsKey(funcNameString)) {
-			FnFunctionNode fnNode = this.fnMap.get(funcNameString);
+		if (this.fnMap.containsKey(fnFuncName)) {
+			FnFunctionNode fnNode = this.fnMap.get(fnFuncName);
 
-			if (funcType != fnNode.getType()) {
-				throw new CompileException("FN: Return type of function call of " + funcNameString + " does not match return type of previous FN.");
+			if (fnFuncType != fnNode.getType()) {
+				throw new CompileException("FN: Return type of function call of " + fnFuncName + "() does not match return type of previous FN.");
 			}
 
-			if (funcArgExprs.size() != fnNode.getFuncArgExprs().length) {
-				throw new CompileException("FN: Number of arguments of function call of " + funcNameString + " does not match number of arguments in previous FN.");
+			if (fnFuncArgExprs.size() != fnNode.getFuncArgExprs().length) {
+				throw new CompileException("FN: Number of arguments in function call of " + fnFuncName + "() does not match number of arguments in previous FN.");
 			}
 
-			for (int i = 0; i < funcArgExprs.size(); i++) {
-				if (funcArgExprs.get(i).getType() != fnNode.getFuncArgExprs()[i].getType()) {
-					throw new CompileException("FN: Type of argument " + i + " of function call of " + funcNameString + " does not match argument type in previous FN.");
+			for (int i = 0; i < fnFuncArgExprs.size(); i++) {
+				if (fnFuncArgExprs.get(i).getType() != fnNode.getFuncArgExprs()[i].getType()) {
+					throw new CompileException("FN: Type of argument #" + (i + 1) + " in function call of " + fnFuncName + "() does not match argument type in previous FN.");
 				}
 			}
 		}
 
-		FnFunctionNode fnFunctionNode = FnFunctionNode.create(funcNameString, funcType, funcArgExprs.toArray(new INode[funcArgExprs.size()]));
-		this.fnMap.put(funcNameString, fnFunctionNode);
+		FnFunctionNode fnFunctionNode = FnFunctionNode.create(fnFuncName, fnFuncType, fnFuncArgExprs.toArray(new INode[fnFuncArgExprs.size()]));
+		this.fnMap.put(fnFuncName, fnFunctionNode);
 
 		return fnFunctionNode;
 	}
 
-	// ATOMIC MATCHERS ///////////////////////////////////////////////////////////
+	// Parser ////////////////////////////////////////////////////////////////////
 
-	/*
-	 * ^           | Start of string
-	 * \\s*?       | Match any whitespace, consumed lazily
-	 * (           | Start capture group 1 (number)
-	 * [+-]?       | Match one plus or minus, if present
-	 * (?:         | Start unnamed capture group 2 (mantissa)
-	 * [0-9]+      | Option 1: Match one or more digits, consumed lazily
-	 * (?:         |   Start unnamed capture group 3 (fractional part of mantissa)
-	 * \\.         |   Match one single period
-	 * [0-9]*      |   Match any digits, consumed possessively
-	 * )           |   End unnamed capture group 3 (fractional part of mantissa)
-	 * ?           |   ...capture group 3 (fractional part of mantissa) is optional
-	 * |           | ...or...
-	 * \\.         | Option2: Match one single period
-	 * [0-9]++     |   Match one or more digits, consumed possessively
-	 * )           |   End unnamed capture group 2 (mantissa)
-	 * (?:         | Start unnamed capture group 3 (exponent)
-	 * [eE]        | Match one 'e' or 'E'
-	 * [+-]?       | Match one plus or minus, if present
-	 * [0-9]++     | Match one or more digits, consumed possessively
-	 * )           | End unnamed capture group 3 (exponent), ...
-	 * ?           | ... capture group 3 (exponent) is optional
-	 * )           | End capture group 1 (number)
-	 */
-	private static final Pattern NUMBER_PATTERN = Pattern.compile("^\\s*?([-+]?(?:[0-9]+(?:\\.[0-9]*+)?|\\.[0-9]++)(?:[eE][-+]?[0-9]++)?)");
-
-	private String getNumConstant() {
-		return findMatch(NUMBER_PATTERN);
-	}
-
-	/*
-	 * ^           | Start of string
-	 * \\s*?       | Match any whitespace, consumed lazily
-	 * \"          | Match one quote
-	 * (           | Start capture group (content of string)
-	 * [^\"]*?     | Match any character but a quote, consumed lazily
-	 * )           | End capture group
-	 * \"          | Match one quote
-	 */
-	private static final Pattern STRING_CONST_PATTERN = Pattern.compile("^\\s*?\"([^\"]*?)\"");
-
-	private String getStrConstant() {
-		return findMatch(STRING_CONST_PATTERN);
-	}
-
-	/*
-	 * ^           | Start of string
-	 * \\s*?       | Match any whitespace, consumed lazily
-	 * (           | Start capture group (keyword)
-	 * [A-Z]       | Match one letter
-	 * [A-Z0-9]*+  | Match any letter or digit, consumed possessively
-	 * )           | End capture group
-	 */
-	private static final Pattern KEYWORD_PATTERN = Pattern.compile("^\\s*?([A-Z][A-Z0-9]*+)");
-
-	private boolean isNextKeyword(Token token) {
-		String match = findMatch(KEYWORD_PATTERN);
-		if (match != null) {
-			if (match.equals(token.getChars())) {
-				return true;
-			}
-			match = unmatch(match);
+	private boolean isNextToken(Token tokenToCompare) {
+		Token token = readToken();
+		if (token == tokenToCompare) {
+			consumeToken();
+			return true;
 		}
 		return false;
 	}
 
-	/*
-	 * ^           | Start of string
-	 * \\s*?       | Match any whitespace, consumed lazily
-	 * (           | Start capture group (constant)
-	 * [^,:]*+     | Match any character but a comma or a colon, consumed possessively
-	 * )           | End capture group
-	 */
-	private static final Pattern ANY_CONST_PATTERN = Pattern.compile("^\\s*?([^,:]*+)");
-
-	private String getAnyConstant() {
-		return findMatch(ANY_CONST_PATTERN);
+	private Token getNextTokenOutOf(Token... tokens) {
+		Token token = readToken();
+		for (Token tokenToCompare : tokens) {
+			if (token == tokenToCompare) {
+				consumeToken();
+				return token;
+			}
+		}
+		return null;
 	}
-
-	/*
-	 * ^           | Start of string
-	 * \\s*?       | Match any whitespace, consumed lazily
-	 * (           | Start capture group (line number)
-	 * [0-9]{1,5}  | Match any sequence of digits, 1 to 5 characters long
-	 * )           | End capture group
-	 */
-	private static final Pattern LINE_NUMBER_PATTERN = Pattern.compile("^\\s*?([0-9]{1,5})");
 
 	private String getLineNumber() {
-		return findMatch(LINE_NUMBER_PATTERN);
+		String constant = getNumConstant();
+		if (constant != null) {
+			if (constant.contains("E") || constant.contains(".")) {
+				return null;
+			}
+		}
+		return constant;
 	}
 
-	private static String statementKeywords[] = new String[] { //
-			"DATA",
-			"DEF",
-			"DIM",
-			"ELSE",
-			"END",
-			"FOR",
-			"GOSUB",
-			"GOTO",
-			"IF",
-			"INPUT",
-			"LET",
-			"NEXT",
-			"ON",
-			"PRINT",
-			"READ",
-			"REM",
-			"RESTORE",
-			"RETURN",
-			"STEP",
-			"STOP",
-			"SWAP",
-			"THEN",
-			"TO",
-			"WEND",
-			"WHILE"
-	};
-
-	private static Set<String> STATEMENT_KEYWORDS = new HashSet<String>();
-
-	static {
-		STATEMENT_KEYWORDS.addAll(Arrays.asList(statementKeywords));
+	private String getNumConstant() {
+		return internalGetName(TokenType.NUM_CONSTANT);
 	}
-
-	/*
-	 * ^              | Start of string
-	 * \\s*?          | Match any whitespace, consumed lazily
-	 * (              | Start capture group (number variable name)
-	 * [A-Z]          | Match one letter
-	 * [A-Z0-9\\.]*+  | Match any letter, digit, or dot, consumed possessively
-	 * )              | End capture group
-	 */
-	private static final Pattern NUM_VARIABLENAME_PATTERN = Pattern.compile("^\\s*?([A-Z][A-Z0-9\\.]*+)");
 
 	private String getNumVariableName() {
-		String match = findMatch(NUM_VARIABLENAME_PATTERN);
-		if (match != null) {
-			if (STATEMENT_KEYWORDS.contains(match)) {
-				match = unmatch(match);
-			}
-		}
-		return match;
+		return internalGetName(TokenType.NUM_VAR_ID);
 	}
-
-	/*
-	 * ^              | Start of string
-	 * \\s*?          | Match any whitespace, consumed lazily
-	 * (              | Start capture group (string variable name)
-	 * [A-Z]          | Match one letter
-	 * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
-	 * \\$            | Match one dollar sign
-	 * )              | End capture group
-	 */
-	private static final Pattern STR_VARIABLENAME_PATTERN = Pattern.compile("^\\s*?([A-Z][A-Z0-9\\.]*?\\$)");
-
-	private String getStrVariableName() {
-		return findMatch(STR_VARIABLENAME_PATTERN);
-	}
-
-	private static String numFunctionKeywords[] = new String[] { //
-			"ABS(",
-			"ASC(",
-			"ATN(",
-			"COS(",
-			"EXP(",
-			"FIX(",
-			"INSTR(",
-			"INT(",
-			"LEN(",
-			"LOG(",
-			"POS(",
-			"RND(",
-			"SGN(",
-			"SIN(",
-			"SQR(",
-			"TAN(",
-			"VAL("
-	};
-
-	private static Set<String> NUM_FUNCTION_KEYWORDS = new HashSet<String>();
-
-	static {
-		NUM_FUNCTION_KEYWORDS.addAll(Arrays.asList(numFunctionKeywords));
-	}
-
-	/*
-	 * ^              | Start of string
-	 * \\s*?          | Match any whitespace, consumed lazily
-	 * (              | Start capture group (number function name)
-	 * FN             | Match "FN"
-	 * [A-Z]          | Match one letter
-	 * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
-	 * \\(            | Match an opening parenthesis
-	 * )              | End capture group
-	 */
-	private static final Pattern NUM_FUNCTION_NAME_PATTERN = Pattern.compile("^\\s*?(FN[A-Z][A-Z0-9\\.]*?\\()");
-
-	private String getNumFunctionName() {
-		return findMatch(NUM_FUNCTION_NAME_PATTERN);
-	}
-
-	/*
-	 * ^              | Start of string
-	 * \\s*?          | Match any whitespace, consumed lazily
-	 * (?!            | Start negative lookahead. No match if characters ahead...
-	 * FN             | Match FN
-	 * [A-Z]          | Match one letter
-	 * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
-	 * \\$            | Match one dollar sign
-	 * \\(            | Match an opening parenthesis
-	 * )              | End negative lookahead
-	 * (              | Start capture group (number array variable name)
-	 * [A-Z]          | Match one letter
-	 * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
-	 * \\(            | Match an opening parenthesis
-	 * )              | End capture group
-	 */
-	private static final Pattern NUM_ARRAY_VARIABLE_NAME_PATTERN = Pattern.compile("^\\s*?(?!FN[A-Z][A-Z0-9\\.]*?\\()([A-Z][A-Z0-9\\.]*?\\()");
 
 	private String getNumArrayVariableName() {
-		String match = findMatch(NUM_ARRAY_VARIABLE_NAME_PATTERN);
-		if (match != null) {
-			if (NUM_FUNCTION_KEYWORDS.contains(match)) {
-				match = unmatch(match);
-			}
-		}
-		return match;
+		return internalGetName(TokenType.NUM_ARRAY_VAR_ID);
 	}
 
-	private static String strFunctionKeywords[] = new String[] { //
-			"CHR$(",
-			"LEFT$(",
-			"MID$(",
-			"RIGHT$(",
-			"SPACE$(",
-			"STR$("
-	};
-
-	private static Set<String> STR_FUNCTION_KEYWORDS = new HashSet<String>();
-
-	static {
-		STR_FUNCTION_KEYWORDS.addAll(Arrays.asList(strFunctionKeywords));
+	private String getNumFNFunctionName() {
+		return internalGetName(TokenType.NUM_FN_ID);
 	}
 
-	/*
-	 * ^              | Start of string
-	 * \\s*?          | Match any whitespace, consumed lazily
-	 * (              | Start capture group (string function name)
-	 * FN             | Match "FN"
-	 * [A-Z]          | Match one letter
-	 * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
-	 * \\$            | Match one dollar sign
-	 * \\(            | Match an opening parenthesis
-	 * )              | End capture group
-	 */
-	private static final Pattern STR_FUNCTION_NAME_PATTERN = Pattern.compile("^\\s*?(FN[A-Z][A-Z0-9\\.]*?\\$\\()");
-
-	private String getStrFunctionName() {
-		return findMatch(STR_FUNCTION_NAME_PATTERN);
+	private String getStrConstant() {
+		return internalGetName(TokenType.STR_CONSTANT);
 	}
 
-	/*
-	 * ^              | Start of string
-	 * \\s*?          | Match any whitespace, consumed lazily
-	 * (?!            | Start negative lookahead. No match if characters ahead...
-	 * FN             | Match FN
-	 * [A-Z]          | Match one letter
-	 * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
-	 * \\$            | Match one dollar sign
-	 * \\(            | Match an opening parenthesis
-	 * )              | End negative lookahead
-	 * (              | Start capture group (string array name)
-	 * [A-Z]          | Match one letter
-	 * [A-Z0-9\\.]*?  | Match any letter, digit, or dot, consumed lazily
-	 * \\$            | Match one dollar sign
-	 * \\(            | Match an opening parenthesis
-	 * )              | End capture group
-	 */
-	private static final Pattern STR_ARRAY_VARIABLE_NAME_PATTERN = Pattern.compile("^\\s*?(?!FN[A-Z][A-Z0-9\\.]*?\\$\\()([A-Z][A-Z0-9\\.]*?\\$\\()");
+	private String getStrVariableName() {
+		return internalGetName(TokenType.STR_VAR_ID);
+	}
 
 	private String getStrArrayVariableName() {
-		String match = findMatch(STR_ARRAY_VARIABLE_NAME_PATTERN);
-		if (match != null) {
-			if (STR_FUNCTION_KEYWORDS.contains(match)) {
-				match = unmatch(match);
-			}
-		}
-		return match;
+		return internalGetName(TokenType.STR_ARRAY_VAR_ID);
 	}
 
-	private String findMatch(Pattern pattern) {
-		String matched = null;
-		Matcher matcher = pattern.matcher(this.stringToParse.substring(this.pos));
-		if (matcher.find()) {
-			matched = matcher.group(1);
-			this.pos += matcher.end();
-		}
-		return matched;
+	private String getStrFNFunctionName() {
+		return internalGetName(TokenType.STR_FN_ID);
 	}
 
-	private String unmatch(String match) {
-		this.pos -= match.length();
+	private String internalGetName(TokenType tokenType) {
+		Token token = readToken();
+		if (token.getType() == tokenType) {
+			consumeToken();
+			return token.getChars();
+		}
 		return null;
+	}
+
+	private String getDataElement() {
+		this.isParsingDATAElement = true;
+		String constant = getStrConstant();
+		this.isParsingDATAElement = false;
+		return constant;
+	}
+
+	// Save and restore parser state /////////////////////////////////////////////
+
+	private static class ParserState {
+		private int pos;
+		private Token token;
+		private boolean hasCachedToken;
+	}
+
+	private ParserState saveParserState() {
+		ParserState state = new ParserState();
+		state.pos = this.pos;
+		state.token = this.token;
+		state.hasCachedToken = this.hasCachedToken;
+		return state;
+	}
+
+	private void restoreParserState(ParserState state) {
+		this.pos = state.pos;
+		this.token = state.token;
+		this.hasCachedToken = state.hasCachedToken;
+	}
+
+	// Lexer /////////////////////////////////////////////////////////////////////
+
+	private Token readToken() {
+		if (this.hasCachedToken == false) {
+			this.token = internalReadToken();
+			this.hasCachedToken = true;
+		}
+		return this.token;
+	}
+
+	private void consumeToken() {
+		this.hasCachedToken = false;
+	}
+
+	private Token internalReadToken() {
+		final int maxLen = this.stringToParse.length();
+
+		// skip leading whitespace
+		while ((this.pos < maxLen) && (Character.isWhitespace(this.stringToParse.charAt(this.pos)))) {
+			this.pos++;
+		}
+
+		// if string fully parsed return end-of-input
+		if (this.pos >= maxLen) {
+			return Token.END_OF_INPUT;
+		}
+
+		char chr = this.stringToParse.charAt(this.pos);
+		final int startPos = this.pos;
+
+		// parse string constants
+		if (chr == '"') {
+			this.pos++;
+
+			while ((this.pos < maxLen) && (this.stringToParse.charAt(this.pos) != '"')) {
+				this.pos++;
+			}
+			boolean hasClosingQuote = (this.pos < maxLen);
+			this.pos++;
+
+			if (hasClosingQuote == false) {
+				throw new CompileException("String constant has no closing quote (\") character.");
+			}
+
+			String chars = this.stringToParse.substring(startPos + 1, this.pos - 1);
+			return new Token(TokenType.STR_CONSTANT, chars);
+		}
+
+		// parse DATA elements
+		if (this.isParsingDATAElement) {
+			while ((this.pos < maxLen) && ((this.stringToParse.charAt(this.pos) != ',') && (this.stringToParse.charAt(this.pos) != ':'))) {
+				this.pos++;
+			}
+
+			String strDataElement = this.stringToParse.substring(startPos, this.pos).trim();
+			return new Token(TokenType.STR_CONSTANT, strDataElement);
+		}
+
+		// parse IDs, keywords, and DATA elements
+		if (Character.isLetter(chr)) {
+			this.pos++;
+
+			// parse IDs and keywords
+			final String STR_FN = "FN";
+
+			while ((this.pos < maxLen) && (Character.isLetterOrDigit(this.stringToParse.charAt(this.pos)) || (this.stringToParse.charAt(this.pos) == '.'))) {
+				this.pos++;
+			}
+
+			String name = this.stringToParse.substring(startPos, this.pos);
+			if ((this.pos < maxLen) && (this.stringToParse.charAt(this.pos) == '$')) {
+				this.pos++;
+				final String fullName = name + "$";
+				if ((this.pos < maxLen) && (this.stringToParse.charAt(this.pos) == '(')) {
+					this.pos++;
+
+					if (name.startsWith(STR_FN) && (name.length() > STR_FN.length())) {
+						return new Token(TokenType.STR_FN_ID, fullName);
+					}
+					if (Token.isKeyword(fullName)) {
+						return Token.getKeywordToken(fullName);
+					}
+					return new Token(TokenType.STR_ARRAY_VAR_ID, fullName);
+				}
+				return new Token(TokenType.STR_VAR_ID, fullName);
+			} else if ((this.pos < maxLen) && (this.stringToParse.charAt(this.pos) == '(')) {
+				this.pos++;
+				if (name.startsWith(STR_FN) && (name.length() > STR_FN.length())) {
+					return new Token(TokenType.NUM_FN_ID, name);
+				}
+				if (Token.isKeyword(name)) {
+					return Token.getKeywordToken(name);
+				}
+				return new Token(TokenType.NUM_ARRAY_VAR_ID, name);
+			}
+			if (Token.isKeyword(name)) {
+				return Token.getKeywordToken(name);
+			}
+			return new Token(TokenType.NUM_VAR_ID, name);
+		}
+
+		// parse special characters (before parsing numbers, which are treated as unsigned)
+		String strChr = String.valueOf(chr);
+
+		if (Token.isSpecialCharacter(strChr)) {
+			int endPos = this.pos + 1;
+
+			this.pos++;
+			while (this.pos <= maxLen) {
+				String chars = this.stringToParse.substring(startPos, this.pos);
+				if (Token.isSpecialCharacter(chars)) {
+					endPos = this.pos;
+					this.pos++;
+				} else {
+					this.pos = endPos;
+					break;
+				}
+			}
+
+			String chars = this.stringToParse.substring(startPos, endPos);
+			return Token.getSpecialCharacterToken(chars);
+		}
+
+		// parse unsigned number constants
+		if (Character.isDigit(chr) || (chr == '.')) {
+			int rollBackPos = this.pos;
+
+			boolean hasIntMantissa = false;
+			boolean hasDecimalPoint = false;
+			boolean hasFracMantisssa = false;
+
+			while ((this.pos < maxLen) && Character.isDigit(this.stringToParse.charAt(this.pos))) {
+				hasIntMantissa = true;
+				this.pos++;
+			}
+
+			if ((this.pos < maxLen) && (this.stringToParse.charAt(this.pos) == '.')) {
+				hasDecimalPoint = true;
+				this.pos++;
+			}
+
+			while ((this.pos < maxLen) && Character.isDigit(this.stringToParse.charAt(this.pos))) {
+				hasFracMantisssa = true;
+				this.pos++;
+			}
+
+			if (hasIntMantissa || (hasDecimalPoint && hasFracMantisssa)) {
+				rollBackPos = this.pos;
+
+				if ((this.pos < maxLen) && ((this.stringToParse.charAt(this.pos) == 'E') || (this.stringToParse.charAt(this.pos) == 'e'))) {
+					this.pos++;
+
+					boolean hasExponent = false;
+
+					if ((this.pos < maxLen) && ((this.stringToParse.charAt(this.pos) == '+') || (this.stringToParse.charAt(this.pos) == '-'))) {
+						this.pos++;
+					}
+
+					while ((this.pos < maxLen) && Character.isDigit(this.stringToParse.charAt(this.pos))) {
+						hasExponent = true;
+						this.pos++;
+					}
+
+					if (hasExponent == false) {
+						this.pos = rollBackPos;
+					}
+				}
+				return new Token(TokenType.NUM_CONSTANT, this.stringToParse.substring(startPos, this.pos));
+			}
+
+			this.pos = rollBackPos;
+		}
+
+		return new Token(TokenType.UNKNOWN, strChr);
 	}
 }
