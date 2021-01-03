@@ -6,65 +6,78 @@ It compiles a BASIC program into Java bytecode, which can be executed with any J
 
 Originally, I started this project to learn about Java bytecodes, hacking together an empty Java class file, adding bits and pieces. Soon this grew into implementing a BASIC compiler complete enough to compile and play classic BASIC games like, for example, "StarTrek". 
 
-BASIC Compiler is self-contained. It uses only a minimum set of Java Virtual Machine methods and by intention no other frameworks as I wanted to write the compiler from scratch. The functionality of BASIC Compiler is backed by over 1500 unit test programs in BASIC. The implemented BASIC language is oriented at Microsoft BASIC.
+BASIC Compiler is self-contained. It uses only a minimum set of Java Virtual Machine methods and (by intention) no other frameworks as I wanted to write the compiler from scratch. The functionality of BASIC Compiler is backed by over 1500 unit test programs in BASIC. The implemented BASIC language is oriented at Microsoft BASIC.
 
-The BASIC Compiler source code is available under the MIT license.
-
-Enjoy! -- Lorenz
+Enjoy! &mdash; Lorenz
 
 ## Table of Contents
 
 * [Getting Started](#getting-started)
-* [BASIC Compiler Language Specification](#basic-compiler-language-specification)
-* [Samples](#samples)
 * [Build Instructions](#build-instructions)
+* [Language Specification](#language-specification)
+* [Samples](#samples)
+* [License](#license)
 
 ## Getting Started
 
-I have prepared for you a [release](https://github.com/lwiest/BASICCompiler/releases/latest) of BASICCompiler.
-
 ### Prerequisites
-* You have installed a Java SDK 5 (or higher) on your system.
+* You have installed Java SDK 5 (or higher) on your system.
 
 ### Instructions
 1. Download [BASICCompiler.jar](https://github.com/lwiest/BASICCompiler/releases/download/v1.5/BASICCompiler.jar) to a folder.
-2. Open a command prompt in that folder and enter:
+2. Open a command prompt in that folder and enter
    ``` 
    java -jar BASICCompiler.jar
    ```
-This runs BASIC Compiler and lists command-line options:
-```
- ___   _   ___  _  ___    ___                _ _
-| _ ) /_\ / __|| |/ __|  / __|___ _ __  _ __(_) |___ _ _
-| _ \/ _ \\__ \| | (__  | (__/ _ \ '  \| '_ \ | | -_) '_|
-|___/_/ \_\___/|_|\___|  \___\___/_|_|_| .__/_|_|___|_|
-                                       |_|
-Version 1.6 (22-DEC-2019) by Lorenz Wiest
+   This runs BASIC Compiler and lists command-line options:
+   ```
+    ___   _   ___  _  ___    ___                _ _
+   | _ ) /_\ / __|| |/ __|  / __|___ _ __  _ __(_) |___ _ _
+   | _ \/ _ \\__ \| | (__  | (__/ _ \ '  \| '_ \ | | -_) '_|
+   |___/_/ \_\___/|_|\___|  \___\___/_|_|_| .__/_|_|___|_|
+                                          |_|
+   Version 1.6 (22-DEC-2019) by Lorenz Wiest
 
-Usage: java BASICCompiler <BASIC source filename> <Java class filename> [<options>]
-Options: -formatted=<filename> | Writes a formatted BASIC source file
-         -optimize             | Applies compiler optimizations
-```
+   Usage: java BASICCompiler <BASIC source filename> <Java class filename> [<options>]
+   Options: -formatted=<filename> | Writes a formatted BASIC source file
+            -optimize             | Applies compiler optimizations
+   ```
 
-Option `-formatted=<filename>` writes a pretty-printed version of the BASIC program to `<filename>`. The line numbers of the BASIC program are renumbered from 1000 on in increments of 10.
+   Option `-formatted=<filename>` writes a pretty-printed version of the BASIC program to `<filename>`. The line numbers of the BASIC program are renumbered from 1000 on in increments of 10.
 
-Option `-optimize` applies compiler optimizations. As of now, the only implemented optimization is the folding of constant string arguments of one or more `PRINT` statements.
+   Option `-optimize` applies compiler optimizations. As of now, the only implemented optimization is the folding of constant string arguments of one or more `PRINT` statements.
 
-**To compile a BASIC program**, for example [STARTREK.BAS](samples/STARTREK.BAS) in folder [samples](samples), enter
+3. **To compile a BASIC program**, for example [STARTREK.BAS](samples/STARTREK.BAS) in folder [samples](samples), enter
+   ```
+   java -jar BASICCompiler.jar samples/STARTREK.BAS StarTrek
+   ```
 
-```
-java -jar BASICCompiler.jar samples/STARTREK.BAS StarTrek
-```
+4. **To run the compiled program**, enter
+   ```
+   java StarTrek
+   ```
 
-**To run the compiled program**, enter
+## Build Instructions
 
-```
-java StarTrek
-```
+### Prerequisites
+You have Java SDK 5 (or higher) installed on your system.
 
-## BASIC Compiler Language Specification
+### Instructions
+1. Download this project's ZIP file from GitHub and unzip it to a temporary folder.
 
-Find more information about the implemented BASIC language in [doc/BASICCompilerLanguage.pdf](doc/BASICCompilerLanguage.pdf).
+2. **To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the temporary folder as an import source _General > Existing Projects into Workspace_.
+
+3. **To compile BASIC Compiler into a convenient JAR file** (Windows only), open a command prompt in the temporary folder and enter
+   ```
+   makejar
+   ```
+   This produces the `BASICCompiler.jar` file, containing the compiled BASIC Compiler.
+   
+   (Note that the environment variable `JAVA_HOME` must point to the installation folder of your Java SDK.)
+   
+## Language Specification
+
+Find more information about the implemented BASIC language in the [language specification](doc/BASICCompilerLanguage.pdf).
 
 ## Samples
 
@@ -634,17 +647,6 @@ HA HA HA - YOU LOSE!
 SAME SET-UP (Y-N)?
 ```
 
-## Build Instructions
+## License
 
-**Prerequisites:** You have Java SDK 5 (or higher) installed on your system.
-
-Download this project's ZIP file from GitHub and unzip it to a temporary folder ("root" folder).
-
-**To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the root folder as an import source _General > Existing Projects into Workspace_.
-
-**To compile BASIC Compiler into a convenient JAR file** (Windows only), open a command prompt in the root folder and enter (`%JAVA_HOME%` must point to the installation folder of your Java SDK):
-
-```
-makejar
-```
-This produces the `BASICCompiler.jar` file, containing the compiled BASIC Compiler.
+This project is available under the MIT license.
