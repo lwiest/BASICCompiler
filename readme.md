@@ -60,7 +60,7 @@ Enjoy! &mdash; Lorenz
 ## Build Instructions
 
 ### Prerequisites
-You have Java SDK 5 (or higher) installed on your system.
+* You have Java SDK 5 (or higher) installed on your system.
 
 ### Instructions
 1. Download this project's ZIP file from GitHub and unzip it to a temporary folder.
