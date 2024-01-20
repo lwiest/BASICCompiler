@@ -56,7 +56,7 @@ Enjoy! &mdash; Lorenz
    java -jar BASICCompiler.jar samples/STARTREK.BAS StarTrek
    ```
 
-4. **To run the compiled program**, enter
+4. **To run the compiled BASIC program**, enter
    ```
    java StarTrek
    ```
@@ -69,7 +69,7 @@ Enjoy! &mdash; Lorenz
 ### Instructions
 1. Download this project&rsquo;s ZIP file from GitHub.
 2. Unzip it to a temporary folder.
-3. **To work with the _BASIC Compiler_ source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the temporary folder as an import source _General > Existing Projects into Workspace_.
+3. **To work with the _BASIC Compiler_ source code in your Eclipse IDE**, import the `BASICCompiler` project into your Eclipse IDE from the temporary folder as an import source _General > Existing Projects into Workspace_.
 4. **To compile _BASIC Compiler_ into a convenient JAR file** (Windows only), open a command prompt in the temporary folder and enter
    ```
    makejar
