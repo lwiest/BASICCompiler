@@ -64,7 +64,7 @@ Enjoy! &mdash; Lorenz
 ## Build Instructions
 
 ### Prerequisites
-* You have Java SDK 5 or higher installed on your system.
+* You have installed Java SDK 5 or higher on your system.
 
 ### Instructions
 1. Download this project&rsquo;s ZIP file from GitHub.
@@ -74,7 +74,7 @@ Enjoy! &mdash; Lorenz
    ```
    makejar
    ```
-   This produces the `BASICCompiler.jar` file, containing the BASIC compiler.
+   This produces the `BASICCompiler.jar` file, containing the compiled BASIC compiler.
    
    (Note that the environment variable `JAVA_HOME` must point to the installation folder of your Java SDK.)
    
