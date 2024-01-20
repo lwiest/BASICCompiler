@@ -1,12 +1,16 @@
 # BASIC Compiler
 
-BASIC Compiler is an open-source BASIC compiler written in Java.
+BASIC Compiler is an open-source BASIC compiler, written in Java.
 
-It compiles a BASIC program into Java bytecode, which can be executed with any Java Virtual Machine 1.5 and higher.
+It compiles a BASIC program into Java bytecode, which can be executed with any Java Virtual Machine 1.5 or higher.
 
-Originally, I started this project to learn about Java bytecodes, hacking together an empty Java class file, adding bits and pieces. Soon this grew into implementing a BASIC compiler complete enough to compile and play classic BASIC games like, for example, "StarTrek". 
+Originally, I started this project to learn about Java bytecodes, hacking together an empty Java class file, adding bits and pieces. Soon this grew into implementing a BASIC compiler complete enough to compile and play classic BASIC games like, for example, _StarTrek_. 
 
-BASIC Compiler is self-contained. It uses only a minimum set of Java Virtual Machine methods and (by intention) no other frameworks as I wanted to write the compiler from scratch. The functionality of BASIC Compiler is backed by over 1500 unit test programs in BASIC. The implemented BASIC language is oriented at Microsoft BASIC.
+BASIC Compiler is self-contained. It uses only a minimum set of Java Virtual Machine methods and &ndash; by intention &ndash; no other frameworks as I wanted to write the compiler from scratch.
+
+The functionality of BASIC Compiler is backed by over 1500 test programs in BASIC.
+
+The implemented BASIC language dialect is oriented at Microsoft BASIC.
 
 Enjoy! &mdash; Lorenz
 
@@ -21,7 +25,7 @@ Enjoy! &mdash; Lorenz
 ## Getting Started
 
 ### Prerequisites
-* You have installed Java SDK 5 (or higher) on your system.
+* You have installed Java JDK (or SDK) 5 or higher on your system.
 
 ### Instructions
 1. Download [BASICCompiler.jar](https://github.com/lwiest/BASICCompiler/releases/download/v1.5/BASICCompiler.jar) to a folder.
@@ -60,18 +64,17 @@ Enjoy! &mdash; Lorenz
 ## Build Instructions
 
 ### Prerequisites
-* You have Java SDK 5 (or higher) installed on your system.
+* You have Java SDK 5 or higher installed on your system.
 
 ### Instructions
-1. Download this project's ZIP file from GitHub and unzip it to a temporary folder.
-
-2. **To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the temporary folder as an import source _General > Existing Projects into Workspace_.
-
-3. **To compile BASIC Compiler into a convenient JAR file** (Windows only), open a command prompt in the temporary folder and enter
+1. Download this project&rsquo;s ZIP file from GitHub.
+2. Unzip it to a temporary folder.
+3. **To work with the BASIC Compiler source code in your Eclipse IDE**, import the `BASICCompiler` project in your Eclipse IDE from the temporary folder as an import source _General > Existing Projects into Workspace_.
+4. **To compile BASIC Compiler into a convenient JAR file** (Windows only), open a command prompt in the temporary folder and enter
    ```
    makejar
    ```
-   This produces the `BASICCompiler.jar` file, containing the compiled BASIC Compiler.
+   This produces the `BASICCompiler.jar` file, containing the BASIC Compiler.
    
    (Note that the environment variable `JAVA_HOME` must point to the installation folder of your Java SDK.)
    
@@ -81,7 +84,7 @@ Find more information about the implemented BASIC language in the [language spec
 
 ## Samples
 
-Find sample BASIC programs from David Ahl's classic _BASIC Computer Games_ books, original (used with permission) and modified, in folder [samples](samples).
+Find sample BASIC programs from David Ahl&rsquo;s classic _BASIC Computer Games_ books, original (used with permission) and modified, in folder [samples](samples).
 Below are transcripts of runs from some compiled sample BASIC programs:
 
 ```
