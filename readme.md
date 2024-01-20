@@ -10,7 +10,7 @@ _BASIC Compiler_ is self-contained. It uses only a minimum set of Java Virtual M
 
 The functionality of _BASIC Compiler_ is backed by over 1500 test programs in BASIC.
 
-The implemented BASIC language dialect is oriented at Microsoft BASIC.
+The implemented BASIC language is oriented at Microsoft BASIC.
 
 Enjoy! &mdash; Lorenz
 
