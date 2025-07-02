@@ -32,9 +32,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_CheckLogicalOperatorArguments extends Method {
-	private final static String METHOD_NAME = "CheckLogicalOperatorAguments";
-	private final static String DESCRIPTOR = "(FF)V";
-	private final static int NUM_LOCALS = 2;
+	private static final String METHOD_NAME = "CheckLogicalOperatorAguments";
+	private static final String DESCRIPTOR = "(FF)V";
+	private static final int NUM_LOCALS = 2;
 
 	public Method_CheckLogicalOperatorArguments(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

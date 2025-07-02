@@ -27,7 +27,7 @@ package de.lorenzwiest.basiccompiler.parser.statements.impl;
 import de.lorenzwiest.basiccompiler.parser.statements.Statement;
 
 public class StopStatement implements Statement {
-	private final static StopStatement INSTANCE = new StopStatement();
+	private static final StopStatement INSTANCE = new StopStatement();
 
 	private StopStatement() {
 		// empty

@@ -33,9 +33,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_StoreStringIn2DArray extends Method {
-	private final static String METHOD_NAME = "StoreStringIn2DArray";
-	private final static String DESCRIPTOR = "([C[[[[CFF)V";
-	private final static int NUM_LOCALS = 4;
+	private static final String METHOD_NAME = "StoreStringIn2DArray";
+	private static final String DESCRIPTOR = "([C[[[[CFF)V";
+	private static final int NUM_LOCALS = 4;
 
 	public Method_StoreStringIn2DArray(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

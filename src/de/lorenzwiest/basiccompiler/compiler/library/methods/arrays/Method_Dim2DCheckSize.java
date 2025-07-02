@@ -32,9 +32,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Dim2DCheckSize extends Method {
-	private final static String METHOD_NAME = "Dim2DCheckSize";
-	private final static String DESCRIPTOR = "(II)V";
-	private final static int NUM_LOCALS = 2;
+	private static final String METHOD_NAME = "Dim2DCheckSize";
+	private static final String DESCRIPTOR = "(II)V";
+	private static final int NUM_LOCALS = 2;
 
 	public Method_Dim2DCheckSize(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

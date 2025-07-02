@@ -33,9 +33,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Dim1DStringArray extends Method {
-	private final static String METHOD_NAME = "Dim1DStringArray";
-	private final static String DESCRIPTOR = "([[[CF)V";
-	private final static int NUM_LOCALS = 3;
+	private static final String METHOD_NAME = "Dim1DStringArray";
+	private static final String DESCRIPTOR = "([[[CF)V";
+	private static final int NUM_LOCALS = 3;
 
 	public Method_Dim1DStringArray(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

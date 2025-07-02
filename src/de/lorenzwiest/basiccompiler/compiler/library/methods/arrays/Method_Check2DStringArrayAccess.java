@@ -33,9 +33,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Check2DStringArrayAccess extends Method {
-	private final static String METHOD_NAME = "Check2DStringArrayAccess";
-	private final static String DESCRIPTOR = "([[[[CII)V";
-	private final static int NUM_LOCALS = 3;
+	private static final String METHOD_NAME = "Check2DStringArrayAccess";
+	private static final String DESCRIPTOR = "([[[[CII)V";
+	private static final int NUM_LOCALS = 3;
 
 	public Method_Check2DStringArrayAccess(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

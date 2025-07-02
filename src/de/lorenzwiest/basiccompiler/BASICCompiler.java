@@ -60,8 +60,8 @@ public class BASICCompiler {
 			+ "Options: -formatted=<filename> | Writes a formatted BASIC source file" + CR //
 			+ "         -optimize             | Applies compiler optimizations";
 
-	private final static String OPT_FORMATTED_OUTPUT = "-formatted=";
-	private final static String OPT_OPTIMIZE = "-optimize";
+	private static final String OPT_FORMATTED_OUTPUT = "-formatted=";
+	private static final String OPT_OPTIMIZE = "-optimize";
 
 	public static void main(String[] args) {
 		if (args.length < 2) {

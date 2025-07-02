@@ -32,9 +32,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_StringEqual extends Method {
-	private final static String METHOD_NAME = "StringEqual";
-	private final static String DESCRIPTOR = "([C[C)F";
-	private final static int NUM_LOCALS = 3;
+	private static final String METHOD_NAME = "StringEqual";
+	private static final String DESCRIPTOR = "([C[C)F";
+	private static final int NUM_LOCALS = 3;
 
 	public Method_StringEqual(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

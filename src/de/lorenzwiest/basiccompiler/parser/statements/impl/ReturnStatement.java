@@ -27,7 +27,7 @@ package de.lorenzwiest.basiccompiler.parser.statements.impl;
 import de.lorenzwiest.basiccompiler.parser.statements.Statement;
 
 public class ReturnStatement implements Statement {
-	private final static ReturnStatement INSTANCE = new ReturnStatement();
+	private static final ReturnStatement INSTANCE = new ReturnStatement();
 
 	private ReturnStatement() {
 		// empty

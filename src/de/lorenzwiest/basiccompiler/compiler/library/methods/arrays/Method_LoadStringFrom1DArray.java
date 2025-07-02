@@ -33,9 +33,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_LoadStringFrom1DArray extends Method {
-	private final static String METHOD_NAME = "LoadStringFrom1DArray";
-	private final static String DESCRIPTOR = "([[[CF)[C";
-	private final static int NUM_LOCALS = 2;
+	private static final String METHOD_NAME = "LoadStringFrom1DArray";
+	private static final String DESCRIPTOR = "([[[CF)[C";
+	private static final int NUM_LOCALS = 2;
 
 	public Method_LoadStringFrom1DArray(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

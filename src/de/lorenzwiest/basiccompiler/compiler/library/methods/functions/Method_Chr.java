@@ -33,9 +33,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Chr extends Method {
-	private final static String METHOD_NAME = "Chr";
-	private final static String DESCRIPTOR = "(F)[C";
-	private final static int NUM_LOCALS = 1;
+	private static final String METHOD_NAME = "Chr";
+	private static final String DESCRIPTOR = "(F)[C";
+	private static final int NUM_LOCALS = 1;
 
 	public Method_Chr(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

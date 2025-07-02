@@ -34,9 +34,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Log extends Method {
-	private final static String METHOD_NAME = "Log";
-	private final static String DESCRIPTOR = "(F)F";
-	private final static int NUM_LOCALS = 1;
+	private static final String METHOD_NAME = "Log";
+	private static final String DESCRIPTOR = "(F)F";
+	private static final int NUM_LOCALS = 1;
 
 	public Method_Log(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

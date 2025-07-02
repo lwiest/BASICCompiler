@@ -53,7 +53,7 @@ public class ClassModel {
 
 	public static final int MAX_METHOD_LENGTH = 65536;
 
-	private final static String SUPER_CLASS_NAME = "java/lang/Object";
+	private static final String SUPER_CLASS_NAME = "java/lang/Object";
 
 	private static final String MAIN_METHOD_NAME = "main";
 	private static final String MAIN_METHOD_DESCRIPTOR = "([Ljava/lang/String;)V";

@@ -28,7 +28,7 @@ import de.lorenzwiest.basiccompiler.parser.nodes.INode;
 import de.lorenzwiest.basiccompiler.parser.nodes.NodeType;
 
 public class VariableNode implements INode {
-	private final static INode[] EMPTY = new INode[0];
+	private static final INode[] EMPTY = new INode[0];
 
 	private final String varName;
 	private final NodeType type;

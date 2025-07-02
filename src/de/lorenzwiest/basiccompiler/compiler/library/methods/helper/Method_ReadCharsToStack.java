@@ -36,9 +36,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_ReadCharsToStack extends Method {
-	private final static String METHOD_NAME = "ReadCharsToStack";
-	private final static String DESCRIPTOR = "()[C";
-	private final static int NUM_LOCALS = 5;
+	private static final String METHOD_NAME = "ReadCharsToStack";
+	private static final String DESCRIPTOR = "()[C";
+	private static final int NUM_LOCALS = 5;
 
 	public Method_ReadCharsToStack(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

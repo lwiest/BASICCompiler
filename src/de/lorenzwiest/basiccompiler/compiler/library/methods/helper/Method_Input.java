@@ -35,9 +35,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Input extends Method {
-	private final static String METHOD_NAME = "Input";
-	private final static String DESCRIPTOR = "([C)[[C";
-	private final static int NUM_LOCALS = 11;
+	private static final String METHOD_NAME = "Input";
+	private static final String DESCRIPTOR = "([C)[[C";
+	private static final int NUM_LOCALS = 11;
 
 	public Method_Input(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

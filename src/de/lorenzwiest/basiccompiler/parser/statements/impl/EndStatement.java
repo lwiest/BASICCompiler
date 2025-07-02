@@ -27,7 +27,7 @@ package de.lorenzwiest.basiccompiler.parser.statements.impl;
 import de.lorenzwiest.basiccompiler.parser.statements.Statement;
 
 public class EndStatement implements Statement {
-	private final static EndStatement INSTANCE = new EndStatement();
+	private static final EndStatement INSTANCE = new EndStatement();
 
 	private EndStatement() {
 		// empty

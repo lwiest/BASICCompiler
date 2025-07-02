@@ -44,7 +44,7 @@ public class BytecodeFlowAnalysis {
 	private static final char DESC_SHORT   = 'S';
 	private static final char DESC_VOID    = 'V';
 
-	private final static String INDENT = "  ";
+	private static final String INDENT = "  ";
 
 	public static int calculateStackSize(byte[] bytecodes, ConstantPool constantPool, ExceptionTableInfo[] exceptionTableInfos, int methodRefIndex) {
 		if (SHOW_BYTECODE_FLOW_ANALYSIS) {

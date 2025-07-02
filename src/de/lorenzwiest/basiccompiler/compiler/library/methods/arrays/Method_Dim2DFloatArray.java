@@ -33,9 +33,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Dim2DFloatArray extends Method {
-	private final static String METHOD_NAME = "Dim2DFloatArray";
-	private final static String DESCRIPTOR = "([[[FFF)V";
-	private final static int NUM_LOCALS = 3;
+	private static final String METHOD_NAME = "Dim2DFloatArray";
+	private static final String DESCRIPTOR = "([[[FFF)V";
+	private static final int NUM_LOCALS = 3;
 
 	public Method_Dim2DFloatArray(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

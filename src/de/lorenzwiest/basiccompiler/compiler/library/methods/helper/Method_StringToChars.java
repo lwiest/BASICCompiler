@@ -34,9 +34,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_StringToChars extends Method {
-	private final static String METHOD_NAME = "StringToChars";
-	private final static String DESCRIPTOR = "(Ljava/lang/String;)[C";
-	private final static int NUM_LOCALS = 1;
+	private static final String METHOD_NAME = "StringToChars";
+	private static final String DESCRIPTOR = "(Ljava/lang/String;)[C";
+	private static final int NUM_LOCALS = 1;
 
 	public Method_StringToChars(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

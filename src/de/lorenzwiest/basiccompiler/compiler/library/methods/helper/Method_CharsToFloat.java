@@ -48,9 +48,9 @@ part is mandatory. If the fraction is omitted, the decimal point is optional.)
  */
 
 public class Method_CharsToFloat extends Method {
-	private final static String METHOD_NAME = "CharsToFloat";
-	private final static String DESCRIPTOR = "([C)F";
-	private final static int NUM_LOCALS = 12;
+	private static final String METHOD_NAME = "CharsToFloat";
+	private static final String DESCRIPTOR = "([C)F";
+	private static final int NUM_LOCALS = 12;
 
 	public Method_CharsToFloat(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

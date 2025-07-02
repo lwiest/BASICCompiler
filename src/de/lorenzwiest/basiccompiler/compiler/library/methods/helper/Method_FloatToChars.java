@@ -67,9 +67,9 @@ Example: f = -1/0 -> c = "-Infinity"
  */
 
 public class Method_FloatToChars extends Method {
-	private final static String METHOD_NAME = "FloatToChars";
-	private final static String DESCRIPTOR = "(F)[C";
-	private final static int NUM_LOCALS = 12;
+	private static final String METHOD_NAME = "FloatToChars";
+	private static final String DESCRIPTOR = "(F)[C";
+	private static final int NUM_LOCALS = 12;
 
 	public Method_FloatToChars(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

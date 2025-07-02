@@ -33,9 +33,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_LoadFloatFrom2DArray extends Method {
-	private final static String METHOD_NAME = "LoadFloatFrom2DArray";
-	private final static String DESCRIPTOR = "([[[FFF)F";
-	private final static int NUM_LOCALS = 3;
+	private static final String METHOD_NAME = "LoadFloatFrom2DArray";
+	private static final String DESCRIPTOR = "([[[FFF)F";
+	private static final int NUM_LOCALS = 3;
 
 	public Method_LoadFloatFrom2DArray(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

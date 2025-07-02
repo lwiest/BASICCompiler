@@ -107,7 +107,7 @@ public class Compiler {
 	public static final String FIELD_DATA_INFO = "_dataInfo";
 	public static final String FIELD_DATA_INDEX = "_dataIndex";
 
-	private final static String IS_DEF_PREFIX = "_isdef_";
+	private static final String IS_DEF_PREFIX = "_isdef_";
 
 	private static final String LABEL_END = "END";
 

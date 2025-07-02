@@ -33,9 +33,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Val extends Method {
-	private final static String METHOD_NAME = "Val";
-	private final static String DESCRIPTOR = "([C)F";
-	private final static int NUM_LOCALS = 2;
+	private static final String METHOD_NAME = "Val";
+	private static final String DESCRIPTOR = "([C)F";
+	private static final int NUM_LOCALS = 2;
 
 	public Method_Val(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

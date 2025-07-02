@@ -33,9 +33,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_GosubStackInitialize extends Method {
-	private final static String METHOD_NAME = "GosubStackInitialize";
-	private final static String DESCRIPTOR = "()V";
-	private final static int NUM_LOCALS = 0;
+	private static final String METHOD_NAME = "GosubStackInitialize";
+	private static final String DESCRIPTOR = "()V";
+	private static final int NUM_LOCALS = 0;
 
 	public Method_GosubStackInitialize(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

@@ -27,7 +27,7 @@ package de.lorenzwiest.basiccompiler.parser.statements.impl;
 import de.lorenzwiest.basiccompiler.parser.statements.Statement;
 
 public class WendStatement implements Statement {
-	private final static WendStatement INSTANCE = new WendStatement();
+	private static final WendStatement INSTANCE = new WendStatement();
 
 	private WendStatement() {
 		// empty

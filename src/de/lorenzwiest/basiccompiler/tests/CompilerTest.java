@@ -46,9 +46,9 @@ import de.lorenzwiest.basiccompiler.BASICCompiler;
 import de.lorenzwiest.basiccompiler.compiler.etc.CompileException;
 
 public class CompilerTest {
-	private final static String CR = System.getProperty("line.separator");
+	private static final String CR = System.getProperty("line.separator");
 
-	private final static String TEST_CLASS_NAME = "CompilerTestClass";
+	private static final String TEST_CLASS_NAME = "CompilerTestClass";
 
 	private static int testCount;
 

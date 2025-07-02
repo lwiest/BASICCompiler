@@ -32,9 +32,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Substring extends Method {
-	private final static String METHOD_NAME = "Substring";
-	private final static String DESCRIPTOR = "([CII)[C";
-	private final static int NUM_LOCALS = 5;
+	private static final String METHOD_NAME = "Substring";
+	private static final String DESCRIPTOR = "([CII)[C";
+	private static final int NUM_LOCALS = 5;
 
 	public Method_Substring(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);

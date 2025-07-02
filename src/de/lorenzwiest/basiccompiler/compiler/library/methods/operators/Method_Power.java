@@ -35,9 +35,9 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Power extends Method {
-	private final static String METHOD_NAME = "Power";
-	private final static String DESCRIPTOR = "(FF)F";
-	private final static int NUM_LOCALS = 2;
+	private static final String METHOD_NAME = "Power";
+	private static final String DESCRIPTOR = "(FF)F";
+	private static final int NUM_LOCALS = 2;
 
 	public Method_Power(LibraryManager libraryManager) {
 		super(libraryManager, METHOD_NAME, DESCRIPTOR, NUM_LOCALS);
