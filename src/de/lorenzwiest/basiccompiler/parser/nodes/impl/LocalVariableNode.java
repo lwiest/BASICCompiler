@@ -27,7 +27,6 @@ package de.lorenzwiest.basiccompiler.parser.nodes.impl;
 import de.lorenzwiest.basiccompiler.parser.nodes.NodeType;
 
 public class LocalVariableNode extends VariableNode {
-
 	private int localIndex;
 
 	private LocalVariableNode(String variableName, NodeType type, int localIndex) {

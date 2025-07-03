@@ -32,7 +32,6 @@ import de.lorenzwiest.basiccompiler.parser.nodes.NodeType;
 import de.lorenzwiest.basiccompiler.parser.nodes.impl.LocalVariableNode;
 
 public class LocalVariableTable {
-
 	private Map<String /* varName */ , LocalVariableNode /* varNode */ > map = new HashMap<String, LocalVariableNode>();
 
 	public LocalVariableNode addAndGetLocalVariableNode(String variableName, NodeType type) {

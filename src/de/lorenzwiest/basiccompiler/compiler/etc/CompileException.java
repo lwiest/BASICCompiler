@@ -26,7 +26,6 @@ package de.lorenzwiest.basiccompiler.compiler.etc;
 
 @SuppressWarnings("serial")
 public class CompileException extends RuntimeException {
-
 	private final int lineNumber;
 
 	public CompileException(int lineNumber, String message) {

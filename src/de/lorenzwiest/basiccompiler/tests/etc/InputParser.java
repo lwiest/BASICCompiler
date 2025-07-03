@@ -25,7 +25,6 @@
 package de.lorenzwiest.basiccompiler.tests.etc;
 
 public class InputParser {
-
 	public static final String BAD_CHARACTER_AFTER_QUOTE = "Bad character after quote!";
 
 	public static String parseAndFormat(String argType, String input) {

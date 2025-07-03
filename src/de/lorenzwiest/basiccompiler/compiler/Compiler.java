@@ -238,7 +238,6 @@ public class Compiler {
 
 	private void flushDefFns() {
 		for (DefFnStatement defFn : this.defFns) {
-
 			String funcName = defFn.getFuncName();
 			NodeType funcType = defFn.getFuncExpr().getType();
 
