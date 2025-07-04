@@ -33,7 +33,6 @@ import de.lorenzwiest.basiccompiler.compiler.library.LibraryManager.MethodEnum;
 import de.lorenzwiest.basiccompiler.compiler.library.methods.Method;
 
 public class Method_Right extends Method {
-
 	private static final String METHOD_NAME = "Right";
 	private static final String DESCRIPTOR = "([CF)[C";
 	private static final int NUM_LOCALS = 2;
