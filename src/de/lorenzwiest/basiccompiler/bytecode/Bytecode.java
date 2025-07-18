@@ -335,25 +335,22 @@ public enum Bytecode {
 				return DUP_X2;
 			} else if (matchesOperandsOnStack(DUP_X2_ALT, opStack)) {
 				return DUP_X2_ALT;
-			} else {
-				throw new BytecodeException(createExceptionMessage(oBytecode, pos));
-			}
+			} 
+			throw new BytecodeException(createExceptionMessage(oBytecode, pos));
 		} else if (oBytecode == DUP2) {
 			if (matchesOperandsOnStack(DUP2, opStack)) {
 				return DUP2;
 			} else if (matchesOperandsOnStack(DUP2_ALT, opStack)) {
 				return DUP2_ALT;
-			} else {
-				throw new BytecodeException(createExceptionMessage(oBytecode, pos));
 			}
+			throw new BytecodeException(createExceptionMessage(oBytecode, pos));
 		} else if (oBytecode == DUP2_X1) {
 			if (matchesOperandsOnStack(DUP2_X1, opStack))  {
 				return DUP2_X1;
 			} else if (matchesOperandsOnStack(DUP2_X1_ALT, opStack)) {
 				return DUP2_X1_ALT;
-			} else {
-				throw new BytecodeException(createExceptionMessage(oBytecode, pos));
 			}
+			throw new BytecodeException(createExceptionMessage(oBytecode, pos));
 		} else if (oBytecode == DUP2_X2) {
 			if (matchesOperandsOnStack(DUP2_X2, opStack)) {
 				return DUP2_X2;
@@ -363,17 +360,15 @@ public enum Bytecode {
 				return DUP2_X2_ALT2;
 			} else if (matchesOperandsOnStack(DUP2_X2_ALT3, opStack)) {
 				return DUP2_X2_ALT3;
-			} else {
-				throw new BytecodeException(createExceptionMessage(oBytecode, pos));
 			}
+			throw new BytecodeException(createExceptionMessage(oBytecode, pos));
 		} else if (oBytecode == POP2) {
 			if (matchesOperandsOnStack(POP2, opStack)) {
 				return POP2;
 			} else if (matchesOperandsOnStack(POP2_ALT, opStack)) {
 				return POP2_ALT;
-			} else {
-				throw new BytecodeException(createExceptionMessage(oBytecode, pos));
 			}
+			throw new BytecodeException(createExceptionMessage(oBytecode, pos));
 		}
 		return oBytecode;
 	}
