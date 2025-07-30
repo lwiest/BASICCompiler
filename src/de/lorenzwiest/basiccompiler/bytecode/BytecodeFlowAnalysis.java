@@ -31,7 +31,7 @@ import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.impl.ConstantPool
 import de.lorenzwiest.basiccompiler.classfile.info.ExceptionTableInfo;
 
 public class BytecodeFlowAnalysis {
-	private static final boolean SHOW_BYTECODE_FLOW_ANALYSIS = false;
+	private static final boolean PRINT_BYTECODE_FLOW_ANALYSIS = false;
 
 	private static final char DESC_BOOLEAN = 'Z';
 	private static final char DESC_BYTE    = 'B';
@@ -47,7 +47,7 @@ public class BytecodeFlowAnalysis {
 	private static final String INDENT = "  ";
 
 	public static int calculateStackSize(byte[] bytecodes, ConstantPool constantPool, ExceptionTableInfo[] exceptionTableInfos, int methodRefIndex) {
-		if (SHOW_BYTECODE_FLOW_ANALYSIS) {
+		if (PRINT_BYTECODE_FLOW_ANALYSIS) {
 			logln(createTitle(constantPool, methodRefIndex));
 			logln(INDENT + "Bytecode flow analysis:");
 		}
@@ -71,7 +71,7 @@ public class BytecodeFlowAnalysis {
 			}
 		}
 
-		if (SHOW_BYTECODE_FLOW_ANALYSIS) {
+		if (PRINT_BYTECODE_FLOW_ANALYSIS) {
 			printResult(maxStackSize, iBytecodes, postOpStacks, constantPool);
 		}
 		return maxStackSize;
@@ -553,7 +553,7 @@ public class BytecodeFlowAnalysis {
 	}
 
 	private static void log(String text) {
-		if (SHOW_BYTECODE_FLOW_ANALYSIS) {
+		if (PRINT_BYTECODE_FLOW_ANALYSIS) {
 			System.out.print(text);
 		}
 	}
