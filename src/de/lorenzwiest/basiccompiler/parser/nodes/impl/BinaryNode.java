@@ -32,7 +32,7 @@ public class BinaryNode implements INode {
 	private final Token op;
 	private final INode leftNode;
 	private final INode rightNode;
-	private NodeType nodeType;
+	private final NodeType nodeType;
 
 	private BinaryNode(Token op, INode leftNode, INode rightNode, NodeType nodeType) {
 		this.op = op;
