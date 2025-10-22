@@ -32,22 +32,22 @@ import java.util.Map;
 import de.lorenzwiest.basiccompiler.classfile.constantpoolinfo.ConstantPoolInfo;
 
 public class ConstantPool {
-	private List<ConstantPoolInfo> listOfConstantPoolInfos = new ArrayList<ConstantPoolInfo>();
+	private List<ConstantPoolInfo> constantPoolInfos = new ArrayList<ConstantPoolInfo>();
 	private Map<String, Integer> mapOfKeys = new HashMap<String, Integer>();
 
 	public ConstantPool() {
-		this.listOfConstantPoolInfos.add(null);  // add first constant pool entry, a dummy entry
+		this.constantPoolInfos.add(null);  // add first constant pool entry, a dummy entry
 	}
 
 	public void put(String key, ConstantPoolInfo constantPoolInfo) {
-		int nextIndex = this.listOfConstantPoolInfos.size();
+		int nextIndex = this.constantPoolInfos.size();
 
-		this.listOfConstantPoolInfos.add(constantPoolInfo);
+		this.constantPoolInfos.add(constantPoolInfo);
 		this.mapOfKeys.put(key, nextIndex);
 	}
 
 	public ConstantPoolInfo get(int constantPoolIndex) {
-		return this.listOfConstantPoolInfos.get(constantPoolIndex);
+		return this.constantPoolInfos.get(constantPoolIndex);
 	}
 
 	public boolean contains(String key) {
@@ -63,11 +63,11 @@ public class ConstantPool {
 	}
 
 	public int getCount() {
-		return this.listOfConstantPoolInfos.size();
+		return this.constantPoolInfos.size();
 	}
 
 	public ConstantPoolInfo[] getConstantPoolInfos() {
-		List<ConstantPoolInfo> allButFirstConstantPoolInfo = this.listOfConstantPoolInfos.subList(1, this.listOfConstantPoolInfos.size());
+		List<ConstantPoolInfo> allButFirstConstantPoolInfo = this.constantPoolInfos.subList(1, this.constantPoolInfos.size());
 		return allButFirstConstantPoolInfo.toArray(new ConstantPoolInfo[0]);
 	}
 }
