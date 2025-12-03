@@ -55,9 +55,9 @@ public class ConstantPool {
 	}
 
 	public int getIndex(String key) {
-		Integer anIndex = this.mapOfKeys.get(key);
-		if (anIndex != null) {
-			return anIndex.intValue();
+		Integer index = this.mapOfKeys.get(key);
+		if (index != null) {
+			return index.intValue();
 		}
 		return -1;
 	}
