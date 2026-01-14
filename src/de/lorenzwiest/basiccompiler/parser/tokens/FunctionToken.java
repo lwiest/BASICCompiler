@@ -54,8 +54,7 @@ public class FunctionToken extends Token {
 	public static final FunctionToken VAL = new FunctionToken("VAL", NodeType.NUM, NodeType.STR);
 
 	private final NodeType returnType;
-
-	private final NodeType[] argTypes;
+    private final NodeType[] argTypes;
 
 	private FunctionToken(String token, NodeType returnType, NodeType... argTypes) {
 		super(TokenType.KEYWORD, token);
